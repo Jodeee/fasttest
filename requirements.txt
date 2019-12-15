@@ -1,0 +1,3 @@
+PyYAML>=5.1.2
+wd>=1.0.1
+opencv-contrib-python==3.4.2.16

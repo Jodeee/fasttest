@@ -1,0 +1,253 @@
+*{
+  margin: 0;
+  padding: 0;
+     }
+   html,body{
+       width: 100%;
+       height: 100%;
+       background-color: rgb(240,240,240)
+     }
+   h1, h2, h3, h4, h5, h6 {
+     color: rgba(0, 0, 0, 0.85);
+     font-weight: 500;
+   }
+   font {
+
+   }
+
+   .root{
+       height: 100%;
+       width: 100%;
+       /*background-color:white;*/
+   }
+
+   .title{
+       width: 100%;
+       height:65px;
+       background-color: rgba(64, 64, 64, 0.94);
+   }
+   .content{
+       border: 1px solid rgb(220,220,220);
+       margin: 70px 40px 40px 40px;
+       background-color:white;
+       height: 100%;
+   }
+
+   .head{
+       margin: 60px 120px 20px 120px;
+       background-color:rgb(240,240,240);
+   }
+   .tabdiv{
+       margin: 30px 120px 20px 120px;
+       background-color:rgb(240,240,240);
+   }
+
+   .text{
+       line-height: 30px;
+       color:rgb(110,110,110);
+       font-size: 15px;
+       margin-left:20px
+       }
+   th {
+       background-color: rgb(240,240,240);
+       border-right: 1px solid rgb(220,220,220);
+       color: rgb(110,110,110);
+       line-height: 28px;
+       font-weight: normal;
+
+   }
+   .module_td{
+       border-right: 1px solid rgb(220,220,220);
+       border-top: 1px solid rgb(220,220,220);
+       color: rgb(110,110,110);
+       line-height: 28px;
+       font-weight: normal;
+       text-align:center
+   }
+   .module_name{
+       border-right: 1px solid rgb(220,220,220);
+       border-top: 1px solid rgb(220,220,220);
+       color: rgb(110,110,110);
+       line-height: 28px;
+       font-weight: normal;
+       text-align:center
+   }
+   .module_td_view{
+       border-right: 1px solid rgb(220,220,220);
+       border-top: 1px solid rgb(220,220,220);
+       color: rgb(110,110,110);
+       line-height: 28px;
+       font-weight: normal;
+       text-align:center
+   }
+   .module_deta{
+       background-color: rgb(240,240,240);
+       border-right: 1px solid rgb(220,220,220);
+       border-top: 1px solid rgb(220,220,220);
+       color: rgb(110,110,110);
+       vertical-align: top
+
+   }
+   .table{
+       width: calc(100% - 40px);
+       margin: 20px;
+       border: 1px solid rgb(220,220,220);
+       border-right-width: 0;
+   }
+   .head_title{
+       border: 1px solid rgb(220,220,220);
+       background-color: white;
+       border-bottom-width: 0;
+       color:rgb(88,88,88);
+       font-size: large;
+       text-indent: 10px;
+       line-height: 30px;
+
+   }
+
+   .Pass{
+       background-color: rgba(57, 121, 4, 0.36);
+   }
+   .failure{
+       background-color: rgba(175, 118, 0, 0.36);
+   }
+   .error{
+       background-color: rgba(121, 0, 12, 0.34);
+   }
+   .skipped{
+       background-color: rgba(121, 111, 112, 0.36);
+   }
+   .status{
+       border-radius: 4px;
+       border: 1px solid rgb(220,220,220);
+       padding: 1px;
+   }
+
+   .child {
+	float: left;
+	height: 400px;
+	width: calc(50%);
+	box-sizing: border-box;
+	background-clip: content-box;
+}
+
+   .errordiv{
+       margin: 20px;
+       /*background-color: white;*/
+       /*border: 1px solid rgb(220,220,220);*/
+       width: auto;
+       height: auto;
+       vertical-align: bottom;
+
+   }
+   .errorp{
+       display: block;
+       padding: 10px;
+       font-size: 13px;
+       color: #333;
+       word-break: break-all;
+       word-wrap: break-word;
+       background-color: white;
+       border-radius: 4px;
+       border: 1px solid rgb(220,220,220);
+       white-space: pre-wrap;
+       box-shadow:4px 4px 10px rgb(220,220,220);
+   }
+
+
+   /*æªå¾*/
+   .SnapshotDiv_root{
+       width: 447px;
+       height: auto;
+       display:flex;
+       margin: auto;
+       align-items:stretch;
+       /*text-align: center;*/
+   }
+
+   .Stepsdetails{
+    margin-bottom: 2px;
+
+    }
+    .StepsdetailsDiv{
+        width: 100%;
+        height: 37px;
+        border-radius: 4px;
+        border: 1px solid rgb(220,220,220);
+        box-shadow:4px 4px 10px rgb(220,220,220);
+        background-color: white;
+    }
+
+    .StepsdetailsPre{
+        line-height: 17px;
+        padding: 10px;
+        font-size: 13px;
+        color: #333;
+        word-break: break-all;
+        word-wrap: break-word;
+        display: inline-block;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .StepsdetailsPre_duration{
+        line-height: 17px;
+        padding: 10px;
+        font-size: 13px;
+        color: #333;
+        word-break: break-all;
+        word-wrap: break-word;
+        display: inline-block;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .show_hide{
+        width: 26px;
+        margin-top: 5.5px
+    }
+    .img {
+        width: 250px;
+        background-color: white;
+        display:block;
+        margin: 10px;
+        margin-left: 0;
+        border: 1px solid rgb(220,220,220);
+        box-shadow:4px 4px 10px rgb(220,220,220);
+  }
+
+   .imgDiv{
+       display: inline-block;
+   }
+
+   .stepspan {
+       display: block;
+       position: relative;
+       bottom: 0;
+       background-color: rgba(0, 0, 0, 0.4);
+       word-wrap:break-word;
+       line-height: 1;
+       text-align:left;
+       color: white;
+       padding: 10px;
+       font-size: 13px;
+       width: 317px;
+   }
+   .leftbutton{
+       display: inline;
+       position: absolute;
+       left: 10px;
+       z-index: 1;
+       top: 50%;
+   }
+   .rightbutton{
+       display: inline;
+       right: 10px;
+       position: absolute;
+       z-index: 1;
+
+       top: 50%;
+   }
+
