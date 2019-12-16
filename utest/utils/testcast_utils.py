@@ -9,6 +9,7 @@ class TestCaseUtils(object):
 
     def __traversal_dir(self,path):
         for rt, dirs, files in os.walk(path):
+            files.sort()
             for f in files:
                 file_path = os.path.join(rt, f)
                 if os.path.isfile(file_path):

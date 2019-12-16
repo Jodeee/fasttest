@@ -95,17 +95,18 @@ class Project(object):
         common_dir = os.path.join(Var.ROOT, "Common")
         for rt, dirs, files in os.walk(common_dir):
             if rt == common_dir:
-                for f in files:
-                    if f.endswith('yaml'):
-                        for commonK, commonV in analytical_file(os.path.join(rt, f)).items():
-                            Var.common_func[commonK] = commonV
-            else:
-                if rt.split(os.sep)[-1].lower() == Var.platformName.lower():
-                    for f in files:
-                        if f.endswith('yaml'):
-                            for commonK, commonV in analytical_file(os.path.join(rt, f)).items():
-                                Var.common_func[commonK] = commonV
+                self.__load_common_func(rt, files)
+            elif rt.split(os.sep)[-1].lower() == Var.platformName.lower():
+                self.__load_common_func(rt, files)
         log_info('common:{}'.format(Var.common_func.keys()))
+
+    def __load_common_func(self,rt ,files):
+        for f in files:
+            if not f.endswith('yaml'):
+                continue
+            for commonK, commonV in analytical_file(os.path.join(rt, f)).items():
+                Var.common_func[commonK] = commonV
+
 
     def __init_testcase_suite(self):
         self.suite = []
@@ -132,11 +133,9 @@ class Project(object):
             desired_caps["activity"] = Var.activity
         elif Var.platformName in "ios":
             desired_caps["bundleId"] = Var.bundleId
-
+            
         server = ServerUtils()
-
         Var.devicePort = server.get_device_port()
-
         for k, v in desired_caps.items():
             log_info('{}:{}'.format(k, v))
         server.start_server()

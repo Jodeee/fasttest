@@ -28,7 +28,7 @@ class DriverBase(object):
         if Var.platformName in "ios":
             Var.driver.init()
         elif Var.platformName in "android":
-            DriverAndroid.shell('shell am start -S {}'.format(activity))
+            DriverAndroid.shell('shell am start {}'.format(activity))
 
     @staticmethod
     def stopApp(package=Var.package):

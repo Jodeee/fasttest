@@ -17,12 +17,12 @@ class TestCase(unittest.TestCase):
 
     def __init__(self, methodName="runTest"):
         super(TestCase, self).__init__(methodName)
+        setattr(self, 'driver', Var.driver)
         setattr(self, 'testcase_path', Var.testcase_path)
         setattr(self, 'module', Var.module)
         setattr(self, 'description', Var.description)
         setattr(self, 'skip', Var.skip)
         setattr(self, 'steps', Var.steps)
-        setattr(self, 'driver', Var.driver)
         self.SnapshotDir = os.path.join(Var.Report, self.module, self.testcase_path.split(os.sep)[-1].split(".")[0])
 
     def run(self, result=None):
