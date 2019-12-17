@@ -17,12 +17,10 @@ class TestCase(unittest.TestCase):
 
     def __init__(self, methodName="runTest"):
         super(TestCase, self).__init__(methodName)
-        setattr(self, 'driver', Var.driver)
-        setattr(self, 'testcase_path', Var.testcase_path)
-        setattr(self, 'module', Var.module)
-        setattr(self, 'description', Var.description)
-        setattr(self, 'skip', Var.skip)
-        setattr(self, 'steps', Var.steps)
+        if not Var.testcase:
+            raise NameError("name 'testcase' is not defined")
+        for key, value in Var.testcase.items():
+            setattr(self, key, value)
         self.SnapshotDir = os.path.join(Var.Report, self.module, self.testcase_path.split(os.sep)[-1].split(".")[0])
 
     def run(self, result=None):
@@ -36,7 +34,7 @@ class TestCase(unittest.TestCase):
                 os.makedirs(Var.SnapshotDir)
             log_info("******************* TestCase {} Start *******************".format(self.description))
             unittest.TestCase.run(self, result)
-            log_info("******************* Total: {}, Pass: {}, Failed: {}, Error: {}, Skipped: {} ********************"
+            log_info("******************* Total: {}, Pass: {}, Failed: {}, Error: {}, Skipped: {} ********************\n"
                     .format(result.testsRun, len(result.successes), len(result.failures), len(result.errors), len(result.skipped)))
         except:
             traceback.print_exc()

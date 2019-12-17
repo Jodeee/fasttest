@@ -112,11 +112,11 @@ class Project(object):
         self.suite = []
         for case_path in self.testcase:
             testcase = analytical_file(case_path)
-            for testcaseK, testcaseV in testcase.items():
-                Var[testcaseK] = testcaseV
-            Var.testcase_path = case_path
+            testcase['testcase_path'] = case_path
+            Var.testcase = testcase
             subsuite = unittest.TestLoader().loadTestsFromTestCase(RunCase)
             self.suite.append(subsuite)
+            Var.testcase = None
 
     def start(self):
 
