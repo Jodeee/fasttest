@@ -35,7 +35,7 @@ class DevicesUtils(object):
         elif self.__platformName in 'ios':
             devices = self.get_devices('idevice_id -l')
             simulator_devices = self.get_devices('instruments -s Devices')
-            if self.__udid and (self.__udid not in (devices and simulator_devices)):
+            if self.__udid and (self.__udid not in (devices or simulator_devices)):
                 raise Exception("device '{}' not found!".format(self.__udid))
             elif not self.__udid and devices:
                 self.__udid = devices[0]
