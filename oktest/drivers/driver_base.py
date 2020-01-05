@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from utest.common import Var
-from utest.common.decorator import therading
-from utest.drivers.driver_platform import DriveriOS
-from utest.drivers.driver_platform import DriverAndroid
+from oktest.common import Var
+from oktest.common.decorator import therading
+from oktest.drivers.driver_platform import DriveriOS
+from oktest.drivers.driver_platform import DriverAndroid
 
 class DriverBase(object):
 
@@ -275,4 +275,3 @@ class DriverBase(object):
                 return element_xpath.get()
             elif not element_classname.isAlive():
                 return element_classname.get()
-

@@ -1,7 +1,7 @@
-from utest.common import Var
-from utest.runner.test_case import TestCase
-from utest.drivers.driver_base import DriverBase
-from utest.runner.case_analysis import CaseAnalysis
+from oktest.common import Var
+from oktest.runner.test_case import TestCase
+from oktest.drivers.driver_base import DriverBase
+from oktest.runner.case_analysis import CaseAnalysis
 
 
 class RunCase(TestCase):

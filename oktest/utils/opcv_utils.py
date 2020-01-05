@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import cv2
-from utest.common import Var
+from oktest.common import Var
 
 
 class OpencvUtils(object):
@@ -20,7 +20,7 @@ class OpencvUtils(object):
         :return:
         """
         try:
-            ocrimg = os.path.join(Var.ROOT, 'ocrImg')
+            ocrimg = os.path.join(Var.ROOT, 'OcrImg')
             if not os.path.exists(ocrimg):
                 os.makedirs(ocrimg)
             imgname = self.matchimage.split(os.sep)[-1]

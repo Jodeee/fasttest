@@ -3,7 +3,7 @@
 import os
 import unittest
 import traceback
-from utest.common import *
+from oktest.common import *
 
 
 class TestCase(unittest.TestCase):

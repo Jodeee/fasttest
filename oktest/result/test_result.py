@@ -3,7 +3,7 @@
 import os
 import time
 import unittest
-from utest.common import *
+from oktest.common import *
 
 
 def testcase_name(test_method):

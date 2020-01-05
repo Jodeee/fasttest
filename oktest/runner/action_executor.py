@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import time
-from utest.common import Var
-from utest.drivers.driver_base import DriverBase
-from utest.common.decorator import keywords
-from utest.utils.opcv_utils import OpencvUtils
+from oktest.common import Var
+from oktest.drivers.driver_base import DriverBase
+from oktest.common.decorator import keywords
+from oktest.utils.opcv_utils import OpencvUtils
 try:
     from Scripts import *
 except Exception:
@@ -301,7 +301,7 @@ class ActionExecutor(object):
             except Exception as e:
                 raise e
         elif step.type == 'Common':
-            from utest.runner.case_analysis import CaseAnalysis
+            from oktest.runner.case_analysis import CaseAnalysis
             case = CaseAnalysis()
             case.iteration(Var.common_func[step.func].steps)
             Var.common_var = {}

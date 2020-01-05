@@ -8,12 +8,12 @@ import inspect
 import unittest
 import traceback
 from macaca.webdriver import WebDriver
-from utest.common import *
-from utest.utils import *
-from utest.runner.run_case import RunCase
-from utest.common.logging import log_init
-from utest.drivers.driver_base import DriverBase
-from utest.result.test_runner import TestRunner
+from oktest.common import *
+from oktest.utils import *
+from oktest.runner.run_case import RunCase
+from oktest.common.logging import log_init
+from oktest.drivers.driver_base import DriverBase
+from oktest.result.test_runner import TestRunner
 
 class Project(object):
 

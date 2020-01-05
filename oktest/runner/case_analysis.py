@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from utest.runner.case_executor import CaseExecutor
+from oktest.common import log_info
+from oktest.runner.case_executor import CaseExecutor
 
 class CaseAnalysis(object):
 
@@ -31,4 +32,3 @@ class CaseAnalysis(object):
                         result = self.iteration(values)
                         if result:
                             return True
-                        break

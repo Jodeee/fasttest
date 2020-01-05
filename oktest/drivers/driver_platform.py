@@ -3,7 +3,7 @@
 import os
 import traceback
 import subprocess
-from utest.common import *
+from oktest.common import *
 
 
 class DriverAndroid(object):

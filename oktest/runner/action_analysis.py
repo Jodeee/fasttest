@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-import collections
-from utest.common import Var, Dict
-from utest.runner.action_executor import ActionExecutor
-
+from oktest.common import Var, Dict
 
 try:
     from Scripts import *
@@ -310,7 +307,7 @@ class ActionAnalysis(object):
         origin_content = var_content
         if re.match(r'\$\.getText', var_content):
             var_step = self.__action_getText(var_content)
-            from utest.runner.action_executor import ActionExecutor
+            from oktest.runner.action_executor import ActionExecutor
             action = ActionExecutor()
             var_content = action._action_getText(var_step)
         elif re.match(Action.SCRIPTS, var_content):
