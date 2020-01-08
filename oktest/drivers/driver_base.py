@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from concurrent import futures
 from oktest.common import Var
 from oktest.common.decorator import therading
 from oktest.drivers.driver_platform import DriveriOS
@@ -135,8 +136,7 @@ class DriverBase(object):
         driver.swipe(fromx, fromy, tox, toy, during)
 
     @staticmethod
-    @therading
-    def wait_element(name='', id='', xpath='', classname='', timeout=5, interval=1, index=0):
+    def wait_element(elements_dict):
         """
         等待元素
         :param name:
@@ -148,14 +148,19 @@ class DriverBase(object):
         :param index:
         :return:
         """
-        if name:
-            elements = driver.wait_for_elements_by_name(name, timeout, interval)
-        elif id:
-            elements = driver.wait_for_elements_by_id(id, timeout, interval)
-        elif xpath:
-            elements = driver.wait_for_elements_by_xpath(xpath, timeout, interval)
-        elif classname:
-            elements = driver.wait_for_elements_by_class_name(classname, timeout, interval)
+        element_type = elements_dict['element_type']
+        element = elements_dict['element']
+        timeout = elements_dict['timeout']
+        interval = elements_dict['interval']
+        index = elements_dict['index']
+        if 'name' in element_type:
+            elements = driver.wait_for_elements_by_name(element, timeout, interval)
+        elif 'id' in element_type:
+            elements = driver.wait_for_elements_by_id(element, timeout, interval)
+        elif 'xpath' in element_type:
+            elements = driver.wait_for_elements_by_xpath(element, timeout, interval)
+        elif 'classname' in element_type:
+            elements = driver.wait_for_elements_by_class_name(element, timeout, interval)
         else:
             raise TypeError('element() missing 1 required positional argument')
 
@@ -262,16 +267,18 @@ class DriverBase(object):
         :param index:
         :return:
         """
-        element_name = DriverBase.wait_element(name=element, timeout=timeout, interval=interval, index=index)
-        element_id = DriverBase.wait_element(id=element, timeout=timeout, interval=interval, index=index)
-        element_xpath = DriverBase.wait_element(xpath=element, timeout=timeout, interval=interval, index=index)
-        element_classname = DriverBase.wait_element(classname=element, timeout=timeout, interval=interval, index=index)
-        while True:
-            if not element_name.isAlive():
-                return element_name.get()
-            elif not element_id.isAlive():
-                return element_id.get()
-            elif not element_xpath.isAlive():
-                return element_xpath.get()
-            elif not element_classname.isAlive():
-                return element_classname.get()
+        ex = futures.ThreadPoolExecutor(max_workers=4)
+        worker_list = []
+        for element_type in ['name','id','xpath','classname']:
+            dict = {
+                'element_type': element_type,
+                'element': element,
+                'timeout': timeout,
+                'interval': interval,
+                'index': index
+            }
+            worker_list.append(ex.submit(DriverBase.wait_element, dict))
+        for f in futures.as_completed(worker_list):
+            if f.result() is not None:
+                return f.result()
+        return None
