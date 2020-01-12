@@ -36,11 +36,11 @@ def keywords(func, *args, **kwds):
         exception = None
         Var.ocrimg = None
         start_time = time.time()
-        Var.SnapshotIndex += 1
-        snapshot_index = Var.SnapshotIndex
+        Var.case_snapshot_index += 1
+        snapshot_index = Var.case_snapshot_index
         filename = args[-1].origin_step
         imagename = "Step_{}.png".format(snapshot_index)
-        file = os.path.join(Var.SnapshotDir, imagename)
+        file = os.path.join(Var.snapshot_dir, imagename)
         try:
             log_info('{}'.format(filename))
             if args or kwds:
@@ -60,7 +60,7 @@ def keywords(func, *args, **kwds):
                 stop_time = time.time()
                 duration = str(int(stop_time - start_time))
                 result_step = '{}|:|{}|:|{}s|:|{}|:|{}\n'.format(snapshot_index, not exception_flag, duration, imagename, filename)
-                with open(os.path.join(Var.SnapshotDir, 'result.log'), 'a') as f:
+                with open(os.path.join(Var.snapshot_dir, 'result.log'), 'a') as f:
                     f.write(result_step)
             except:
                 log_error(traceback.format_exc(), False)

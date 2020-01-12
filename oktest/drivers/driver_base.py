@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import re
 from concurrent import futures
 from oktest.common import Var
-from oktest.common.decorator import therading
 from oktest.drivers.driver_platform import DriveriOS
 from oktest.drivers.driver_platform import DriverAndroid
 
@@ -153,13 +153,13 @@ class DriverBase(object):
         timeout = elements_dict['timeout']
         interval = elements_dict['interval']
         index = elements_dict['index']
-        if 'name' in element_type:
+        if element_type in 'name':
             elements = driver.wait_for_elements_by_name(element, timeout, interval)
-        elif 'id' in element_type:
+        elif element_type in 'id' :
             elements = driver.wait_for_elements_by_id(element, timeout, interval)
-        elif 'xpath' in element_type:
+        elif element_type in 'xpath':
             elements = driver.wait_for_elements_by_xpath(element, timeout, interval)
-        elif 'classname' in element_type:
+        elif element_type in 'classname':
             elements = driver.wait_for_elements_by_class_name(element, timeout, interval)
         else:
             raise TypeError('element() missing 1 required positional argument')
@@ -267,18 +267,35 @@ class DriverBase(object):
         :param index:
         :return:
         """
-        ex = futures.ThreadPoolExecutor(max_workers=4)
-        worker_list = []
-        for element_type in ['name','id','xpath','classname']:
+        if Var.platformName in 'android':
+            ex = futures.ThreadPoolExecutor(max_workers=4)
+            worker_list = []
+            for element_type in ['name', 'id', 'xpath', 'classname']:
+                dict = {
+                    'element_type': element_type,
+                    'element': element,
+                    'timeout': timeout,
+                    'interval': interval,
+                    'index': index
+                }
+                worker_list.append(ex.submit(DriverBase.wait_element, dict))
+            for f in futures.as_completed(worker_list):
+                if f.result() is not None:
+                    return f.result()
+            return None
+        else:
             dict = {
-                'element_type': element_type,
                 'element': element,
                 'timeout': timeout,
                 'interval': interval,
                 'index': index
             }
-            worker_list.append(ex.submit(DriverBase.wait_element, dict))
-        for f in futures.as_completed(worker_list):
-            if f.result() is not None:
-                return f.result()
-        return None
+            if re.match(r'XCUIElementType', element):
+                dict['element_type'] = 'classname'
+            elif re.match(r'//XCUIElementType', element):
+                dict['element_type'] = 'xpath'
+            elif re.match(r'//\*\[@', element):
+                dict['element_type'] = 'xpath'
+            else:
+                dict['element_type'] = 'name'
+            return DriverBase.wait_element(dict)

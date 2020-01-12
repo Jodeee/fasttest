@@ -54,7 +54,7 @@ class ServerUtils(object):
     def start_server(self):
         try:
             self.stop_server()
-            webdriver_server = WebDriverServer(Var.devicePort)
+            webdriver_server = WebDriverServer(Var.device_port)
             webdriver_server.start_server()
         except:
             traceback.print_exc()
@@ -67,8 +67,8 @@ class ServerUtils(object):
                 pass
             if Var.driver:
                 Var.driver.quit()
-            if Var.devicePort is not None:
-                result, pid = self.__check_port_is_used(Var.devicePort)
+            if Var.device_port is not None:
+                result, pid = self.__check_port_is_used(Var.device_port)
                 if result:
                     p = platform.system()
                     if p == "Windows":

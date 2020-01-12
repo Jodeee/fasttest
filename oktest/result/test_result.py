@@ -42,7 +42,7 @@ class TestInfo(object):
         )
         self.dataId = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
         self.casename = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
-        self.SnapshotDir = test_method.SnapshotDir
+        self.snapshot_dir = test_method.snapshot_dir
         self.module_name = test_method.module
         self.description = test_method.description
 
@@ -62,10 +62,10 @@ class TestResult(unittest.TextTestResult):
         :return:
         '''
         try:
-            self._stdout_data = Var.CaseMessage
-            Var.CaseMessage = ""
-            Var.CaseStepIndex = 0
-            Var.SnapshotIndex = 0
+            self._stdout_data = Var.case_message
+            Var.case_message = ""
+            Var.case_step_index = 0
+            Var.case_snapshot_index = 0
         except AttributeError as e:
             pass
 
@@ -87,7 +87,7 @@ class TestResult(unittest.TextTestResult):
         self.stop_time = time.time()
         self.result[-1][1].start_time = self.start_time
         self.result[-1][1].stop_time = self.stop_time
-        self.Report = Var.Report
+        self.report = Var.report
 
     def addSuccess(self, test):
         '''

@@ -73,12 +73,12 @@ class Project(object):
         Var.udid, deviceinfo = devices.device_info()
         report_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
         report_child = "{}_{}".format(deviceinfo, report_time)
-        Var.Report = os.path.join(Var.ROOT, "Report", report_child)
+        Var.report = os.path.join(Var.ROOT, "Report", report_child)
 
-        if not os.path.exists(Var.Report):
-            os.makedirs(Var.Report)
-            os.makedirs(os.path.join(Var.Report, 'resource'))
-        log_init(Var.Report)
+        if not os.path.exists(Var.report):
+            os.makedirs(Var.report)
+            os.makedirs(os.path.join(Var.report, 'resource'))
+        log_init(Var.report)
 
     def __analytical_testcase_file(self):
         log_info('******************* analytical config *******************')
@@ -135,11 +135,11 @@ class Project(object):
             desired_caps["bundleId"] = Var.bundleId
             
         server = ServerUtils()
-        Var.devicePort = server.get_device_port()
+        Var.device_port = server.get_device_port()
         for k, v in desired_caps.items():
             log_info('{}:{}'.format(k, v))
         server.start_server()
-        Var.driver = WebDriver(desired_caps, url='http://127.0.0.1:{}/wd/hub'.format(Var.devicePort))
+        Var.driver = WebDriver(desired_caps, url='http://127.0.0.1:{}/wd/hub'.format(Var.device_port))
         try:
             Var.driver.init()
         except:

@@ -44,7 +44,8 @@ class DevicesUtils(object):
             DeviceName = os.popen('ideviceinfo -u {} -k DeviceName'.format(self.__udid)).read()
             ProductVersion = os.popen('ideviceinfo -u {} -k ProductVersion'.format(self.__udid)).read()
             ProducName = os.popen('ideviceinfo -u {} -k ProducName'.format(self.__udid)).read()
-            if 'ideviceinfo' not in DeviceName:
+
+            if DeviceName:
                 device_type = DeviceName.replace(' ', '_')
             else:
                 device_type = self.__platformName
@@ -61,7 +62,7 @@ class DevicesUtils(object):
             devices.pop(0)
             while "" in devices:
                 devices.remove("")
-        elif self.__platformName in 'ios':
+        else:
             pipe = os.popen(cmd)
             deviceinfo = pipe.read()
             r = re.compile(r'\[(.*?)\]', re.S)

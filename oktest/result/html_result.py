@@ -216,10 +216,10 @@ class HTMLTestRunner(Template_mixin):
             tabdiv = tabdiv
         )
         resource = os.path.join(os.path.split(os.path.abspath(__file__))[0], "resource")
-        shutil.copy(os.path.join(resource,"css.css"), os.path.join(result.Report,'resource'))
-        shutil.copy(os.path.join(resource,"js.js"), os.path.join(result.Report,'resource'))
-        shutil.copy(os.path.join(resource, "hide.png"), os.path.join(result.Report, 'resource'))
-        shutil.copy(os.path.join(resource, "show.png"), os.path.join(result.Report, 'resource'))
+        shutil.copy(os.path.join(resource,"css.css"), os.path.join(result.report,'resource'))
+        shutil.copy(os.path.join(resource,"js.js"), os.path.join(result.report,'resource'))
+        shutil.copy(os.path.join(resource, "hide.png"), os.path.join(result.report, 'resource'))
+        shutil.copy(os.path.join(resource, "show.png"), os.path.join(result.report, 'resource'))
         self.stream.write(output.encode('utf-8'))
 
     def _getReportAttributes(self,result,starttime,stoptime):
@@ -344,10 +344,10 @@ class HTMLTestRunner(Template_mixin):
         dataId = testinfo.dataId
         steps = testinfo.stdout
         err = '\n' + testinfo.test_exception_info if testinfo.test_exception_info else 'Nothing'
-        if testinfo.SnapshotDir and os.path.exists(testinfo.SnapshotDir):
-            path = testinfo.SnapshotDir.split(testinfo.module_name, 1)[-1]
+        if testinfo.snapshot_dir and os.path.exists(testinfo.snapshot_dir):
+            path = testinfo.snapshot_dir.split(testinfo.module_name, 1)[-1]
             steps = ""
-            result = os.path.join(testinfo.SnapshotDir,'result.log')
+            result = os.path.join(testinfo.snapshot_dir,'result.log')
             if os.path.isfile(result):
                 file_list = []
                 with open(result, 'r') as f:

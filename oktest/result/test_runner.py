@@ -39,7 +39,7 @@ class TestRunner(unittest.TextTestRunner):
         starTime = time.time()
         test(result)
         stopTime = time.time()
-        html_file = os.path.join(Var.Report,'report.html')
+        html_file = os.path.join(Var.report,'report.html')
         fp = open(html_file,'wb')
         html_runner = HTMLTestRunner(stream=fp,
                                      title='Test Results',
