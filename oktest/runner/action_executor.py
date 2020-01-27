@@ -5,71 +5,13 @@ from oktest.common import Var
 from oktest.drivers.driver_base import DriverBase
 from oktest.common.decorator import keywords
 from oktest.utils.opcv_utils import OpencvUtils
+from oktest.runner.action_keyword import ActionKeyWord
+
 try:
     from Scripts import *
 except Exception:
     pass
 
-
-class Action(object):
-    VARIABLES = 'variables'
-    SCRIPTS = 'Scripts'
-    CALL = 'call'
-    COMMON = 'Common'
-
-    # APP 操作
-    STARTAPP = 'startApp'
-    STOPAPP = 'stopApp'
-
-    # 手势
-    TAP = 'tap'
-    DOUBLETAP = 'doubleTap'
-    PRESS = 'press'
-    PINCHOPEN = 'pinchOpen'  # 待实现
-    PINCHCLOSE = 'pinchClose'  # 待实现
-    ROTATE = 'rotate'  # 待实现
-    DRAG = 'drag'  # 待实现
-
-    # only Android
-    GOBACK = 'goBack'
-    ADB = 'adb'
-    ADBSHELL = 'adbShell'  # 待实现
-
-    # 滑动
-    SWIPEUP = 'swipeUp'
-    SWIPEDOWN = 'swipeDown'
-    SWIPELEFT = 'swipeLeft'
-    SWIPERIGHT = 'swipeRight'
-    SWIPE = 'swipe'
-
-    # 元素操作
-    RECT = 'rect'  # 待实现
-    GETTEXT = 'getText'
-    CLICK = 'click'
-    CHECKT = 'check'
-    INPUT = 'input'
-
-    # 逻辑判断
-    IF = 'if'
-    ELIF = 'elif'
-    ELSE = 'else'
-    IFCHECK = 'ifcheck'
-    ELIFCHECK = 'elifcheck'
-    IFIOS = 'ifiOS'
-    IFANDROID = 'ifAndroid'
-
-    # 等待
-    SLEEP = 'sleep'
-
-    # 断言
-    ASSERT = 'assert'
-
-    # 循环
-    WHILE = 'while'
-
-    BREAK = 'break'
-
-    SETGV = 'setGV'
 
 class ActionExecutor(object):
 
@@ -493,73 +435,106 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        if step.action == Action.STARTAPP:
+        if step.action == ActionKeyWord.STARTAPP:
             action = self.__action_start_app(step)
-        elif step.action == Action.STOPAPP:
+
+        elif step.action == ActionKeyWord.STOPAPP:
             action = self.__action_stop_app(step)
-        elif step.action == Action.ADB:
+
+        elif step.action == ActionKeyWord.ADB:
             action = self.__action_adb(step)
-        elif step.action == Action.GOBACK:
+
+        elif step.action == ActionKeyWord.GOBACK:
             action = self.__action_goback(step)
-        elif step.action == Action.TAP:
+
+        elif step.action == ActionKeyWord.TAP:
             action = self.__action_tap(step)
-        elif step.action == Action.DOUBLETAP:
+
+        elif step.action == ActionKeyWord.DOUBLETAP:
             action = self.__action_doubleTap(step)
-        elif step.action == Action.PRESS:
+
+        elif step.action == ActionKeyWord.PRESS:
             action = self.__action_press(step)
-        elif step.action == Action.PINCHOPEN:
+
+        elif step.action == ActionKeyWord.PINCHOPEN:
             action = self.__action_pinch_open(step)
-        elif step.action == Action.PINCHCLOSE:
+
+        elif step.action == ActionKeyWord.PINCHCLOSE:
             action = self.__action_pinch_close(step)
-        elif step.action == Action.ROTATE:
+
+        elif step.action == ActionKeyWord.ROTATE:
             action = self.__action_rotate(step)
-        elif step.action == Action.DRAG:
+
+        elif step.action == ActionKeyWord.DRAG:
             action = self.__action_drag(step)
-        elif step.action == Action.SWIPEUP:
+
+        elif step.action == ActionKeyWord.SWIPEUP:
             action = self.__action_swipe_up(step)
-        elif step.action == Action.SWIPEDOWN:
+
+        elif step.action == ActionKeyWord.SWIPEDOWN:
             action = self.__action_swipe_down(step)
-        elif step.action == Action.SWIPELEFT:
+
+        elif step.action == ActionKeyWord.SWIPELEFT:
             action = self.__action_swipe_left(step)
-        elif step.action == Action.SWIPERIGHT:
+
+        elif step.action == ActionKeyWord.SWIPERIGHT:
             action = self.__action_swipe_right(step)
-        elif step.action == Action.SWIPE:
+
+        elif step.action == ActionKeyWord.SWIPE:
             action = self.__action_swipe(step)
-        elif step.action == Action.RECT:
+
+        elif step.action == ActionKeyWord.RECT:
             action = self.__action_rect(step)
-        elif step.action == Action.CLICK:
+
+        elif step.action == ActionKeyWord.CLICK:
             action = self.__action_click(step)
-        elif step.action == Action.CHECKT:
+
+        elif step.action == ActionKeyWord.CHECKT:
             action = self.__action_check(step)
-        elif step.action == Action.INPUT:
+
+        elif step.action == ActionKeyWord.INPUT:
             action = self.__action_input(step)
-        elif step.action == Action.CALL:
+
+        elif step.action == ActionKeyWord.CALL:
             action = self.__action_call(step)
-        elif step.action == Action.VARIABLES:
+
+        elif step.action == 'variables':
             action = self.__action_var(step)
-        elif step.action == Action.IFCHECK:
+
+        elif step.action == ActionKeyWord.IFCHECK:
             action = self.__action_ifcheck(step)
-        elif step.action == Action.ELIFCHECK:
+
+        elif step.action == ActionKeyWord.ELIFCHECK:
             action = self.__action_elifcheck(step)
-        elif step.action == Action.IFIOS:
+
+        elif step.action == ActionKeyWord.IFIOS:
             action = self.__action_ifiOS(step)
-        elif step.action == Action.IFANDROID:
+
+        elif step.action == ActionKeyWord.IFANDROID:
             action = self.__action_ifAndroid(step)
-        elif step.action == Action.IF:
+
+        elif step.action == ActionKeyWord.IF:
             action = self.__action_if(step)
-        elif step.action == Action.ELIF:
+
+        elif step.action == ActionKeyWord.ELIF:
             action = self.__action_elif(step)
-        elif step.action == Action.ELSE:
+
+        elif step.action == ActionKeyWord.ELSE:
             action = self.__action_else(step)
-        elif step.action == Action.SLEEP:
+
+        elif step.action == ActionKeyWord.SLEEP:
             action = self.__action_sleep(step)
-        elif step.action == Action.ASSERT:
+
+        elif step.action == ActionKeyWord.ASSERT:
             action = self.__action_assert(step)
-        elif step.action == Action.WHILE:
+
+        elif step.action == ActionKeyWord.WHILE:
             action = self.__action_while(step)
-        elif step.action == Action.BREAK:
+
+        elif step.action == ActionKeyWord.BREAK:
             action = self.__action_break(step)
-        elif step.action == Action.SETGV:
+
+        elif step.action == 'setGV':
             action = self.__action_setGV(step)
         else:
             raise SyntaxError(step)

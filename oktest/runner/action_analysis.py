@@ -2,72 +2,13 @@
 # -*- coding: utf-8 -*-
 import re
 from oktest.common import Var, Dict
+from oktest.runner.action_keyword import ActionKeyWord
 
 try:
     from Scripts import *
 except Exception:
     pass
 
-
-class Action(object):
-    VARIABLES = r'\$\{\w+\}'
-    SCRIPTS = 'Scripts'
-    CALL = 'call'
-    COMMON = 'Common'
-
-    # APP 操作
-    STARTAPP = 'startApp'
-    STOPAPP = 'stopApp'
-
-    # 手势
-    TAP = 'tap'
-    DOUBLETAP = 'doubleTap'
-    PRESS = 'press'
-    PINCHOPEN = 'pinchOpen' # 待实现
-    PINCHCLOSE = 'pinchClose' # 待实现
-    ROTATE = 'rotate' # 待实现
-    DRAG = 'drag' # 待实现
-
-    # only Android
-    GOBACK = 'goBack'
-    ADB = 'adb'
-    ADBSHELL = 'adbShell' # 待实现
-
-    # 滑动
-    SWIPEUP = 'swipeUp'
-    SWIPEDOWN = 'swipeDown'
-    SWIPELEFT = 'swipeLeft'
-    SWIPERIGHT = 'swipeRight'
-    SWIPE = 'swipe'
-
-    # 元素操作
-    RECT = 'rect' # 待实现
-    GETTEXT = 'getText'
-    CLICK = 'click'
-    CHECKT = 'check'
-    INPUT = 'input'
-
-    # 逻辑判断
-    IF = 'if'
-    ELIF = 'elif'
-    ELSE = 'else'
-    IFCHECK = 'ifcheck'
-    ELIFCHECK = 'elifcheck'
-    IFIOS = 'ifiOS'
-    IFANDROID = 'ifAndroid'
-
-    # 等待
-    SLEEP = 'sleep'
-
-    # 断言
-    ASSERT = 'assert'
-
-    # 循环
-    WHILE = 'while'
-
-    BREAK = 'break'
-
-    SETGV = r'\$\.setGV'
 
 class ActionAnalysis(object):
 
@@ -310,7 +251,7 @@ class ActionAnalysis(object):
             from oktest.runner.action_executor import ActionExecutor
             action = ActionExecutor()
             var_content = action._action_getText(var_step)
-        elif re.match(Action.SCRIPTS, var_content):
+        elif re.match(ActionKeyWord.SCRIPTS, var_content):
             scripts_func = var_content.split('(')[0]
             scripst_content = self.__get_contents(var_content)
             scripst_content = self.__join_value(scripst_content, ',')
@@ -355,18 +296,18 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.CALL).strip()
+        origin_content = step.lstrip(ActionKeyWord.CALL).strip()
         if not origin_content:
             raise SyntaxError(step)
         call_func = origin_content.split('(')[0]
         call_content = self.__get_contents(origin_content)
-        if origin_content.startswith(Action.SCRIPTS):
-            call_type = Action.SCRIPTS
+        if origin_content.startswith(ActionKeyWord.SCRIPTS):
+            call_type = ActionKeyWord.SCRIPTS
             call_content = self.__join_value(call_content, ',')
             call_func = '{}({})'.format(call_func, call_content)
             origin_step = 'call {}'.format(call_func)
         else:
-            call_type = Action.COMMON
+            call_type = ActionKeyWord.COMMON
             Var.common_var = {}
             if call_func not in Var.common_func.keys():
                 raise NameError('name "{}" is not defined'.format(call_func))
@@ -378,7 +319,7 @@ class ActionAnalysis(object):
             origin_step = "call {}({})".format(call_func, object_content)
 
         action_dict = Dict({
-            'action': Action.CALL,
+            'action': ActionKeyWord.CALL,
             'type': call_type,
             'func': call_func,
             'origin_step': origin_step
@@ -390,13 +331,13 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.STARTAPP).strip()
+        origin_content = step.lstrip(ActionKeyWord.STARTAPP).strip()
         startApp_content = self.__get_content(origin_content)
         if len(startApp_content) > 1:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.STARTAPP, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.STARTAPP, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.STARTAPP,
+            'action': ActionKeyWord.STARTAPP,
             'activity': startApp_content[0] if startApp_content else '',
             'origin_step': origin_step
         })
@@ -407,13 +348,13 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.STOPAPP).strip()
+        origin_content = step.lstrip(ActionKeyWord.STOPAPP).strip()
         stopApp_content = self.__get_content(origin_content)
         if len(stopApp_content) > 1:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.STARTAPP, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.STARTAPP, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.STOPAPP,
+            'action': ActionKeyWord.STOPAPP,
             'package': stopApp_content[0] if stopApp_content else '',
             'origin_step': origin_step
         })
@@ -424,14 +365,14 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.TAP).strip()
+        origin_content = step.lstrip(ActionKeyWord.TAP).strip()
         tap_content = self.__get_content(origin_content)
         if len(tap_content) != 2:
             raise SyntaxError(step)
         x, y = tap_content
-        origin_step = '{} {}'.format(Action.TAP, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.TAP, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.TAP,
+            'action': ActionKeyWord.TAP,
             'location': {
                 'x': int(x),
                 'y': int(y)
@@ -445,14 +386,14 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.DOUBLETAP).strip()
+        origin_content = step.lstrip(ActionKeyWord.DOUBLETAP).strip()
         doubleTap_content = self.__get_content(origin_content)
         if len(doubleTap_content) != 2:
             raise SyntaxError(step)
         x, y = doubleTap_content
-        origin_step = '{} {}'.format(Action.DOUBLETAP, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.DOUBLETAP, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.DOUBLETAP,
+            'action': ActionKeyWord.DOUBLETAP,
             'location': {
                 'x': int(x),
                 'y': int(y)
@@ -466,7 +407,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.PRESS).strip()
+        origin_content = step.lstrip(ActionKeyWord.PRESS).strip()
         press_content = self.__get_content(origin_content)
         if len(press_content) == 2:
             x, y = press_content
@@ -475,9 +416,9 @@ class ActionAnalysis(object):
             x, y, s = press_content
         else:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.PRESS, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.PRESS, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.PRESS,
+            'action': ActionKeyWord.PRESS,
             'location': {
                 'x': int(x),
                 'y': int(y)
@@ -492,7 +433,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.SWIPEUP).strip()
+        origin_content = step.lstrip(ActionKeyWord.SWIPEUP).strip()
         swipeUp_content = self.__get_content(origin_content)
         if not swipeUp_content:
             during = 3
@@ -500,9 +441,9 @@ class ActionAnalysis(object):
             during = swipeUp_content[0]
         else:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.SWIPEUP, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.SWIPEUP, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.SWIPEUP,
+            'action': ActionKeyWord.SWIPEUP,
             'during': int(during),
             'origin_step': origin_step
         })
@@ -513,7 +454,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.SWIPEDOWN).strip()
+        origin_content = step.lstrip(ActionKeyWord.SWIPEDOWN).strip()
         swipeDown_content = self.__get_content(origin_content)
         if not swipeDown_content:
             during = 3
@@ -521,9 +462,9 @@ class ActionAnalysis(object):
             during = swipeDown_content[0]
         else:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.SWIPEDOWN, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.SWIPEDOWN, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.SWIPEDOWN,
+            'action': ActionKeyWord.SWIPEDOWN,
             'during': int(during),
             'origin_step': origin_step
         })
@@ -534,7 +475,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.SWIPELEFT).strip()
+        origin_content = step.lstrip(ActionKeyWord.SWIPELEFT).strip()
         swipeLeft_content = self.__get_content(origin_content)
         if not swipeLeft_content:
             during = 3
@@ -542,9 +483,9 @@ class ActionAnalysis(object):
             during = swipeLeft_content[0]
         else:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.SWIPELEFT, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.SWIPELEFT, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.SWIPELEFT,
+            'action': ActionKeyWord.SWIPELEFT,
             'during': int(during),
             'origin_step': origin_step
         })
@@ -555,7 +496,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.SWIPERIGHT).strip()
+        origin_content = step.lstrip(ActionKeyWord.SWIPERIGHT).strip()
         swipeRight_content = self.__get_content(origin_content)
         if not swipeRight_content:
             during = 3
@@ -563,9 +504,9 @@ class ActionAnalysis(object):
             during = swipeRight_content[0]
         else:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.SWIPERIGHT, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.SWIPERIGHT, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.SWIPERIGHT,
+            'action': ActionKeyWord.SWIPERIGHT,
             'during': int(during),
             'origin_step': origin_step
         })
@@ -576,7 +517,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.SWIPE).strip()
+        origin_content = step.lstrip(ActionKeyWord.SWIPE).strip()
         swipe_content = self.__get_content(origin_content)
         if len(swipe_content) == 4:
             during = 3
@@ -585,9 +526,9 @@ class ActionAnalysis(object):
             fromx, fromy, tox, toy, during = swipe_content
         else:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.SWIPE, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.SWIPE, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.SWIPE,
+            'action': ActionKeyWord.SWIPE,
             'location': {
                 'fromx': int(fromx),
                 'fromy': int(fromy),
@@ -605,9 +546,9 @@ class ActionAnalysis(object):
         :return:
         """
         action_dict = Dict({
-            'action': Action.GOBACK,
+            'action': ActionKeyWord.GOBACK,
             'cmd': 'shell input keyevent 4',
-            'origin_step': Action.GOBACK
+            'origin_step': ActionKeyWord.GOBACK
         })
         return action_dict
 
@@ -616,13 +557,13 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.ADB).strip()
+        origin_content = step.lstrip(ActionKeyWord.ADB).strip()
         adb_content = self.__get_content(origin_content)
         if len(adb_content) != 1:
             raise SyntaxError(step)
-        origin_step = '{} {}'.format(Action.ADB, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.ADB, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.ADB,
+            'action': ActionKeyWord.ADB,
             'cmd': adb_content[0],
             'origin_step': origin_step
         })
@@ -633,7 +574,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        keyword = self.__get_keyword(Action.CLICK, step)
+        keyword = self.__get_keyword(ActionKeyWord.CLICK, step)
         origin_content = step.lstrip(keyword).strip()
         click_index = self.__get_index(keyword)
         click_content = self.__get_content(origin_content)
@@ -641,7 +582,7 @@ class ActionAnalysis(object):
             raise SyntaxError(step)
         origin_step = "{} {}".format(keyword, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.CLICK,
+            'action': ActionKeyWord.CLICK,
             'element': click_content[0],
             'index': click_index,
             'origin_step': origin_step
@@ -653,7 +594,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        keyword = self.__get_keyword(Action.CHECKT, step)
+        keyword = self.__get_keyword(ActionKeyWord.CHECKT, step)
         origin_content = step.lstrip(keyword).strip()
         check_index = self.__get_index(keyword)
         check_content = self.__get_content(origin_content)
@@ -661,7 +602,7 @@ class ActionAnalysis(object):
             raise SyntaxError(step)
         origin_step = "{} {}".format(keyword, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.CHECKT,
+            'action': ActionKeyWord.CHECKT,
             'element': check_content[0],
             'index': check_index,
             'origin_step': origin_step
@@ -673,7 +614,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        keyword = self.__get_keyword(Action.INPUT, step)
+        keyword = self.__get_keyword(ActionKeyWord.INPUT, step)
         origin_content = step.lstrip(keyword).strip()
         input_index = self.__get_index(keyword)
         input_content = self.__get_content(origin_content)
@@ -681,7 +622,7 @@ class ActionAnalysis(object):
             raise SyntaxError(step)
         origin_step = "{} {}".format(keyword, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.INPUT,
+            'action': ActionKeyWord.INPUT,
             'element': input_content[0],
             'content': input_content[1],
             'index': input_index,
@@ -705,7 +646,7 @@ class ActionAnalysis(object):
             raise SyntaxError(step)
         origin_step = "$.getText({})".format(origin_content)
         action_dict = Dict({
-            'action': Action.GETTEXT,
+            'action': ActionKeyWord.GETTEXT,
             'element': getText_content[0],
             'index': index,
             'origin_step': origin_step
@@ -717,11 +658,11 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.IF).strip()
+        origin_content = step.lstrip(ActionKeyWord.IF).strip()
         if_content = self.__get_replace_string(origin_content)
-        origin_step = '{} {}'.format(Action.IF, if_content)
+        origin_step = '{} {}'.format(ActionKeyWord.IF, if_content)
         action_dict = Dict({
-            'action': Action.IF,
+            'action': ActionKeyWord.IF,
             'content': if_content,
             'origin_step': origin_step
         })
@@ -732,11 +673,11 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.ELIF).strip()
+        origin_content = step.lstrip(ActionKeyWord.ELIF).strip()
         elif_content = self.__get_replace_string(origin_content)
-        origin_step = '{} {}'.format(Action.ELIF, elif_content)
+        origin_step = '{} {}'.format(ActionKeyWord.ELIF, elif_content)
         action_dict = Dict({
-            'action': Action.ELIF,
+            'action': ActionKeyWord.ELIF,
             'content': elif_content,
             'origin_step': origin_step
         })
@@ -747,7 +688,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        keyword = self.__get_keyword(Action.IFCHECK, step)
+        keyword = self.__get_keyword(ActionKeyWord.IFCHECK, step)
         origin_content = step.lstrip(keyword).strip()
         ifcheck_index = self.__get_index(keyword)
         ifcheck_content = self.__get_content(origin_content)
@@ -755,7 +696,7 @@ class ActionAnalysis(object):
             raise SyntaxError(step)
         origin_step = "{} {}".format(keyword, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.IFCHECK,
+            'action': ActionKeyWord.IFCHECK,
             'element': ifcheck_content[0],
             'index': ifcheck_index,
             'origin_step': origin_step
@@ -767,7 +708,7 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        keyword = self.__get_keyword(Action.ELIFCHECK, step)
+        keyword = self.__get_keyword(ActionKeyWord.ELIFCHECK, step)
         origin_content = step.lstrip(keyword).strip()
         elifcheck_index = self.__get_index(keyword)
         elifcheck_content = self.__get_content(origin_content)
@@ -775,7 +716,7 @@ class ActionAnalysis(object):
             raise SyntaxError(step)
         origin_step = "{} {}".format(keyword, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.ELIFCHECK,
+            'action': ActionKeyWord.ELIFCHECK,
             'element': elifcheck_content[0],
             'index': elifcheck_index,
             'origin_step': origin_step
@@ -788,8 +729,8 @@ class ActionAnalysis(object):
         :return:
         """
         action_dict = Dict({
-            'action': Action.IFIOS,
-            'origin_step': Action.IFIOS
+            'action': ActionKeyWord.IFIOS,
+            'origin_step': ActionKeyWord.IFIOS
         })
         return action_dict
 
@@ -799,8 +740,8 @@ class ActionAnalysis(object):
         :return:
         """
         action_dict = Dict({
-            'action': Action.IFANDROID,
-            'origin_step': Action.IFANDROID
+            'action': ActionKeyWord.IFANDROID,
+            'origin_step': ActionKeyWord.IFANDROID
         })
         return action_dict
 
@@ -812,8 +753,8 @@ class ActionAnalysis(object):
         if len(step.strip()) != 4:
             raise SyntaxError(step)
         action_dict = Dict({
-            'action': Action.ELSE,
-            'origin_step': Action.ELSE
+            'action': ActionKeyWord.ELSE,
+            'origin_step': ActionKeyWord.ELSE
         })
         return action_dict
 
@@ -822,14 +763,14 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.SLEEP).strip()
+        origin_content = step.lstrip(ActionKeyWord.SLEEP).strip()
         sleep_content = self.__get_content(origin_content)
         if len(sleep_content) != 1:
             raise SyntaxError(step)
         duration = int(sleep_content[0])
-        origin_step = '{} {}'.format(Action.SLEEP, self.__get_origincontent(origin_content))
+        origin_step = '{} {}'.format(ActionKeyWord.SLEEP, self.__get_origincontent(origin_content))
         action_dict = Dict({
-            'action': Action.SLEEP,
+            'action': ActionKeyWord.SLEEP,
             'duration': duration,
             'origin_step': origin_step
         })
@@ -840,11 +781,11 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.ASSERT).strip()
+        origin_content = step.lstrip(ActionKeyWord.ASSERT).strip()
         assert_content = self.__get_replace_string(origin_content)
-        origin_step = '{} {}'.format(Action.ASSERT, assert_content)
+        origin_step = '{} {}'.format(ActionKeyWord.ASSERT, assert_content)
         action_dict = Dict({
-            'action': Action.ASSERT,
+            'action': ActionKeyWord.ASSERT,
             'content': assert_content,
             'origin_step': origin_step
         })
@@ -855,11 +796,11 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        origin_content = step.lstrip(Action.WHILE).strip()
+        origin_content = step.lstrip(ActionKeyWord.WHILE).strip()
         while_content = self.__get_replace_string(origin_content)
-        origin_step = '{} {}'.format(Action.WHILE, while_content)
+        origin_step = '{} {}'.format(ActionKeyWord.WHILE, while_content)
         action_dict = Dict({
-            'action': Action.WHILE,
+            'action': ActionKeyWord.WHILE,
             'content': while_content,
             'origin_step': origin_step
         })
@@ -873,8 +814,8 @@ class ActionAnalysis(object):
         if len(step.strip()) != 5:
             raise SyntaxError(step)
         action_dict = Dict({
-            'action': Action.BREAK,
-            'origin_step': Action.BREAK
+            'action': ActionKeyWord.BREAK,
+            'origin_step': ActionKeyWord.BREAK
         })
         return action_dict
 
@@ -903,91 +844,91 @@ class ActionAnalysis(object):
         :param step:
         :return:
         """
-        if re.match(Action.VARIABLES, step):
+        if re.match(ActionKeyWord.VARIABLES, step):
             action = self.__action_variables(step)
 
-        elif re.match(Action.CALL, step):
+        elif re.match(ActionKeyWord.CALL, step):
             action = self.__action_call(step)
 
-        elif re.match(Action.STARTAPP, step):
+        elif re.match(ActionKeyWord.STARTAPP, step):
             action = self.__action_startApp(step)
 
-        elif re.match(Action.STOPAPP, step):
+        elif re.match(ActionKeyWord.STOPAPP, step):
             action = self.__action_stopApp(step)
 
-        elif re.match(Action.TAP, step):
+        elif re.match(ActionKeyWord.TAP, step):
             action = self.__action_tap(step)
 
-        elif re.match(Action.DOUBLETAP, step):
+        elif re.match(ActionKeyWord.DOUBLETAP, step):
             action = self.__action_doubleTap(step)
 
-        elif re.match(Action.PRESS, step):
+        elif re.match(ActionKeyWord.PRESS, step):
             action = self.__action_press(step)
 
-        elif re.match(Action.SWIPEUP, step):
+        elif re.match(ActionKeyWord.SWIPEUP, step):
             action = self.__action_swipeUp(step)
 
-        elif re.match(Action.SWIPEDOWN, step):
+        elif re.match(ActionKeyWord.SWIPEDOWN, step):
             action = self.__action_swipeDown(step)
 
-        elif re.match(Action.SWIPELEFT, step):
+        elif re.match(ActionKeyWord.SWIPELEFT, step):
             action = self.__action_swipeLeft(step)
 
-        elif re.match(Action.SWIPERIGHT, step):
+        elif re.match(ActionKeyWord.SWIPERIGHT, step):
             action = self.__action_swipeRight(step)
 
-        elif re.match(Action.SWIPE, step):
+        elif re.match(ActionKeyWord.SWIPE, step):
             action = self.__action_swipe(step)
 
-        elif re.match(Action.GOBACK, step):
+        elif re.match(ActionKeyWord.GOBACK, step):
             action = self.__action_goBack(step)
 
-        elif re.match(Action.ADB, step):
+        elif re.match(ActionKeyWord.ADB, step):
             action = self.__action_adb(step)
 
-        elif re.match(Action.CLICK, step):
+        elif re.match(ActionKeyWord.CLICK, step):
             action = self.__action_click(step)
 
-        elif re.match(Action.CHECKT, step):
+        elif re.match(ActionKeyWord.CHECKT, step):
             action = self.__action_check(step)
 
-        elif re.match(Action.INPUT, step):
+        elif re.match(ActionKeyWord.INPUT, step):
             action = self.__action_input(step)
 
-        elif re.match(Action.IFCHECK, step):
+        elif re.match(ActionKeyWord.IFCHECK, step):
             action = self.__action_ifcheck(step)
 
-        elif re.match(Action.ELIFCHECK, step):
+        elif re.match(ActionKeyWord.ELIFCHECK, step):
             action = self.__action_elifcheck(step)
 
-        elif re.match(Action.IFIOS, step):
+        elif re.match(ActionKeyWord.IFIOS, step):
             action = self.__action_ifiOS(step)
 
-        elif re.match(Action.IFANDROID, step):
+        elif re.match(ActionKeyWord.IFANDROID, step):
             action = self.__action_ifAndroid(step)
 
-        elif re.match(Action.IF, step):
+        elif re.match(ActionKeyWord.IF, step):
             action = self.__action_if(step)
 
-        elif re.match(Action.ELIF, step):
+        elif re.match(ActionKeyWord.ELIF, step):
             action = self.__action_elif(step)
 
-        elif re.match(Action.ELSE, step):
+        elif re.match(ActionKeyWord.ELSE, step):
             action = self.__action_else(step)
 
-        elif re.match(Action.SLEEP, step):
+        elif re.match(ActionKeyWord.SLEEP, step):
             action = self.__action_sleep(step)
 
-        elif re.match(Action.ASSERT, step):
+        elif re.match(ActionKeyWord.ASSERT, step):
             action = self.__action_assert(step)
 
-        elif re.match(Action.WHILE, step):
+        elif re.match(ActionKeyWord.WHILE, step):
             action = self.__action_while(step)
 
-        elif re.match(Action.BREAK, step):
+        elif re.match(ActionKeyWord.BREAK, step):
             action = self.__action_break(step)
 
-        elif re.match(Action.SETGV, step):
+        elif re.match(ActionKeyWord.SETGV, step):
             action = self.__action_setGV(step)
         else:
             raise SyntaxError(step)
