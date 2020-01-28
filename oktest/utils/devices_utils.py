@@ -41,11 +41,9 @@ class DevicesUtils(object):
                 self.__udid = devices[0]
             elif not self.__udid:
                 raise Exception("Can‘t find device!")
-            DeviceName = os.popen('ideviceinfo -u {} -k DeviceName'.format(self.__udid)).read()
-            ProductVersion = os.popen('ideviceinfo -u {} -k ProductVersion'.format(self.__udid)).read()
-            ProducName = os.popen('ideviceinfo -u {} -k ProducName'.format(self.__udid)).read()
 
-            if DeviceName:
+            if self.__udid in devices:
+                DeviceName = os.popen('ideviceinfo -u {} -k DeviceName'.format(self.__udid)).read()
                 device_type = DeviceName.replace(' ', '_')
             else:
                 device_type = self.__platformName

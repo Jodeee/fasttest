@@ -39,8 +39,13 @@ class Project(object):
     def __init_config(self):
         self.config = analytical_file(os.path.join(self.ROOT, 'config.yaml'))
         for configK, configV in self.config.items():
-            if configK == 'platformName':
-                Var[configK] = configV.lower()
+            if configK == 'desiredcaps':
+                Var.desired_caps = configV[0]
+                for desiredcapsK, desiredcapsV in Var.desired_caps.items():
+                    if desiredcapsK == 'platformName':
+                        Var[desiredcapsK] = desiredcapsV.lower()
+                    else:
+                        Var[desiredcapsK] = desiredcapsV
             else:
                 Var[configK] = configV
         DriverBase.init()
@@ -121,25 +126,12 @@ class Project(object):
     def start(self):
 
         log_info('The project starts running...')
-        desired_caps = {}
-        desired_caps["platformName"] = Var.platformName
-        desired_caps["deviceName"] = Var.deviceName if Var.deviceName else Var.platformName
-        desired_caps["autoAcceptAlerts"] = Var.autoAcceptAlerts if Var.autoAcceptAlerts else False
-        desired_caps["reuse"] = Var.reuse if Var.reuse else 3
-        desired_caps["udid"] = Var.udid
-        desired_caps["app"] = Var.app
-        if Var.platformName in "android":
-            desired_caps["package"] = Var.package
-            desired_caps["activity"] = Var.activity
-        elif Var.platformName in "ios":
-            desired_caps["bundleId"] = Var.bundleId
-            
         server = ServerUtils()
         Var.device_port = server.get_device_port()
-        for k, v in desired_caps.items():
+        for k, v in Var.desired_caps.items():
             log_info('{}:{}'.format(k, v))
         server.start_server()
-        Var.driver = WebDriver(desired_caps, url='http://127.0.0.1:{}/wd/hub'.format(Var.device_port))
+        Var.driver = WebDriver(Var.desired_caps, url='http://127.0.0.1:{}/wd/hub'.format(Var.device_port))
         try:
             Var.driver.init()
         except:

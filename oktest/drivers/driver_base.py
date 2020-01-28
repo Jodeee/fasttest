@@ -27,7 +27,8 @@ class DriverBase(object):
         :return:
         """
         if Var.platformName in "ios":
-            Var.driver.init()
+            # Var.driver.init()
+            pass
         elif Var.platformName in "android":
             DriverAndroid.shell('shell am start -W {}'.format(activity))
 
@@ -39,7 +40,8 @@ class DriverBase(object):
         :return:
         """
         if Var.platformName in "ios":
-            Var.driver.init()
+            # Var.driver.init()
+            pass
         elif Var.platformName in "android":
             DriverAndroid.shell('shell am force-stop {}'.format(package))
 
