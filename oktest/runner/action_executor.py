@@ -456,11 +456,11 @@ class ActionExecutor(object):
         elif step.action == ActionKeyWord.PRESS:
             action = self.__action_press(step)
 
-        elif step.action == ActionKeyWord.PINCHOPEN:
-            action = self.__action_pinch_open(step)
-
-        elif step.action == ActionKeyWord.PINCHCLOSE:
-            action = self.__action_pinch_close(step)
+        # elif step.action == ActionKeyWord.PINCHOPEN:
+        #     action = self.__action_pinch_open(step)
+        #
+        # elif step.action == ActionKeyWord.PINCHCLOSE:
+        #     action = self.__action_pinch_close(step)
 
         elif step.action == ActionKeyWord.ROTATE:
             action = self.__action_rotate(step)
@@ -483,8 +483,8 @@ class ActionExecutor(object):
         elif step.action == ActionKeyWord.SWIPE:
             action = self.__action_swipe(step)
 
-        elif step.action == ActionKeyWord.RECT:
-            action = self.__action_rect(step)
+        # elif step.action == ActionKeyWord.RECT:
+        #     action = self.__action_rect(step)
 
         elif step.action == ActionKeyWord.CLICK:
             action = self.__action_click(step)

@@ -255,7 +255,7 @@ class ActionAnalysis(object):
             scripts_func = var_content.split('(')[0]
             scripst_content = self.__get_contents(var_content)
             scripst_content = self.__join_value(scripst_content, ',')
-            var_content = eval('{}({})'.format(scripts_func, scripst_content))
+            var_content = eval('{}({})'.format(scripts_func[8:], scripst_content))
         elif re.match(r'\$\.id', var_content):
             pattern_content = re.compile(r'\((.*)\)')
             id_content = re.findall(pattern_content, var_content)
@@ -306,6 +306,7 @@ class ActionAnalysis(object):
             call_content = self.__join_value(call_content, ',')
             call_func = '{}({})'.format(call_func, call_content)
             origin_step = 'call {}'.format(call_func)
+            call_func = call_func[8:]
         else:
             call_type = ActionKeyWord.COMMON
             Var.common_var = {}
