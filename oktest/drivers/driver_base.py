@@ -260,7 +260,7 @@ class DriverBase(object):
             raise Exception("Can't find element {}".format(element))
 
     @staticmethod
-    def get_element(element, timeout=5, interval=1, index=0):
+    def get_element(element, timeout=10, interval=1, index=0):
         """
         等待元素
         :param element:
@@ -269,6 +269,10 @@ class DriverBase(object):
         :param index:
         :return:
         """
+        if not timeout:
+            timeout = 10
+        if not interval:
+            interval = 1
         if Var.platformName in 'android':
             ex = futures.ThreadPoolExecutor(max_workers=4)
             worker_list = []
