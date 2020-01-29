@@ -7,7 +7,7 @@ import time
 import traceback
 import threading
 from macaca.webdriver import WebElement
-from oktest.common import *
+from fasttest.common import *
 
 def therading(func):
     def start(*args, **kwds):

@@ -6,7 +6,7 @@ import random
 import platform
 import traceback
 import subprocess
-from oktest.common import *
+from fasttest.common import *
 
 
 class ServerUtils(object):

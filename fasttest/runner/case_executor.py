@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from oktest.runner.action_analysis import ActionAnalysis
-from oktest.runner.action_executor import ActionExecutor
+from fasttest.runner.action_analysis import ActionAnalysis
+from fasttest.runner.action_executor import ActionExecutor
 
 class CaseExecutor(object):
 

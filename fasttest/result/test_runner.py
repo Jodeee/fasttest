@@ -4,9 +4,9 @@ import os
 import sys
 import time
 import unittest
-from oktest.common import Var
-from oktest.result.test_result import TestResult
-from oktest.result.html_result import HTMLTestRunner
+from fasttest.common import Var
+from fasttest.result.test_result import TestResult
+from fasttest.result.html_result import HTMLTestRunner
 
 
 class TestRunner(unittest.TextTestRunner):

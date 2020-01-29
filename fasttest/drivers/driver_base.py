@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import re
 from concurrent import futures
-from oktest.common import Var
-from oktest.drivers.driver_platform import DriveriOS
-from oktest.drivers.driver_platform import DriverAndroid
+from fasttest.common import Var
+from fasttest.drivers.driver_platform import DriveriOS
+from fasttest.drivers.driver_platform import DriverAndroid
 
 class DriverBase(object):
 

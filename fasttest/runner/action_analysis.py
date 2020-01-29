@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-from oktest.common import Var, Dict
-from oktest.runner.action_keyword import ActionKeyWord
+from fasttest.common import Var, Dict
+from fasttest.runner.action_keyword import ActionKeyWord
 
 try:
     from Scripts import *
@@ -248,7 +248,7 @@ class ActionAnalysis(object):
         origin_content = var_content
         if re.match(r'\$\.getText', var_content):
             var_step = self.__action_getText(var_content)
-            from oktest.runner.action_executor import ActionExecutor
+            from fasttest.runner.action_executor import ActionExecutor
             action = ActionExecutor()
             var_content = action._action_getText(var_step)
         elif re.match(ActionKeyWord.SCRIPTS, var_content):

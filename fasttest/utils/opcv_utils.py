@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import cv2
-from oktest.common import Var
+from fasttest.common import Var
 
 
 class OpencvUtils(object):

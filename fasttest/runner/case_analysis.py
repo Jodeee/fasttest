@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from oktest.common import log_info
-from oktest.runner.case_executor import CaseExecutor
+from fasttest.common import log_info
+from fasttest.runner.case_executor import CaseExecutor
 
 class CaseAnalysis(object):
 
