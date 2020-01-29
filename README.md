@@ -8,6 +8,7 @@
 
 ## 运行示例
 
+<video src="http://47.110.43.11/media/video/demo1080.mp4" controls="controls">您的浏览器不支持播放该视频！</video>
 ![image](http://47.110.43.11/media/image/demo1080.gif)
 
 
