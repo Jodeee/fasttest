@@ -8,14 +8,7 @@
 
 ## 运行示例
 
-<video width="320" height="240" controls="controls" autoplay="autoplay">
-  <source src="http://47.110.43.11/media/video/demo1080.mp4" type="video/mp4" />
-  <object data="http://47.110.43.11/media/video/demo1080.mp4" width="320" height="240">
-    <embed width="320" height="240" src="http://47.110.43.11/media/video/demo1080.mp4" />
-  </object>
-</video>
-
-![image](http://47.110.43.11/media/image/demo1080.gif)
+![image](http://47.110.43.11/media/image/1080.gif)
 
 
 
