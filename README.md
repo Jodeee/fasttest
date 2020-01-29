@@ -8,7 +8,7 @@
 
 ## 运行示例
 
-![](http://47.110.43.11/media/image/demo1080.gif)
+![image](http://47.110.43.11/media/image/demo1080.gif)
 
 
 
