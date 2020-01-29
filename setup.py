@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fasttest", # 软件包发行名称
-    version="0.0.3", # 软件包版本
+    version="0.0.4", # 软件包版本
     author="IMJIE", # 作者
     author_email="imjie@outlook.com", # 邮件
     keywords=('macaca','UI自动化','关键字自动化'),
@@ -24,11 +24,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Jodeee/fasttest",
     packages=setuptools.find_packages(),
-    data_files=[('fasttest/result/resource',
-                 ['fasttest/result/resource/css.css',
-                  'fasttest/result/resource/hide.png',
-                  'fasttest/result/resource/js.js',
-                  'fasttest/result/resource/show.png'])],
+    include_package_data=True,
+    package_data={'fasttest/result':['resource/*']},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
