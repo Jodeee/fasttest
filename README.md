@@ -5,11 +5,9 @@
 ![](https://img.shields.io/badge/python-3.7-green) ![](https://img.shields.io/badge/macaca-2.2.0-lightgrey)
 
 
-
 ## 运行示例
 
 ![image](http://47.110.43.11/media/image/demo1.gif)
-
 
 
 ## 更多帮助
