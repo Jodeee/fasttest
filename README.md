@@ -6,6 +6,20 @@
 
 
 ## 运行示例
+测试用例
+```
+module: OpenWebView
+skip: false
+description: 打开饿了么
+steps:
+  - input '搜索或输入网站名称' 'tb.ele.me/m?from=taobaoapp'
+  - click '定位失败'
+  - input '请输入地址' '西湖'
+  - click '西湖文化广场'
+  - check '美食'
+```
+
+运行示例
 
 ![image](http://47.110.43.11/media/image/demo1.gif)
 
