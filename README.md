@@ -1,6 +1,6 @@
 ## 框架介绍
 
-`fasttest` 在`macaca`的基础上做了一层关键字的封装与解析，目的在于保证执行效率的同时简化用例描述，目前除了常规的动作关键字以外，还支持模块级复用、自定义关键字等操作
+`fasttest` 在`macaca`的基础上做了一层关键字的封装与解析，极大得简化了测试用例描述。我们有丰富的行为关键字，而且支持关键字模块级复用，自定义关键字等操作
 
 ![](https://img.shields.io/badge/python-3.7-green) ![](https://img.shields.io/badge/macaca-2.2.0-lightgrey)
 
