@@ -34,6 +34,13 @@ class DriverAndroid(object):
         :return:
         '''
         try:
+            width = Var.driver.get_window_size()['width']
+            height = Var.driver.get_window_size()['height']
+            if x <= 1.0:
+                x = x * width
+            if y <= 1.0:
+                y = y * height
+
             Var.driver.touch('tap', { 'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
@@ -45,6 +52,13 @@ class DriverAndroid(object):
         :return:
         '''
         try:
+            width = Var.driver.get_window_size()['width']
+            height = Var.driver.get_window_size()['height']
+            if x <= 1.0:
+                x = x * width
+            if y <= 1.0:
+                y = y * height
+
             Var.driver.touch('doubleTap', { 'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
@@ -156,6 +170,16 @@ class DriverAndroid(object):
         :return:
         '''
         try:
+            width = Var.driver.get_window_size()['width']
+            height = Var.driver.get_window_size()['height']
+            if fromX <= 1.0:
+                fromX = fromX * width
+            if fromY <= 1.0:
+                fromY = fromY * height
+            if toX <= 1.0:
+                toX = toX * width
+            if toY <= 1.0:
+                toY = toY * height
             DriverAndroid.shell('shell input swipe {} {} {} {} {}'.format(fromX, fromY, toX, toY, during * 100))
         except:
             raise Exception(traceback.format_exc())
@@ -275,6 +299,13 @@ class DriveriOS(object):
         :return:
         '''
         try:
+            width = Var.driver.get_window_size()['width']
+            height = Var.driver.get_window_size()['height']
+            if x <= 1.0:
+                x = x * width
+            if y <= 1.0:
+                y = y * height
+
             Var.driver.touch('tap', {'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
@@ -286,6 +317,13 @@ class DriveriOS(object):
         :return:
         '''
         try:
+            width = Var.driver.get_window_size()['width']
+            height = Var.driver.get_window_size()['height']
+            if x <= 1.0:
+                x = x * width
+            if y <= 1.0:
+                y = y * height
+
             Var.driver.touch('doubleTap', {'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
@@ -395,6 +433,17 @@ class DriveriOS(object):
         :return:
         '''
         try:
+            width = Var.driver.get_window_size()['width']
+            height = Var.driver.get_window_size()['height']
+            if fromX <= 1.0:
+                fromX = fromX * width
+            if fromY <= 1.0:
+                fromY = fromY * height
+            if toX <= 1.0:
+                toX = toX * width
+            if toY <= 1.0:
+                toY = toY * height
+
             Var.driver.touch('drag', {'fromX': fromX, 'fromY': fromY, 'toX': toX, 'toY': toY, 'duration': during})
         except:
             raise Exception(traceback.format_exc())

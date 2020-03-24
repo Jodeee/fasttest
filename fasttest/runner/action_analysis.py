@@ -15,6 +15,18 @@ class ActionAnalysis(object):
     def __init__(self):
         self.variables = {}
 
+    def __switch_data(self, data):
+        """
+        :param data:
+        :return:
+        """
+        if isinstance(data, str):
+            try:
+                data = int(data)
+            except:
+                data = float(data)
+        return data
+
     def __get_varname(self, var):
         """
         获取变量名称
@@ -371,12 +383,14 @@ class ActionAnalysis(object):
         if len(tap_content) != 2:
             raise SyntaxError(step)
         x, y = tap_content
+        x = self.__switch_data(x)
+        y = self.__switch_data(y)
         origin_step = '{} {}'.format(ActionKeyWord.TAP, self.__get_origincontent(origin_content))
         action_dict = Dict({
             'action': ActionKeyWord.TAP,
             'location': {
-                'x': int(x),
-                'y': int(y)
+                'x': x,
+                'y': y
             },
             'origin_step': origin_step
         })
@@ -392,12 +406,14 @@ class ActionAnalysis(object):
         if len(doubleTap_content) != 2:
             raise SyntaxError(step)
         x, y = doubleTap_content
+        x = self.__switch_data(x)
+        y = self.__switch_data(y)
         origin_step = '{} {}'.format(ActionKeyWord.DOUBLETAP, self.__get_origincontent(origin_content))
         action_dict = Dict({
             'action': ActionKeyWord.DOUBLETAP,
             'location': {
-                'x': int(x),
-                'y': int(y)
+                'x': x,
+                'y': y
             },
             'origin_step': origin_step
         })
@@ -417,12 +433,14 @@ class ActionAnalysis(object):
             x, y, s = press_content
         else:
             raise SyntaxError(step)
+        x = self.__switch_data(x)
+        y = self.__switch_data(y)
         origin_step = '{} {}'.format(ActionKeyWord.PRESS, self.__get_origincontent(origin_content))
         action_dict = Dict({
             'action': ActionKeyWord.PRESS,
             'location': {
-                'x': int(x),
-                'y': int(y)
+                'x': x,
+                'y': y
             },
             'duration': int(s),
             'origin_step': origin_step
@@ -527,14 +545,18 @@ class ActionAnalysis(object):
             fromx, fromy, tox, toy, during = swipe_content
         else:
             raise SyntaxError(step)
+        fromx = self.__switch_data(fromx)
+        fromy = self.__switch_data(fromy)
+        tox = self.__switch_data(tox)
+        toy = self.__switch_data(toy)
         origin_step = '{} {}'.format(ActionKeyWord.SWIPE, self.__get_origincontent(origin_content))
         action_dict = Dict({
             'action': ActionKeyWord.SWIPE,
             'location': {
-                'fromx': int(fromx),
-                'fromy': int(fromy),
-                'tox': int(tox),
-                'toy': int(toy)
+                'fromx': fromx,
+                'fromy': fromy,
+                'tox': tox,
+                'toy': toy
             },
             'during': int(during),
             'origin_step': origin_step

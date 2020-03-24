@@ -64,7 +64,7 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.tap(int(step.location.x), int(step.location.y))
+        DriverBase.tap(step.location.x, step.location.y)
 
     @keywords
     def __action_doubleTap(self, step):
@@ -73,7 +73,7 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.doubleTap(int(step.location.x), int(step.location.y))
+        DriverBase.doubleTap(step.location.x, step.location.y)
 
     @keywords
     def __action_press(self, step):
@@ -82,7 +82,7 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.press(int(step.location.x), int(step.location.y), int(step.duration))
+        DriverBase.press(step.location.x, step.location.y, step.duration)
 
     @keywords
     def __action_pinch_open(self, step):
@@ -163,7 +163,7 @@ class ActionExecutor(object):
         fromy = step.location.fromy
         tox = step.location.tox
         toy = step.location.toy
-        DriverBase.swipe(int(fromx), int(fromy), int(tox), int(toy), int(step.during))
+        DriverBase.swipe(fromx, fromy, tox, toy, step.during)
 
     @keywords
     def __action_rect(self, step):
