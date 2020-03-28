@@ -7,7 +7,6 @@ import json
 import inspect
 import unittest
 import traceback
-from macaca.webdriver import WebDriver
 from fasttest.common import *
 from fasttest.utils import *
 from fasttest.runner.run_case import RunCase
@@ -18,16 +17,18 @@ from fasttest.result.test_runner import TestRunner
 class Project(object):
 
     def __init__(self):
+
         self.__init_project()
         self.__init_config()
         self.__init_logging()
         self.__analytical_testcase_file()
         self.__analytical_common_file()
-        self.__init_extensions()
+        self.__init_data()
         self.__init_images()
         self.__init_testcase_suite()
 
     def __init_project(self):
+
         for path in [path  for path in inspect.stack() if str(path[1]).endswith("runtest.py")]:
             self.ROOT = os.path.dirname(path[1])
             sys.path.append(self.ROOT)
@@ -37,32 +38,33 @@ class Project(object):
             Var.common_var = {} # common临时变量，call执行完后重置
 
     def __init_config(self):
+
         self.config = analytical_file(os.path.join(self.ROOT, 'config.yaml'))
         for configK, configV in self.config.items():
             if configK == 'desiredcaps':
                 Var.desired_caps = configV[0]
                 for desiredcapsK, desiredcapsV in Var.desired_caps.items():
-                    if desiredcapsK == 'platformName':
-                        Var[desiredcapsK] = desiredcapsV.lower()
-                    else:
-                        Var[desiredcapsK] = desiredcapsV
+                    Var[desiredcapsK] = desiredcapsV
             else:
                 Var[configK] = configV
         DriverBase.init()
 
 
-    def __init_extensions(self):
+    def __init_data(self):
+
         if os.path.exists(os.path.join(Var.ROOT,'data.json')):
             with open(os.path.join(Var.ROOT, 'data.json'), 'r', encoding='utf-8') as f:
                 dict = Dict(json.load(fp=f))
                 if dict:
-                    log_info('******************* analytical extensions *******************')
+                    log_info('******************* analytical data *******************')
                 for extensionsK, extensionsV in dict.items():
                     log_info('{}:{}'.format(extensionsK, extensionsV))
                     Var.extensions_var[extensionsK] = extensionsV
 
     def __init_images(self):
+
         if Var.extensions_var and Var.extensions_var['images']:
+            log_info('******************* analytical images *******************')
             images_dict = {}
             for images in Var.extensions_var['images']:
                 images_file = os.path.join(Var.ROOT, 'images/{}'.format(images))
@@ -74,6 +76,7 @@ class Project(object):
             log_info('image path:{}'.format(Var.extensions_var['images_file']))
 
     def __init_logging(self):
+
         devices = DevicesUtils(Var.platformName, Var.udid)
         Var.udid, deviceinfo = devices.device_info()
         report_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
@@ -86,6 +89,7 @@ class Project(object):
         log_init(Var.report)
 
     def __analytical_testcase_file(self):
+
         log_info('******************* analytical config *******************')
         for configK, configV in self.config.items():
             log_info('{}:{}'.format(configK, configV))
@@ -95,6 +99,7 @@ class Project(object):
         log_info('testcase:{}'.format(self.testcase))
 
     def __analytical_common_file(self):
+
         log_info('******************* analytical common *******************')
         Var.common_func = Dict()
         common_dir = os.path.join(Var.ROOT, "Common")
@@ -106,6 +111,7 @@ class Project(object):
         log_info('common:{}'.format(Var.common_func.keys()))
 
     def __load_common_func(self,rt ,files):
+
         for f in files:
             if not f.endswith('yaml'):
                 continue
@@ -114,6 +120,7 @@ class Project(object):
 
 
     def __init_testcase_suite(self):
+
         self.suite = []
         for case_path in self.testcase:
             testcase = analytical_file(case_path)
@@ -124,20 +131,10 @@ class Project(object):
             Var.testcase = None
 
     def start(self):
-
-        log_info('The project starts running...')
-        server = ServerUtils()
-        Var.device_port = server.get_device_port()
-        for k, v in Var.desired_caps.items():
-            log_info('{}:{}'.format(k, v))
+        log_info('******************* analytical desired capabilities *******************')
+        server = ServerUtils(Var.driver, Var.desired_caps)
         server.start_server()
-        Var.driver = WebDriver(Var.desired_caps, url='http://127.0.0.1:{}/wd/hub'.format(Var.device_port))
-        try:
-            Var.driver.init()
-        except:
-            # todo com.macaca.android.testing.test
-            server.stop_server()
-            raise Exception(traceback.format_exc())
+        Var.instance = server.start_connect()
 
         suite = unittest.TestSuite(tuple(self.suite))
         runner = TestRunner()

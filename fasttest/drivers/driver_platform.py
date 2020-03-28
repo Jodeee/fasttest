@@ -34,14 +34,14 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             if x <= 1.0:
                 x = x * width
             if y <= 1.0:
                 y = y * height
 
-            Var.driver.touch('tap', { 'x': x, 'y': y})
+            Var.instance.touch('tap', { 'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
 
@@ -52,14 +52,14 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             if x <= 1.0:
                 x = x * width
             if y <= 1.0:
                 y = y * height
 
-            Var.driver.touch('doubleTap', { 'x': x, 'y': y})
+            Var.instance.touch('doubleTap', { 'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
 
@@ -109,8 +109,8 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             DriverAndroid.shell(
                 'shell input swipe {} {} {} {} {}'.format(width / 2, height * 3 / 4, width / 2, height / 4, during * 100))
         except:
@@ -123,8 +123,8 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             DriverAndroid.shell(
                 'shell input swipe {} {} {} {} {}'.format(width / 2, height / 4, width / 2, height * 3 / 4, during * 100))
         except:
@@ -138,8 +138,8 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             DriverAndroid.shell(
                 'shell input swipe {} {} {} {} {}'.format(width * 3 / 4, height / 2, width / 4, height / 2, during * 100))
         except:
@@ -152,8 +152,8 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             DriverAndroid.shell(
                 'shell input swipe {} {} {} {} {}'.format(width / 4, height / 2, width * 3 / 4, height / 2, during * 100))
         except:
@@ -170,8 +170,8 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             if fromX <= 1.0:
                 fromX = fromX * width
             if fromY <= 1.0:
@@ -193,7 +193,7 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_id(id,int(timeout)*1000,int(interval)*1000)
+            elements = Var.instance.wait_for_elements_by_id(id,int(timeout)*1000,int(interval)*1000)
             return elements
         except:
             return None
@@ -207,7 +207,7 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_name(name,int(timeout)*1000,int(interval)*1000)
+            elements = Var.instance.wait_for_elements_by_name(name,int(timeout)*1000,int(interval)*1000)
             return elements
         except:
             return None
@@ -221,7 +221,7 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_xpath(xpath,int(timeout)*1000,int(interval)*1000)
+            elements = Var.instance.wait_for_elements_by_xpath(xpath,int(timeout)*1000,int(interval)*1000)
             return elements
         except:
             return None
@@ -235,7 +235,7 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_class_name(classname,int(timeout)*1000,int(interval)*1000)
+            elements = Var.instance.wait_for_elements_by_class_name(classname,int(timeout)*1000,int(interval)*1000)
             return elements
         except:
             return None
@@ -263,7 +263,7 @@ class DriverAndroid(object):
         :return:
         '''
         try:
-            Var.driver.clear()
+            Var.instance.clear()
         except:
             pass
 
@@ -299,14 +299,14 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             if x <= 1.0:
                 x = x * width
             if y <= 1.0:
                 y = y * height
 
-            Var.driver.touch('tap', {'x': x, 'y': y})
+            Var.instance.touch('tap', {'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
 
@@ -317,14 +317,14 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             if x <= 1.0:
                 x = x * width
             if y <= 1.0:
                 y = y * height
 
-            Var.driver.touch('doubleTap', {'x': x, 'y': y})
+            Var.instance.touch('doubleTap', {'x': x, 'y': y})
         except:
             raise Exception(traceback.format_exc())
 
@@ -373,9 +373,9 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
-            Var.driver.touch('drag', {'fromX': width / 2, 'fromY': height * 3 / 4, 'toX': width / 2, 'toY': height / 4,
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
+            Var.instance.touch('drag', {'fromX': width / 2, 'fromY': height * 3 / 4, 'toX': width / 2, 'toY': height / 4,
                                       'duration': during})
         except:
             raise Exception(traceback.format_exc())
@@ -387,9 +387,9 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
-            Var.driver.touch('drag', {'fromX': width / 2, 'fromY': height / 4, 'toX': width / 2, 'toY': height * 3 / 4,
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
+            Var.instance.touch('drag', {'fromX': width / 2, 'fromY': height / 4, 'toX': width / 2, 'toY': height * 3 / 4,
                                       'duration': during})
         except:
             raise Exception(traceback.format_exc())
@@ -401,9 +401,9 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
-            Var.driver.touch('drag', {'fromX': width * 3 / 4, 'fromY': height / 2, 'toX': width / 4, 'toY': 100,
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
+            Var.instance.touch('drag', {'fromX': width * 3 / 4, 'fromY': height / 2, 'toX': width / 4, 'toY': 100,
                                       'duration': during})
         except:
             raise Exception(traceback.format_exc())
@@ -415,9 +415,9 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
-            Var.driver.touch('drag', {'fromX': 100, 'fromY': height / 2, 'toX': width * 3 / 4, 'toY': height / 2,
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
+            Var.instance.touch('drag', {'fromX': 100, 'fromY': height / 2, 'toX': width * 3 / 4, 'toY': height / 2,
                                       'duration': during})
         except:
             raise Exception(traceback.format_exc())
@@ -433,8 +433,8 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            width = Var.driver.get_window_size()['width']
-            height = Var.driver.get_window_size()['height']
+            width = Var.instance.get_window_size()['width']
+            height = Var.instance.get_window_size()['height']
             if fromX <= 1.0:
                 fromX = fromX * width
             if fromY <= 1.0:
@@ -444,7 +444,7 @@ class DriveriOS(object):
             if toY <= 1.0:
                 toY = toY * height
 
-            Var.driver.touch('drag', {'fromX': fromX, 'fromY': fromY, 'toX': toX, 'toY': toY, 'duration': during})
+            Var.instance.touch('drag', {'fromX': fromX, 'fromY': fromY, 'toX': toX, 'toY': toY, 'duration': during})
         except:
             raise Exception(traceback.format_exc())
 
@@ -457,7 +457,7 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_id(id, int(timeout) * 1000, int(interval) * 1000)
+            elements = Var.instance.wait_for_elements_by_id(id, int(timeout) * 1000, int(interval) * 1000)
             return elements
         except:
             return None
@@ -471,7 +471,7 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_name(name, int(timeout) * 1000, int(interval) * 1000)
+            elements = Var.instance.wait_for_elements_by_name(name, int(timeout) * 1000, int(interval) * 1000)
             return elements
         except:
             return None
@@ -485,7 +485,7 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_xpath(xpath, int(timeout) * 1000, int(interval) * 1000)
+            elements = Var.instance.wait_for_elements_by_xpath(xpath, int(timeout) * 1000, int(interval) * 1000)
             return elements
         except:
             return None
@@ -499,7 +499,7 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            elements = Var.driver.wait_for_elements_by_class_name(classname, int(timeout) * 1000, int(interval) * 1000)
+            elements = Var.instance.wait_for_elements_by_class_name(classname, int(timeout) * 1000, int(interval) * 1000)
             return elements
         except:
             return None
@@ -527,7 +527,7 @@ class DriveriOS(object):
         :return:
         '''
         try:
-            Var.driver.clear()
+            Var.instance.clear()
         except:
             pass
 

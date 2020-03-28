@@ -12,9 +12,9 @@ class DriverBase(object):
     def init():
         try:
             global driver
-            if Var.platformName in "ios":
+            if Var.platformName.lower() == "ios":
                 driver = DriveriOS
-            elif Var.platformName in "android":
+            elif Var.platformName.lower() == "android":
                 driver = DriverAndroid
         except:
             driver = DriverAndroid
@@ -26,10 +26,10 @@ class DriverBase(object):
         :param activity:
         :return:
         """
-        if Var.platformName in "ios":
-            # Var.driver.init()
+        if Var.platformName.lower() == "ios":
+            # Var.instance.init()
             pass
-        elif Var.platformName in "android":
+        elif Var.platformName.lower() == "android":
             DriverAndroid.shell('shell am start -W {}'.format(activity))
 
     @staticmethod
@@ -39,10 +39,10 @@ class DriverBase(object):
         :param package:
         :return:
         """
-        if Var.platformName in "ios":
-            # Var.driver.init()
+        if Var.platformName.lower() == "ios":
+            # Var.instance.init()
             pass
-        elif Var.platformName in "android":
+        elif Var.platformName.lower() == "android":
             DriverAndroid.shell('shell am force-stop {}'.format(package))
 
     @staticmethod
@@ -52,9 +52,9 @@ class DriverBase(object):
         :param cmd:
         :return:
         """
-        if Var.platformName in "ios":
+        if Var.platformName.lower() == "ios":
             pass
-        elif Var.platformName in "android":
+        elif Var.platformName.lower() == "android":
             DriverAndroid.shell(cmd)
 
     @staticmethod
@@ -86,7 +86,7 @@ class DriverBase(object):
         :param duration:
         :return:
         """
-        Var.driver.touch('press', {'x': int(x), 'y': int(y), 'duration': duration})
+        Var.instance.touch('press', {'x': int(x), 'y': int(y), 'duration': duration})
 
     @staticmethod
     def swipe_up(during=3):
@@ -155,13 +155,13 @@ class DriverBase(object):
         timeout = elements_dict['timeout']
         interval = elements_dict['interval']
         index = elements_dict['index']
-        if element_type in 'name':
+        if element_type == 'name':
             elements = driver.wait_for_elements_by_name(element, timeout, interval)
-        elif element_type in 'id' :
+        elif element_type == 'id' :
             elements = driver.wait_for_elements_by_id(element, timeout, interval)
-        elif element_type in 'xpath':
+        elif element_type == 'xpath':
             elements = driver.wait_for_elements_by_xpath(element, timeout, interval)
-        elif element_type in 'classname':
+        elif element_type == 'classname':
             elements = driver.wait_for_elements_by_class_name(element, timeout, interval)
         else:
             raise TypeError('element() missing 1 required positional argument')
@@ -273,7 +273,7 @@ class DriverBase(object):
             timeout = 10
         if not interval:
             interval = 1
-        if Var.platformName in 'android':
+        if Var.platformName.lower() == 'android':
             ex = futures.ThreadPoolExecutor(max_workers=4)
             worker_list = []
             for element_type in ['name', 'id', 'xpath', 'classname']:

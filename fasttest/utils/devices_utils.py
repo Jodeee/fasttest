@@ -13,7 +13,7 @@ class DevicesUtils(object):
 
     def device_info(self):
 
-        if self.__platformName in 'android':
+        if self.__platformName.lower() == 'android':
             devices = self.get_devices()
             if self.__udid and (self.__udid not in devices):
                 raise Exception("device '{}' not found!".format(self.__udid))
@@ -32,7 +32,7 @@ class DevicesUtils(object):
             model = "None" if not result else \
                 re.search(r"\[ro.product.model\]:\s*\[(.[^\]]*)\]", result).groups()[0].split()[-1]
             device_type = "{}_{}".format(manufacturer, model).replace(" ", "_")
-        elif self.__platformName in 'ios':
+        elif self.__platformName.lower() == 'ios':
             devices = self.get_devices('idevice_id -l')
             simulator_devices = self.get_devices('instruments -s Devices')
             if self.__udid and (self.__udid not in (devices or simulator_devices)):
@@ -53,7 +53,7 @@ class DevicesUtils(object):
         return self.__udid,device_type
 
     def get_devices(self,cmd=''):
-        if self.__platformName in 'android':
+        if self.__platformName.lower() == 'android':
             pipe = os.popen("adb devices")
             deviceinfo = pipe.read()
             devices = deviceinfo.replace('\tdevice', "").split('\n')

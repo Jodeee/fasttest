@@ -25,7 +25,7 @@ class OpencvUtils(object):
                 os.makedirs(ocrimg)
             imgname = self.matchimage.split(os.sep)[-1]
             file_path = os.path.join(ocrimg, '{}_{}'.format(self.action, imgname))
-            Var.driver.save_screenshot(file_path)
+            Var.instance.save_screenshot(file_path)
             self.baseimage = file_path
         except Exception as e:
             raise e
@@ -40,7 +40,7 @@ class OpencvUtils(object):
             # self.baseimage = cv2.resize(self.baseimage, dsize=(int(self.baseimage.shape[1] / 2), int(self.baseimage.shape[0] / 2)))
             self.matchimage = cv2.imread(self.matchimage)
 
-            view_height = Var.driver.get_window_size()['height']
+            view_height = Var.instance.get_window_size()['height']
             image_height = self.baseimage.shape[0]
             if view_height * 2 == image_height:
                 self.iszoom = True

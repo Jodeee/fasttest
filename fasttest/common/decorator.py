@@ -56,7 +56,7 @@ def keywords(func, *args, **kwds):
                     cv2.imwrite(file, Var.ocrimg)
                     Var.ocrimg = None
                 else:
-                    Var.driver.save_screenshot(file)
+                    Var.instance.save_screenshot(file)
                 stop_time = time.time()
                 duration = str(int(stop_time - start_time))
                 result_step = '{}|:|{}|:|{}s|:|{}|:|{}\n'.format(snapshot_index, not exception_flag, duration, imagename, filename)
