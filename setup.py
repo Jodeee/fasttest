@@ -15,7 +15,7 @@ with open("README.md", "r", encoding='UTF-8') as fh:
 
 setuptools.setup(
     name="fasttest", # 软件包发行名称
-    version="0.0.6", # 软件包版本
+    version="0.0.7", # 软件包版本
     author="IMJIE", # 作者
     author_email="imjie@outlook.com", # 邮件
     keywords=('macaca', 'appium', 'UI自动化', '关键字驱动'),
