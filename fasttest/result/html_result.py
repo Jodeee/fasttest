@@ -172,7 +172,7 @@ class Template_mixin(object):
                                         <pre class="StepsdetailsPre_duration {status}">{runtime}</pre>
                                         <pre class="StepsdetailsPre">{steps}</pre>
                                     </div>
-                                    <div style="width: 40px;float: right;display: inline-block">
+                                    <div style="width: 35px;float: right;display: inline-block">
                                         <img class="show_hide" src="resource/show.png">
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@ class Template_mixin(object):
                                         <pre class="StepsdetailsPre_duration {status}">{runtime}</pre>
                                         <pre class="StepsdetailsPre">{steps}</pre>
                                     </div>
-                                    <div style="width: 40px;float: right;display: inline-block">
+                                    <div style="width: 35px;float: right;display: inline-block">
                                         <img class="show_hide" src="resource/show.png">
                                     </div>
                                 </div>

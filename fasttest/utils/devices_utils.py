@@ -44,6 +44,8 @@ class DevicesUtils(object):
 
             if self.__udid in devices:
                 DeviceName = os.popen('ideviceinfo -u {} -k DeviceName'.format(self.__udid)).read()
+                if not DeviceName:
+                    DeviceName = 'iOS'
                 device_type = DeviceName.replace(' ', '_')
             else:
                 device_type = self.__platformName
