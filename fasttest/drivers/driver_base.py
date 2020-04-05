@@ -2,306 +2,299 @@
 # -*- coding: utf-8 -*-
 import re
 from concurrent import futures
-from fasttest.common import Var
-from fasttest.drivers.driver_platform import DriveriOS
-from fasttest.drivers.driver_platform import DriverAndroid
+from fasttest.common import *
 
 class DriverBase(object):
+
 
     @staticmethod
     def init():
         try:
             global driver
+            if Var.driver.lower() == 'appium':
+                from fasttest.drivers.appium import AndroidDriver, iOSDriver
+            else:
+                from fasttest.drivers.macaca import AndroidDriver, iOSDriver
+
             if Var.platformName.lower() == "ios":
-                driver = DriveriOS
+                driver = iOSDriver
             elif Var.platformName.lower() == "android":
-                driver = DriverAndroid
-        except:
-            driver = DriverAndroid
+                driver = AndroidDriver
+            Var.driver_instance = driver
+        except Exception as e:
+            raise e
 
     @staticmethod
-    def startApp(activity=Var.activity):
+    def adb_shell(cmd):
+        """onlu Android
+        Args:
+            command
+        Usage:
+            adbshell 'adb devices'
+        Returns:
+            None
         """
-        启动app
-        :param activity:
-        :return:
-        """
-        if Var.platformName.lower() == "ios":
-            # Var.instance.init()
-            pass
-        elif Var.platformName.lower() == "android":
-            DriverAndroid.shell('shell am start -W {}'.format(activity))
+        driver.adb_shell(cmd)
 
     @staticmethod
-    def stopApp(package=Var.package):
-        """
-        关闭app
-        :param package:
+    def install_app(app_path):
+        '''
+        install app
+        :param app_path:
         :return:
-        """
-        if Var.platformName.lower() == "ios":
-            # Var.instance.init()
-            pass
-        elif Var.platformName.lower() == "android":
-            DriverAndroid.shell('shell am force-stop {}'.format(package))
+        '''
+        driver.install_app(app_path)
 
     @staticmethod
-    def adb(cmd):
-        """
-        adb 命令
-        :param cmd:
+    def uninstall_app(package_info):
+        '''
+        uninstall app
+        :param package_info: Android(package) or iOS(bundleId)
         :return:
-        """
-        if Var.platformName.lower() == "ios":
-            pass
-        elif Var.platformName.lower() == "android":
-            DriverAndroid.shell(cmd)
+        '''
+        driver.uninstall_app(package_info)
+
+    @staticmethod
+    def launch_app(package_info):
+        '''
+        launch app
+        :param package_info: Android(package/activity) or iOS(bundleId)
+        :return:
+        '''
+        driver.launch_app(package_info)
+
+    @staticmethod
+    def close_app(package_info):
+        '''
+        close app
+        :param package_info: Android(package) or iOS(bundleId)
+        :return:
+        '''
+        driver.close_app(package_info)
+
+    @staticmethod
+    def background_app():
+        '''
+        only appium
+        :return:
+        '''
+        driver.background_app()
 
     @staticmethod
     def tap(x, y):
-        """
-        单击
+        '''
         :param x:
         :param y:
         :return:
-        """
+        '''
         driver.tap(x, y)
 
     @staticmethod
-    def doubleTap(x, y):
-        """
-        双击
+    def double_tap(x, y):
+        '''
         :param x:
         :param y:
         :return:
-        """
-        driver.doubleTap(x, y)
+        '''
+        driver.double_tap(x, y)
 
     @staticmethod
     def press(x, y, duration=2):
-        """
-        长按
+        '''
         :param x:
         :param y:
         :param duration:
         :return:
-        """
-        Var.instance.touch('press', {'x': int(x), 'y': int(y), 'duration': duration})
+        '''
+        driver.press(x, y, duration)
 
     @staticmethod
-    def swipe_up(during=3):
-        """
-        上滑
-        :param during:
+    def press(element, duration=2):
+        '''
+        :param element:
+        :param duration:
         :return:
-        """
-        driver.swipe_up(during)
+        '''
+        driver.press(element, duration)
 
     @staticmethod
-    def swipe_down(during=3):
-        """
-        下拉
-        :param during:
+    def swipe_up(duration=2):
+        '''
+        :param duration:
         :return:
-        """
-        driver.swipe_down(during)
+        '''
+        driver.swipe_up(duration)
 
     @staticmethod
-    def swipe_left(during=3):
-        """
-        左滑
-        :param during:
+    def swipe_down(duration=2):
+        '''
+        :param duration:
         :return:
-        """
-        driver.swipe_left(during)
+        '''
+        driver.swipe_down(duration)
 
     @staticmethod
-    def swipe_right(during=3):
-        """
-        右滑
-        :param during:
+    def swipe_left(duration=2):
+        '''
+        :param duration:
         :return:
-        """
-        driver.swipe_right(during)
+        '''
+        driver.swipe_left(duration)
 
     @staticmethod
-    def swipe(fromx, fromy, tox, toy, during=3):
-        """
-        滑动
-        :param fromx:
-        :param fromy:
-        :param tox:
-        :param toy:
-        :param during:
+    def swipe_right(duration=2):
+        '''
+        :param duration:
         :return:
-        """
-        driver.swipe(fromx, fromy, tox, toy, during)
+        '''
+        driver.swipe_right(duration)
 
     @staticmethod
-    def wait_element(elements_dict):
-        """
-        等待元素
-        :param name:
-        :param id:
-        :param xpath:
-        :param classname:
-        :param timeout:
-        :param interval:
-        :param index:
+    def swipe(from_x, from_y, to_x, to_y, duration=2):
+        '''
+        :param from_x:
+        :param from_y:
+        :param to_x:
+        :param to_y:
+        :param duration:
         :return:
-        """
-        element_type = elements_dict['element_type']
-        element = elements_dict['element']
-        timeout = elements_dict['timeout']
-        interval = elements_dict['interval']
-        index = elements_dict['index']
-        if element_type == 'name':
-            elements = driver.wait_for_elements_by_name(element, timeout, interval)
-        elif element_type == 'id' :
-            elements = driver.wait_for_elements_by_id(element, timeout, interval)
-        elif element_type == 'xpath':
-            elements = driver.wait_for_elements_by_xpath(element, timeout, interval)
-        elif element_type == 'classname':
-            elements = driver.wait_for_elements_by_class_name(element, timeout, interval)
-        else:
-            raise TypeError('element() missing 1 required positional argument')
-
-        if elements:
-            if len(elements) <= int(index):
-                raise Exception('list index out of range, index:{}'.format(index))
-            return elements[index]
-        return None
+        '''
+        driver.swipe(from_x, from_y, to_x, to_y, duration)
 
     @staticmethod
-    def rect(element, timeout=10, interval=1, index=0):
-        """
-        获取元素坐标
+    def move_to(x, y):
+        '''
+        :param x:
+        :param y:
+        :return:
+        '''
+        driver.move_to(x, y)
+
+    @staticmethod
+    def click(key, timeout=10, interval=1, index=0):
+        '''
         :param element:
         :param timeout:
         :param interval:
         :param index:
         :return:
-        """
-        element_rect = DriverBase.get_element(element=element, timeout=timeout, interval=interval, index=index)
-        if element_rect:
-            return element_rect.rect
-        else:
+        '''
+        element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
+        if not element:
             raise Exception("Can't find element {}".format(element))
+        element.click()
 
     @staticmethod
-    def click(element, timeout=10, interval=1, index=0):
-        """
-        点击元素
-        :param element:
+    def check(key, timeout=10, interval=1, index=0):
+        '''
+        :param key:
         :param timeout:
         :param interval:
         :param index:
         :return:
-        """
-        element_click = DriverBase.get_element(element=element, timeout=timeout, interval=interval, index=index)
-        if element_click:
-            element_click.click()
-        else:
-            raise Exception("Can't find element {}".format(element))
-
-    @staticmethod
-    def check(element, timeout=10, interval=1, index=0):
-        """
-        检查元素
-        :param element:
-        :param timeout:
-        :param interval:
-        :param index:
-        :return:
-        """
-        element_check = DriverBase.get_element(element=element, timeout=timeout, interval=interval, index=index)
-        if element_check:
-            return True
-        else:
+        '''
+        element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
+        if not element:
             return False
+        return True
 
     @staticmethod
-    def input(element, text='', timeout=10, interval=1, index=0, clear=True):
-        """
-        输入
-        :param element:
+    def input(key, text='', timeout=10, interval=1, index=0, clear=True):
+        '''
         :param text:
         :param timeout:
         :param interval:
         :param index:
         :param clear:
         :return:
-        """
-        element_input = DriverBase.get_element(element=element, timeout=timeout, interval=interval, index=index)
-        if element_input:
-            driver.input(element_input, text=text, clear=clear)
-        else:
+        '''
+        element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
+        if not element:
             raise Exception("Can't find element {}".format(element))
+        driver.input(element, text)
 
     @staticmethod
-    def text(element, timeout=10, interval=1, index=0):
-        """
-        获取文案
-        :param element:
+    def get_text(key, timeout=10, interval=1, index=0):
+        '''
+        :param key:
         :param timeout:
         :param interval:
         :param index:
         :return:
-        """
-
-        element_text = DriverBase.get_element(element=element, timeout=timeout, interval=interval, index=index)
-        if element_text:
-            text = driver.text(element_text)
-            if text:
-                return text
-            else:
-                return ''
-        else:
+        '''
+        element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
+        if not element:
             raise Exception("Can't find element {}".format(element))
+        text = driver.get_text(element)
+        return text
 
     @staticmethod
-    def get_element(element, timeout=10, interval=1, index=0):
-        """
-        等待元素
-        :param element:
+    def find_elements_by_key(key, timeout=10, interval=1, index=0):
+        '''
+        :param key:
         :param timeout:
         :param interval:
         :param index:
         :return:
-        """
+        '''
         if not timeout:
             timeout = 10
         if not interval:
             interval = 1
+        dict = {
+            'element': key,
+            'timeout': timeout,
+            'interval': interval,
+            'index': index
+        }
         if Var.platformName.lower() == 'android':
-            ex = futures.ThreadPoolExecutor(max_workers=4)
-            worker_list = []
-            for element_type in ['name', 'id', 'xpath', 'classname']:
-                dict = {
-                    'element_type': element_type,
-                    'element': element,
-                    'timeout': timeout,
-                    'interval': interval,
-                    'index': index
-                }
-                worker_list.append(ex.submit(DriverBase.wait_element, dict))
-            for f in futures.as_completed(worker_list):
-                if f.result() is not None:
-                    return f.result()
-            return None
-        else:
-            dict = {
-                'element': element,
-                'timeout': timeout,
-                'interval': interval,
-                'index': index
-            }
-            if re.match(r'XCUIElementType', element):
+            if re.match(r'[a-zA-Z]+\.[a-zA-Z]+[\.\w]+:id/\S+', key):
+                dict['element_type'] = 'id'
+            elif re.match(r'android\.[a-zA-Z]+[\.(a-zA-Z)]+', key) or re.match(r'[a-zA-Z]+\.[a-zA-Z]+[\.(a-zA-Z)]+', key):
                 dict['element_type'] = 'classname'
-            elif re.match(r'//XCUIElementType', element):
-                dict['element_type'] = 'xpath'
-            elif re.match(r'//\*\[@', element):
+            elif re.match('//\*\[@\S+=\S+\]', key) or re.match('//[a-zA-Z]+\.[a-zA-Z]+[\.(a-zA-Z)]+\[\d+\]', key):
                 dict['element_type'] = 'xpath'
             else:
                 dict['element_type'] = 'name'
-            return DriverBase.wait_element(dict)
+        else:
+            if re.match(r'XCUIElementType', key):
+                dict['element_type'] = 'classname'
+            elif re.match(r'//XCUIElementType', key):
+                dict['element_type'] = 'xpath'
+            elif re.match(r'//\*\[@\S+=\S+\]', key):
+                dict['element_type'] = 'xpath'
+            else:
+                dict['element_type'] = 'name'
+        return DriverBase.wait_for_elements_by_key(dict)
+
+    @staticmethod
+    def wait_for_elements_by_key(elements_info):
+        '''
+        :param elements_info:
+        :return:
+        '''
+
+        element_type = elements_info['element_type']
+        element = elements_info['element']
+        timeout = elements_info['timeout']
+        interval = elements_info['interval']
+        index = elements_info['index']
+        log_info("find elements: Body: {'using': '%s', 'value': '%s', 'index': %s}" % (element_type, element, index))
+        if element_type == 'name':
+            elements = driver.wait_for_elements_by_name(name=element, timeout=timeout, interval=interval)
+        elif element_type == 'id':
+            elements = driver.wait_for_elements_by_id(id=element, timeout=timeout, interval=interval)
+        elif element_type == 'xpath':
+            elements = driver.wait_for_elements_by_xpath(xpath=element, timeout=timeout, interval=interval)
+        elif element_type == 'id':
+            elements = driver.wait_for_elements_by_classname(classname=element, timeout=timeout, interval=interval)
+        else:
+            elements = None
+
+        log_info('return elements: {}'.format(elements))
+        if elements:
+            if len(elements) <= int(index):
+                log_error('elements exists, but cannot find index({}) position'.format(index), False)
+                raise Exception('list index out of range, index:{}'.format(index))
+            return elements[index]
+        return None

@@ -8,7 +8,7 @@ class RunCase(TestCase):
 
     def setUp(self):
         if Var.restart and not self.skip:
-            DriverBase.startApp(Var.activity)
+            DriverBase.launch_app(None)
 
     def testCase(self):
         if self.skip:
@@ -18,4 +18,4 @@ class RunCase(TestCase):
 
     def tearDown(self):
         if Var.restart and not self.skip:
-            DriverBase.stopApp(Var.package)
+            DriverBase.close_app(Var.package)

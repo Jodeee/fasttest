@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import time
-from fasttest.common import Var
+from fasttest.common import Var, log_info
 from fasttest.drivers.driver_base import DriverBase
 from fasttest.common.decorator import keywords
 from fasttest.utils.opcv_utils import OpencvUtils
@@ -22,10 +22,11 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        if step.activity:
-            DriverBase.startApp(step.activity)
+        params = step.params
+        if len(params) == 1:
+            DriverBase.launch_app(params[0])
         else:
-            DriverBase.startApp(Var.activity)
+            raise TypeError('launchApp missing 1 required positional argument: package_info')
 
     @keywords
     def __action_stop_app(self, step):
@@ -34,10 +35,38 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        if step.package:
-            DriverBase.stopApp(step.package)
+        params = step.params
+        if params is None:
+            DriverBase.close_app(Var.package)
+        elif len(params) == 1:
+            DriverBase.close_app(params[0])
         else:
-            DriverBase.stopApp(Var.package)
+            raise TypeError('closeApp takes 1 positional argument but {} were giver'.format(len(params)))
+
+
+    @keywords
+    def __action_install_app(self, step):
+        """
+        行为执行：install_app
+        :param step:
+        :return:
+        """
+        if len(step.params) == 1:
+            DriverBase.install_app(step.params[0])
+        else:
+            raise TypeError('installApp missing 1 required positional argument: app_path')
+
+    @keywords
+    def __action_uninstall_app(self, step):
+        """
+        行为执行：uninstall_app
+        :param step:
+        :return:
+        """
+        if len(step.params) == 1:
+            DriverBase.uninstall_app(step.params[0])
+        else:
+            raise TypeError('uninstallApp missing 1 required positional argument: package_info')
 
     @keywords
     def __action_adb(self, step):
@@ -46,7 +75,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.adb(step.cmd)
+        if len(step.params) == 1:
+            DriverBase.adb_shell(step.params[0])
+        else:
+            raise TypeError('adb missing 1 required positional argument')
 
     @keywords
     def __action_goback(self, step):
@@ -55,7 +87,7 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.adb(step.cmd)
+        DriverBase.adb_shell('shell input keyevent 4')
 
     @keywords
     def __action_tap(self, step):
@@ -64,7 +96,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.tap(step.location.x, step.location.y)
+        if len(step.params) == 2:
+            DriverBase.tap(float(step.params[0]), float(step.params[-1]))
+        else:
+            raise TypeError('tap missing 2 required positional argument: x, y')
 
     @keywords
     def __action_doubleTap(self, step):
@@ -73,7 +108,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.doubleTap(step.location.x, step.location.y)
+        if len(step.params) == 2:
+            DriverBase.double_tap(float(step.params[0]), float(step.params[-1]))
+        else:
+            raise TypeError('doubleTap missing 2 required positional argument: x, y')
 
     @keywords
     def __action_press(self, step):
@@ -82,39 +120,12 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.press(step.location.x, step.location.y, step.duration)
-
-    @keywords
-    def __action_pinch_open(self, step):
-        """
-        行为执行：pinch_open
-        :param step:
-        :return:
-        """
-
-    @keywords
-    def __action_pinch_close(self, step):
-        """
-        行为执行：pinch_close
-        :param step:
-        :return:
-        """
-
-    @keywords
-    def __action_rotate(self, step):
-        """
-        行为执行：rotate
-        :param step:
-        :return:
-        """
-
-    @keywords
-    def __action_drag(self, step):
-        """
-        行为执行：drag
-        :param step:
-        :return:
-        """
+        if len(step.params) == 2:
+            DriverBase.press(float(step.params[0]), float(step.params[-1]))
+        elif len(step.params) == 3:
+            DriverBase.press(float(step.params[0]), float(step.params[1]), float(step.params[-1]))
+        else:
+            raise TypeError('press missing 2 required positional argument: x, y')
 
     @keywords
     def __action_swipe_up(self, step):
@@ -123,7 +134,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.swipe_up(int(step.during))
+        if step.params is None:
+            DriverBase.swipe_up()
+        else:
+            DriverBase.swipe_up(float(step.params[0]))
 
     @keywords
     def __action_swipe_down(self, step):
@@ -132,7 +146,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.swipe_down(int(step.during))
+        if step.params is None:
+            DriverBase.swipe_down()
+        else:
+            DriverBase.swipe_down(float(step.params[0]))
 
     @keywords
     def __action_swipe_left(self, step):
@@ -141,7 +158,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.swipe_left(int(step.during))
+        if step.params is None:
+            DriverBase.swipe_left()
+        else:
+            DriverBase.swipe_left(float(step.params[0]))
 
     @keywords
     def __action_swipe_right(self, step):
@@ -150,7 +170,10 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.swipe_right(int(step.during))
+        if step.params is None:
+            DriverBase.swipe_right()
+        else:
+            DriverBase.swipe_right(float(step.params[0]))
 
     @keywords
     def __action_swipe(self, step):
@@ -159,29 +182,29 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        fromx = step.location.fromx
-        fromy = step.location.fromy
-        tox = step.location.tox
-        toy = step.location.toy
-        DriverBase.swipe(fromx, fromy, tox, toy, step.during)
+        params = step.params
+        if params is None:
+            raise TypeError('swipe missing 4 required positional argument: from_x, from_y, to_x, to_y')
+        elif len(params) == 4:
+            DriverBase.swipe(float(step.params[0]), float(step.params[1]), float(step.params[2]), float(step.params[3]))
+        elif len(step.params) == 5:
+            DriverBase.swipe(float(step.params[0]), float(step.params[1]), float(step.params[2]), float(step.params[3]), float(step.params[4]))
+        else:
+            raise TypeError('swipe takes 1 positional argument but {} were giver'.format(len(step.action)))
 
-    @keywords
-    def __action_rect(self, step):
-        """
-        行为执行：rect
-        :param step:
-        :return:
-        """
-        rect = DriverBase.rect(element=step.element, timeout=Var.timeout, interval=Var.interval, index=step.index)
-        return rect
-
-    def _action_getText(self, step):
+    def _action_get_text(self, step):
         """
         行为执行：getText
         :param step:
         :return:
         """
-        text = DriverBase.text(element=step.element, timeout=Var.timeout, interval=Var.interval, index=step.index)
+        params = step.params
+        if len(params) == 1:
+            text = DriverBase.get_text(key=params[0], timeout=Var.timeout, interval=Var.interval, index=0)
+        elif len(params) == 2:
+            text = DriverBase.get_text(key=params[0], timeout=Var.timeout, interval=Var.interval, index=params[-1])
+        else:
+            raise TypeError('getText missing 1 required positional argument: element')
         return text
 
     @keywords
@@ -191,14 +214,21 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        img_info = self.ocr_analysis(step.action, step.element, True)
-        if not isinstance(img_info, bool):
-            Var.ocrimg = img_info['ocrimg']
-            x = img_info['x']
-            y = img_info['y']
-            DriverBase.tap(x, y)
+        params = step.params
+        if len(params) == 1:
+            img_info = self.ocr_analysis(step.action, params[0], True)
+            if not isinstance(img_info, bool):
+                Var.ocrimg = img_info['ocrimg']
+                x = img_info['x']
+                y = img_info['y']
+                DriverBase.tap(x, y)
+            else:
+                if params[0]:
+                    DriverBase.click(key=params[0], timeout=Var.timeout, interval=Var.interval, index=step.index)
+                else:
+                    raise TypeError('click missing 1 required positional argument: element')
         else:
-            DriverBase.click(element=step.element, timeout=Var.timeout, interval=Var.interval, index=step.index)
+            raise TypeError('click missing 1 required positional argument: element')
 
     @keywords
     def __action_check(self, step):
@@ -207,19 +237,28 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        img_info = self.ocr_analysis(step.action, step.element, False)
-        if not isinstance(img_info, bool):
-            if img_info is not None:
-                Var.ocrimg = img_info['ocrimg']
-                check = True
+        params = step.params
+        if len(params) == 1:
+            img_info = self.ocr_analysis(step.action, params[0], False)
+            if not isinstance(img_info, bool):
+                if img_info is not None:
+                    Var.ocrimg = img_info['ocrimg']
+                    check = True
+                else:
+                    check = False
             else:
-                check = False
-        else:
-            check = DriverBase.check(element=step.element, timeout=Var.timeout, interval=Var.interval, index=step.index)
-        if not check:
-            raise Exception("Can't find element {}".format(step.element))
-        return check
+                if params[0]:
+                    check = DriverBase.check(key=params[0], timeout=Var.timeout, interval=Var.interval,
+                                             index=step.index)
+                else:
+                    raise TypeError('check missing 1 required positional argument: element')
 
+            if not check:
+                raise Exception("Can't find element {}".format(step.element))
+            return check
+        else:
+            raise TypeError('check missing 1 required positional argument: element')
+    
     @keywords
     def __action_input(self, step):
         """
@@ -227,70 +266,17 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        DriverBase.input(element=step.element, text=step.content, timeout=Var.timeout, interval=Var.interval,
-                         index=step.index)
+        params = step.params
+        if len(params) == 2:
 
-    @keywords
-    def __action_call(self, step):
-        """
-        行为执行：call
-        :param step:
-        :return:
-        """
-        if step.type == 'Scripts':
-            try:
-                return eval(step.func)
-            except Exception as e:
-                raise e
-        elif step.type == 'Common':
-            from fasttest.runner.case_analysis import CaseAnalysis
-            case = CaseAnalysis()
-            case.iteration(Var.common_func[step.func].steps)
-            Var.common_var = {}
-
-    @keywords
-    def __action_var(self, step):
-        """
-        行为执行：赋值
-        :param step:
-        :return:
-        """
-
-    @keywords
-    def __action_ifcheck(self, step):
-        """
-        行为执行：ifcheck
-        :param step:
-        :return:
-        """
-        img_info = self.ocr_analysis(step.action, step.element, False)
-        if not isinstance(img_info, bool):
-            if img_info is not None:
-                Var.ocrimg = img_info['ocrimg']
-                check = True
+            if params[0]:
+                DriverBase.input(key=params[0], text=params[1], timeout=Var.timeout, interval=Var.interval,
+                                 index=step.index)
             else:
-                check = False
+                raise TypeError('input missing 2 required positional argument: element, text')
         else:
-            check = DriverBase.check(element=step.element, timeout=Var.timeout, interval=Var.interval, index=step.index)
-        return check
+            raise TypeError('input missing 2 required positional argument: element, text')
 
-    @keywords
-    def __action_elifcheck(self, step):
-        """
-        行为执行：elifcheck
-        :param step:
-        :return:
-        """
-        img_info = self.ocr_analysis(step.action, step.element, False)
-        if not isinstance(img_info, bool):
-            if img_info is not None:
-                Var.ocrimg = img_info['ocrimg']
-                check = True
-            else:
-                check = False
-        else:
-            check = DriverBase.check(element=step.element, timeout=Var.timeout, interval=Var.interval, index=step.index)
-        return check
 
     @keywords
     def __action_if(self, step):
@@ -299,29 +285,46 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        try:
-            object_if = eval(step.content)
-            if not object_if:
-                object_if = False
-        except Exception as e:
-            raise e
-        return object_if
+        params = step.params
+        if params:
+            try:
+                object_if = eval(params)
+            except Exception as e:
+                raise e
+            if object_if:
+                log_info('{} {}: True'.format(step.action, params))
+            else:
+                log_info('{} {}: False'.format(step.action, params))
+            return object_if
+        else:
+            raise TypeError('{} missing 1 required positional argument'.format(step.action))
 
     @keywords
-    def __action_elif(self, step):
+    def __action_ifcheck(self, step):
         """
-        行为执行：elif
+        行为执行：ifcheck
         :param step:
         :return:
         """
-        try:
-            object_else = eval(step.content)
-            if not object_else:
-                object_else = False
-        except Exception as e:
-            raise e
-        return object_else
-
+        params = step.params
+        if len(params) == 1:
+            img_info = self.ocr_analysis(step.action, params[0], False)
+            if not isinstance(img_info, bool):
+                if img_info is not None:
+                    Var.ocrimg = img_info['ocrimg']
+                    check = True
+                else:
+                    check = False
+            else:
+                if params[0]:
+                    check = DriverBase.check(key=params[0], timeout=Var.timeout, interval=Var.interval,
+                                             index=step.index)
+                else:
+                    raise TypeError('{} missing 1 required positional argument: element'.format(step.action))
+            return check
+        else:
+            raise TypeError('{} missing 1 required positional argument: element'.format(step.action))
+    
     @keywords
     def __action_ifiOS(self, step):
         """
@@ -360,7 +363,11 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        time.sleep(int(step.duration))
+        params = step.params
+        if params is None:
+            raise TypeError('sleep missing 1 required positional argument')
+        elif len(params) == 1:
+            time.sleep(float(params[0]))
 
     @keywords
     def __action_assert(self, step):
@@ -369,12 +376,23 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        try:
-            assert eval(step.content)
-        except AssertionError as e:
-            raise AssertionError(step.originStep)
-        except Exception as e:
-            raise e
+        params = step.params
+        if params:
+            try:
+                result = eval(params)
+                if result:
+                    log_info('assert {}: True'.format(params))
+                else:
+                    log_info('assert {}: False'.format(params))
+                assert result
+            except AssertionError as e:
+                raise AssertionError(params)
+            except Exception as e:
+                raise e
+        else:
+            raise TypeError('assert missing 1 required positional argument')
+
+
 
     @keywords
     def __action_while(self, step):
@@ -383,22 +401,20 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        try:
-            object_else = eval(step.content)
-            if not object_else:
-                object_else = False
-        except Exception as e:
-            raise e
-        return object_else
+        params = step.params
+        if params:
+            try:
+                object_while = eval(params)
+            except Exception as e:
+                raise e
+            if object_while:
+                log_info('while {}: True'.format(params))
+            else:
+                log_info('while {}: False'.format(params))
+            return object_while
+        else:
+            raise TypeError('where missing 1 required positional argument')
 
-    @keywords
-    def __action_setGV(self, step):
-        """
-        设置全局变量
-        :param step:
-        :return:
-        """
-        return True
 
     @keywords
     def __action_break(self, step):
@@ -407,6 +423,30 @@ class ActionExecutor(object):
         :return:
         """
         return True
+
+    @keywords
+    def __action_call(self, step):
+        """
+        行为执行：call
+        :param step:
+        :return:
+        """
+        if step.type == 'Scripts':
+            try:
+                eval(step.func)
+            except Exception as e:
+                raise e
+        elif step.type == 'Common':
+            from fasttest.runner.case_analysis import CaseAnalysis
+            case = CaseAnalysis()
+            case.iteration(Var.common_func[step.func].steps)
+            Var.common_var = {}
+
+    @keywords
+    def __action_step(self, step):
+        '''
+        :return:
+        '''
 
     def ocr_analysis(self, action, element, israise):
         """
@@ -435,17 +475,20 @@ class ActionExecutor(object):
         :param step:
         :return:
         """
-        if step.action == ActionKeyWord.STARTAPP:
+        if len(step.keys()) == 1:
+            action = self.__action_step(step)
+
+        elif step.action == ActionKeyWord.INSTALLAPP:
+            action = self.__action_install_app(step)
+
+        elif step.action == ActionKeyWord.UNINSTALLAPP:
+            action = self.__action_uninstall_app(step)
+
+        elif step.action == ActionKeyWord.LAUNCHAPP:
             action = self.__action_start_app(step)
 
-        elif step.action == ActionKeyWord.STOPAPP:
+        elif step.action == ActionKeyWord.CLOSEAPP:
             action = self.__action_stop_app(step)
-
-        elif step.action == ActionKeyWord.ADB:
-            action = self.__action_adb(step)
-
-        elif step.action == ActionKeyWord.GOBACK:
-            action = self.__action_goback(step)
 
         elif step.action == ActionKeyWord.TAP:
             action = self.__action_tap(step)
@@ -456,17 +499,11 @@ class ActionExecutor(object):
         elif step.action == ActionKeyWord.PRESS:
             action = self.__action_press(step)
 
-        # elif step.action == ActionKeyWord.PINCHOPEN:
-        #     action = self.__action_pinch_open(step)
-        #
-        # elif step.action == ActionKeyWord.PINCHCLOSE:
-        #     action = self.__action_pinch_close(step)
+        elif step.action == ActionKeyWord.ADB:
+            action = self.__action_adb(step)
 
-        elif step.action == ActionKeyWord.ROTATE:
-            action = self.__action_rotate(step)
-
-        elif step.action == ActionKeyWord.DRAG:
-            action = self.__action_drag(step)
+        elif step.action == ActionKeyWord.GOBACK:
+            action = self.__action_goback(step)
 
         elif step.action == ActionKeyWord.SWIPEUP:
             action = self.__action_swipe_up(step)
@@ -483,9 +520,6 @@ class ActionExecutor(object):
         elif step.action == ActionKeyWord.SWIPE:
             action = self.__action_swipe(step)
 
-        # elif step.action == ActionKeyWord.RECT:
-        #     action = self.__action_rect(step)
-
         elif step.action == ActionKeyWord.CLICK:
             action = self.__action_click(step)
 
@@ -495,32 +529,26 @@ class ActionExecutor(object):
         elif step.action == ActionKeyWord.INPUT:
             action = self.__action_input(step)
 
-        elif step.action == ActionKeyWord.CALL:
-            action = self.__action_call(step)
+        elif step.action == ActionKeyWord.IF:
+            action = self.__action_if(step)
 
-        elif step.action == 'variables':
-            action = self.__action_var(step)
+        elif step.action == ActionKeyWord.ELIF:
+            action = self.__action_if(step)
+
+        elif step.action == ActionKeyWord.ELSE:
+            action = self.__action_else(step)
 
         elif step.action == ActionKeyWord.IFCHECK:
             action = self.__action_ifcheck(step)
 
         elif step.action == ActionKeyWord.ELIFCHECK:
-            action = self.__action_elifcheck(step)
+            action = self.__action_ifcheck(step)
 
         elif step.action == ActionKeyWord.IFIOS:
             action = self.__action_ifiOS(step)
 
         elif step.action == ActionKeyWord.IFANDROID:
             action = self.__action_ifAndroid(step)
-
-        elif step.action == ActionKeyWord.IF:
-            action = self.__action_if(step)
-
-        elif step.action == ActionKeyWord.ELIF:
-            action = self.__action_elif(step)
-
-        elif step.action == ActionKeyWord.ELSE:
-            action = self.__action_else(step)
 
         elif step.action == ActionKeyWord.SLEEP:
             action = self.__action_sleep(step)
@@ -534,8 +562,8 @@ class ActionExecutor(object):
         elif step.action == ActionKeyWord.BREAK:
             action = self.__action_break(step)
 
-        elif step.action == 'setGV':
-            action = self.__action_setGV(step)
+        elif step.action == ActionKeyWord.CALL:
+            action = self.__action_call(step)
         else:
             raise SyntaxError(step)
         return action

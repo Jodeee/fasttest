@@ -368,12 +368,12 @@ class HTMLTestRunner(Template_mixin):
                     )
                     steps = steps + case_snapshot
             else:
-                steps = case_snapshot = self.CASE_SNAPSHOT_DIV.format(
-                            status='skipped' ,
-                            runtime='0',
-                            steps='Nothing',
-                            image=''
-                        )
+                case_snapshot = self.CASE_SNAPSHOT_DIV.format(
+                    status='skipped',
+                    runtime='0',
+                    steps='Nothing',
+                    image=''
+                )
 
             casedeta = self.CASE_DETA_SNAPSHOT.format(
                 dataId=dataId,

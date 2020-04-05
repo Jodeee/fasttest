@@ -38,11 +38,10 @@ def keywords(func, *args, **kwds):
         start_time = time.time()
         Var.case_snapshot_index += 1
         snapshot_index = Var.case_snapshot_index
-        filename = args[-1].origin_step
         imagename = "Step_{}.png".format(snapshot_index)
         file = os.path.join(Var.snapshot_dir, imagename)
+        action_instance = args[-1]
         try:
-            log_info('{}'.format(filename))
             if args or kwds:
                 result = func(*args, **kwds)
             else:
@@ -58,8 +57,8 @@ def keywords(func, *args, **kwds):
                 else:
                     Var.instance.save_screenshot(file)
                 stop_time = time.time()
-                duration = str(int(stop_time - start_time))
-                result_step = '{}|:|{}|:|{}s|:|{}|:|{}\n'.format(snapshot_index, not exception_flag, duration, imagename, filename)
+                duration = str('%.1f' % (stop_time - start_time))
+                result_step = '{}|:|{}|:|{}s|:|{}|:|{}\n'.format(snapshot_index, not exception_flag, duration, imagename, action_instance['origin'])
                 with open(os.path.join(Var.snapshot_dir, 'result.log'), 'a') as f:
                     f.write(result_step)
             except:

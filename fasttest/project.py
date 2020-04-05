@@ -30,17 +30,17 @@ class Project(object):
     def __init_project(self):
 
         for path in [path  for path in inspect.stack() if str(path[1]).endswith("runtest.py")]:
-            self.ROOT = os.path.dirname(path[1])
-            sys.path.append(self.ROOT)
-            Var.ROOT = self.ROOT
+            self.__ROOT = os.path.dirname(path[1])
+            sys.path.append(self.__ROOT)
+            Var.ROOT = self.__ROOT
             Var.global_var = {} # 全局变量
             Var.extensions_var = {} # 扩展数据变量
             Var.common_var = {} # common临时变量，call执行完后重置
 
     def __init_config(self):
 
-        self.config = analytical_file(os.path.join(self.ROOT, 'config.yaml'))
-        for configK, configV in self.config.items():
+        self.__config = analytical_file(os.path.join(self.__ROOT, 'config.yaml'))
+        for configK, configV in self.__config.items():
             if configK == 'desiredcaps':
                 Var.desired_caps = configV[0]
                 for desiredcapsK, desiredcapsV in Var.desired_caps.items():
@@ -58,7 +58,7 @@ class Project(object):
                 if dict:
                     log_info('******************* analytical data *******************')
                 for extensionsK, extensionsV in dict.items():
-                    log_info('{}:{}'.format(extensionsK, extensionsV))
+                    log_info('{}: {}'.format(extensionsK, extensionsV))
                     Var.extensions_var[extensionsK] = extensionsV
 
     def __init_images(self):
@@ -73,7 +73,7 @@ class Project(object):
                 else:
                     raise FileNotFoundError('No such file or directory: {}'.format(images_file))
             Var.extensions_var['images_file'] = images_dict
-            log_info('image path:{}'.format(Var.extensions_var['images_file']))
+            log_info('image path: {}'.format(Var.extensions_var['images_file']))
 
     def __init_logging(self):
 
@@ -91,12 +91,12 @@ class Project(object):
     def __analytical_testcase_file(self):
 
         log_info('******************* analytical config *******************')
-        for configK, configV in self.config.items():
-            log_info('{}:{}'.format(configK, configV))
+        for configK, configV in self.__config.items():
+            log_info('{}: {}'.format(configK, configV))
         log_info('******************* analytical testcase *******************')
         testcase = TestCaseUtils()
-        self.testcase = testcase.testcase_path(Var.ROOT, Var.testcase)
-        log_info('testcase:{}'.format(self.testcase))
+        self.__testcase = testcase.testcase_path(Var.ROOT, Var.testcase)
+        log_info('testcase:{}'.format(self.__testcase))
 
     def __analytical_common_file(self):
 
@@ -108,7 +108,7 @@ class Project(object):
                 self.__load_common_func(rt, files)
             elif rt.split(os.sep)[-1].lower() == Var.platformName.lower():
                 self.__load_common_func(rt, files)
-        log_info('common:{}'.format(Var.common_func.keys()))
+        log_info('common: {}'.format(Var.common_func.keys()))
 
     def __load_common_func(self,rt ,files):
 
@@ -121,13 +121,13 @@ class Project(object):
 
     def __init_testcase_suite(self):
 
-        self.suite = []
-        for case_path in self.testcase:
+        self.__suite = []
+        for case_path in self.__testcase:
             testcase = analytical_file(case_path)
             testcase['testcase_path'] = case_path
             Var.testcase = testcase
             subsuite = unittest.TestLoader().loadTestsFromTestCase(RunCase)
-            self.suite.append(subsuite)
+            self.__suite.append(subsuite)
             Var.testcase = None
 
     def start(self):
@@ -136,7 +136,7 @@ class Project(object):
         server.start_server()
         Var.instance = server.start_connect()
 
-        suite = unittest.TestSuite(tuple(self.suite))
+        suite = unittest.TestSuite(tuple(self.__suite))
         runner = TestRunner()
         runner.run(suite)
         server.stop_server()

@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import time
 import random
 import platform
-import eventlet
 import threading
 import subprocess
 from fasttest.common import *
@@ -37,7 +37,7 @@ class ServerUtils(object):
                 elif key in ['activity', 'appActivity']:
                     key = 'activity'
             desired_capabilities_dict[key] = value
-            log_info('{}: {}'.format(key, value))
+            log_info('    {}: {}'.format(key, value))
             object.__setattr__(self, key, value)
 
         self.url = 'http://127.0.0.1'
@@ -109,6 +109,7 @@ class ServerUtils(object):
                 self.pipe = subprocess.Popen('appium -a {} -p {} --session-override --log-level info'.format('127.0.0.1', self.port), stdout=subprocess.PIPE, shell=True)
                 thread = threading.Thread(target=self.__print_appium_log)
                 thread.start()
+                time.sleep(5)
             else:
                 ob = subprocess.Popen('macaca server -p {}'.format(self.port), stdout=subprocess.PIPE, shell=True)
                 for out_ in ob.stdout:
@@ -126,12 +127,16 @@ class ServerUtils(object):
                 from appium import webdriver
                 self.instance = webdriver.Remote(command_executor='{}:{}/wd/hub'.format(self.url, self.port),
                                                  desired_capabilities=self.desired_capabilities)
+
+                if self.timeout:
+                    self.instance.implicitly_wait(int(self.timeout))
+                else:
+                    self.instance.implicitly_wait(10)
             else:
                 from macaca import WebDriver
                 self.instance = WebDriver(url='{}:{}/wd/hub'.format(self.url, self.port),
                                           desired_capabilities=self.desired_capabilities)
                 self.instance.init()
-                # todo com.macaca.android.testing.test
             return self.instance
 
         except Exception as e:
@@ -142,6 +147,7 @@ class ServerUtils(object):
             else:
                 os.system('adb uninstall com.macaca.android.testing')
                 os.system('adb uninstall com.macaca.android.testing.test')
+                os.system('adb uninstall xdf.android_unlock')
             self.stop_server()
             raise e
 
