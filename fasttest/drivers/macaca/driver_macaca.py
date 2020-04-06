@@ -75,7 +75,10 @@ class AndroidDriver(object):
         :return:
         '''
         try:
-            AndroidDriver.adb_shell('shell am force-stop {}'.format(package_info))
+            if not package_info:
+                AndroidDriver.adb_shell('shell am force-stop {}'.format(Var.package))
+            else:
+                AndroidDriver.adb_shell('shell am force-stop {}'.format(package_info))
         except Exception as e:
             raise e
 
@@ -333,8 +336,7 @@ class iOSDriver(object):
         :return:
         '''
         try:
-            if app_path:
-                os.system('ideviceinstaller -u {} -i {}'.format(Var.udid, app_path))
+            os.system('ideviceinstaller -u {} -i {}'.format(Var.udid, app_path))
         except Exception as e:
             raise e
 
@@ -346,7 +348,7 @@ class iOSDriver(object):
         :return:
         '''
         try:
-            pass # todo 待实现
+            os.system('ideviceinstaller -u {} -U {}'.format(Var.udid, package_info))
         except Exception as e:
             raise e
 
@@ -358,11 +360,7 @@ class iOSDriver(object):
         :return:
         '''
         try:
-            if not package_info:
-                pass  # todo 待实现
-            else:
-                pass  # todo 待实现
-
+            pass  # todo 待实现
         except Exception as e:
             raise e
 

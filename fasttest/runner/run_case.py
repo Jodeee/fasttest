@@ -18,4 +18,4 @@ class RunCase(TestCase):
 
     def tearDown(self):
         if Var.restart and not self.skip:
-            DriverBase.close_app(Var.package)
+            DriverBase.close_app(None)

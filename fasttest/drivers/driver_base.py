@@ -181,7 +181,7 @@ class DriverBase(object):
         '''
         element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
         if not element:
-            raise Exception("Can't find element {}".format(element))
+            raise Exception("Can't find element {}".format(key))
         element.click()
 
     @staticmethod
@@ -210,7 +210,7 @@ class DriverBase(object):
         '''
         element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
         if not element:
-            raise Exception("Can't find element {}".format(element))
+            raise Exception("Can't find element {}".format(key))
         driver.input(element, text)
 
     @staticmethod
@@ -224,7 +224,7 @@ class DriverBase(object):
         '''
         element = DriverBase.find_elements_by_key(key=key, timeout=timeout, interval=interval, index=index)
         if not element:
-            raise Exception("Can't find element {}".format(element))
+            raise Exception("Can't find element {}".format(key))
         text = driver.get_text(element)
         return text
 
@@ -286,7 +286,7 @@ class DriverBase(object):
             elements = driver.wait_for_elements_by_id(id=element, timeout=timeout, interval=interval)
         elif element_type == 'xpath':
             elements = driver.wait_for_elements_by_xpath(xpath=element, timeout=timeout, interval=interval)
-        elif element_type == 'id':
+        elif element_type == 'classname':
             elements = driver.wait_for_elements_by_classname(classname=element, timeout=timeout, interval=interval)
         else:
             elements = None

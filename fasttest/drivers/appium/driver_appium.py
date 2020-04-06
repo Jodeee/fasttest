@@ -375,11 +375,13 @@ class iOSDriver(object):
         :param package_info: Android(package/activity) or iOS(bundleId)
         :return:
         '''
-        if not package_info:
-            Var.instance.launch_app()
-        else:
-            pass
-            #todo 待补充
+        try:
+            if not package_info:
+                Var.instance.launch_app()
+            else:
+                pass  # todo 待补充
+        except Exception as e:
+            raise e
 
     @staticmethod
     def close_app(package_info):
