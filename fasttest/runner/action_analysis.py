@@ -3,6 +3,7 @@
 import re
 from fasttest.common import Var, Dict, log_info
 from fasttest.runner.action_keyword import ActionKeyWord
+from fasttest.runner.action_executor import ActionExecutor
 
 try:
     from Scripts import *
@@ -14,6 +15,7 @@ class ActionAnalysis(object):
 
     def __init__(self):
         self.variables = {}
+        self.action_executor = ActionExecutor()
 
     def __get_variables(self, name):
         '''
@@ -207,6 +209,7 @@ class ActionAnalysis(object):
                           ActionKeyWord.BREAK,
                                 ]
         try:
+            action_dict = Dict()
             for action_keyword in action_keyword_list:
                 if re.match(r'%s ' % (action_keyword), step) or re.match(r'%s@(\d+|-\d+) ' % (action_keyword), step):
                     action = action_keyword
@@ -233,7 +236,7 @@ class ActionAnalysis(object):
                     log_info(step)
                     
                     action_dict['origin'] = step
-                    return action_dict
+                    break
 
                 elif re.match(r'^%s$' % (action_keyword), step):
                     action = step
@@ -246,7 +249,7 @@ class ActionAnalysis(object):
                     log_info(step)
 
                     action_dict['origin'] = step
-                    return action_dict
+                    break
 
             else:
                 if re.match(ActionKeyWord.VARIABLES, step):
@@ -259,7 +262,6 @@ class ActionAnalysis(object):
                     action = step_split[0].strip()[2:-1]
                     params = step_split[-1].strip()
                     log_info(step)
-                    action_dict = Dict()
                     if re.match(r'\$\.getText', params):
                         # 获取元素text
                         params = self.__get_params(r'\$\.getText', params)
@@ -301,7 +303,6 @@ class ActionAnalysis(object):
                     log_info('{} {}: {}'.format(type(self.variables[action]), action, self.variables[action]))
 
                     action_dict['origin'] = step
-                    return action_dict
 
                 elif re.match(ActionKeyWord.SETGV, step):
                     # 全局变量
@@ -319,7 +320,6 @@ class ActionAnalysis(object):
                     action_dict = Dict({
                         'origin': step
                     })
-                    return action_dict
 
                 elif re.match(r'%s ' % (ActionKeyWord.CALL), step):
                     # 调用
@@ -353,18 +353,22 @@ class ActionAnalysis(object):
                         action_dict['type'] = 'Common'
                         action_dict['func'] = func
 
-                    return action_dict
-
                 else:
                     raise SyntaxError(step)
+
+            if len(action_dict):
+                result = self.action_executor.action_executor(action_dict)
+            else:
+                result = None
+            return result
 
         except Exception as e:
             raise e
 
     def action_analysis(self, step):
 
-        action_dict = self.__get_action_step(step)
-        return action_dict
+        result = self.__get_action_step(step)
+        return result
 
 if __name__ == '__main__':
     action = ActionAnalysis()
