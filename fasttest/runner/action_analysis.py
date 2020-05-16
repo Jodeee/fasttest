@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import re
 from fasttest.common import Var, Dict, log_info
+from fasttest.common.decorator import keywords
 from fasttest.runner.action_keyword import ActionKeyWord
 from fasttest.runner.action_executor import ActionExecutor
 
@@ -173,6 +174,7 @@ class ActionAnalysis(object):
             return int(index[1])
         return 0
 
+    @keywords
     def __get_action_step(self, step):
         '''
         获取执行步骤

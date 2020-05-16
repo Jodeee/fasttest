@@ -3,7 +3,6 @@
 import time
 from fasttest.common import Var, log_info
 from fasttest.drivers.driver_base import DriverBase
-from fasttest.common.decorator import keywords
 from fasttest.utils.opcv_utils import OpencvUtils
 from fasttest.runner.action_keyword import ActionKeyWord
 
@@ -15,7 +14,6 @@ except Exception:
 
 class ActionExecutor(object):
 
-    @keywords
     def __action_start_app(self, step):
         """
         行为执行：start_app
@@ -28,7 +26,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('launchApp missing 1 required positional argument: package_info')
 
-    @keywords
     def __action_stop_app(self, step):
         """
         行为执行：stop_app
@@ -44,7 +41,6 @@ class ActionExecutor(object):
             raise TypeError('closeApp takes 1 positional argument but {} were giver'.format(len(params)))
 
 
-    @keywords
     def __action_install_app(self, step):
         """
         行为执行：install_app
@@ -56,7 +52,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('installApp missing 1 required positional argument: app_path')
 
-    @keywords
     def __action_uninstall_app(self, step):
         """
         行为执行：uninstall_app
@@ -68,7 +63,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('uninstallApp missing 1 required positional argument: package_info')
 
-    @keywords
     def __action_adb(self, step):
         """
         行为执行：adb
@@ -80,7 +74,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('adb missing 1 required positional argument')
 
-    @keywords
     def __action_goback(self, step):
         """
         行为执行：goback
@@ -89,7 +82,6 @@ class ActionExecutor(object):
         """
         DriverBase.adb_shell('shell input keyevent 4')
 
-    @keywords
     def __action_tap(self, step):
         """
         行为执行：tap
@@ -101,7 +93,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('tap missing 2 required positional argument: x, y')
 
-    @keywords
     def __action_doubleTap(self, step):
         """
         行为执行：doubleTap
@@ -113,7 +104,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('doubleTap missing 2 required positional argument: x, y')
 
-    @keywords
     def __action_press(self, step):
         """
         行为执行：press
@@ -127,7 +117,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('press missing 2 required positional argument: x, y')
 
-    @keywords
     def __action_swipe_up(self, step):
         """
         行为执行：swipe_up
@@ -139,7 +128,6 @@ class ActionExecutor(object):
         else:
             DriverBase.swipe_up(float(step.params[0]))
 
-    @keywords
     def __action_swipe_down(self, step):
         """
         行为执行：swipe_down
@@ -151,7 +139,6 @@ class ActionExecutor(object):
         else:
             DriverBase.swipe_down(float(step.params[0]))
 
-    @keywords
     def __action_swipe_left(self, step):
         """
         行为执行：swipe_left
@@ -163,7 +150,6 @@ class ActionExecutor(object):
         else:
             DriverBase.swipe_left(float(step.params[0]))
 
-    @keywords
     def __action_swipe_right(self, step):
         """
         行为执行：swipe_right
@@ -175,7 +161,6 @@ class ActionExecutor(object):
         else:
             DriverBase.swipe_right(float(step.params[0]))
 
-    @keywords
     def __action_swipe(self, step):
         """
         行为执行：swipe
@@ -207,7 +192,6 @@ class ActionExecutor(object):
             raise TypeError('getText missing 1 required positional argument: element')
         return text
 
-    @keywords
     def __action_click(self, step):
         """
         行为执行：click
@@ -230,7 +214,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('click missing 1 required positional argument: element')
 
-    @keywords
     def __action_check(self, step):
         """
         行为执行：check
@@ -258,8 +241,7 @@ class ActionExecutor(object):
             return check
         else:
             raise TypeError('check missing 1 required positional argument: element')
-    
-    @keywords
+
     def __action_input(self, step):
         """
         行为执行：input
@@ -278,7 +260,6 @@ class ActionExecutor(object):
             raise TypeError('input missing 2 required positional argument: element, text')
 
 
-    @keywords
     def __action_if(self, step):
         """
         行为执行：if
@@ -299,7 +280,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('{} missing 1 required positional argument'.format(step.action))
 
-    @keywords
     def __action_ifcheck(self, step):
         """
         行为执行：ifcheck
@@ -324,8 +304,7 @@ class ActionExecutor(object):
             return check
         else:
             raise TypeError('{} missing 1 required positional argument: element'.format(step.action))
-    
-    @keywords
+
     def __action_ifiOS(self, step):
         """
         行为执行：ifiOS
@@ -336,7 +315,6 @@ class ActionExecutor(object):
             return True
         return False
 
-    @keywords
     def __action_ifAndroid(self, step):
         """
         行为执行：ifAndroid
@@ -347,7 +325,6 @@ class ActionExecutor(object):
             return True
         return False
 
-    @keywords
     def __action_else(self, step):
         """
         行为执行：else
@@ -356,7 +333,6 @@ class ActionExecutor(object):
         """
         return True
 
-    @keywords
     def __action_sleep(self, step):
         """
         行为执行
@@ -369,7 +345,6 @@ class ActionExecutor(object):
         elif len(params) == 1:
             time.sleep(float(params[0]))
 
-    @keywords
     def __action_assert(self, step):
         """
         行为解析：Assert
@@ -393,8 +368,6 @@ class ActionExecutor(object):
             raise TypeError('assert missing 1 required positional argument')
 
 
-
-    @keywords
     def __action_while(self, step):
         """
         行为解析：while
@@ -416,7 +389,6 @@ class ActionExecutor(object):
             raise TypeError('where missing 1 required positional argument')
 
 
-    @keywords
     def __action_break(self, step):
         """
         :param step:
@@ -424,7 +396,6 @@ class ActionExecutor(object):
         """
         return True
 
-    @keywords
     def __action_call(self, step):
         """
         行为执行：call
@@ -442,7 +413,6 @@ class ActionExecutor(object):
             case.iteration(Var.common_func[step.func].steps)
             Var.common_var = {}
 
-    @keywords
     def __action_step(self, step):
         '''
         :return:
