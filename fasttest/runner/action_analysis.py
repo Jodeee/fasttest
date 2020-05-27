@@ -175,7 +175,7 @@ class ActionAnalysis(object):
         return 0
 
     @keywords
-    def __get_action_step(self, step):
+    def __get_action_step(self, step, style=''):
         '''
         获取执行步骤
         :param step:
@@ -354,6 +354,7 @@ class ActionAnalysis(object):
 
                         action_dict['type'] = 'Common'
                         action_dict['func'] = func
+                        action_dict['style'] = style
 
                 else:
                     raise SyntaxError(step)
@@ -367,9 +368,9 @@ class ActionAnalysis(object):
         except Exception as e:
             raise e
 
-    def action_analysis(self, step):
+    def action_analysis(self, step, style):
 
-        result = self.__get_action_step(step)
+        result = self.__get_action_step(step, style)
         return result
 
 if __name__ == '__main__':

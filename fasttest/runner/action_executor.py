@@ -237,7 +237,7 @@ class ActionExecutor(object):
                     raise TypeError('check missing 1 required positional argument: element')
 
             if not check:
-                raise Exception("Can't find element {}".format(step.element))
+                raise Exception("Can't find element {}".format(params[0]))
             return check
         else:
             raise TypeError('check missing 1 required positional argument: element')
@@ -410,7 +410,7 @@ class ActionExecutor(object):
         elif step.type == 'Common':
             from fasttest.runner.case_analysis import CaseAnalysis
             case = CaseAnalysis()
-            case.iteration(Var.common_func[step.func].steps)
+            case.iteration(Var.common_func[step.func].steps, f'{step.style}    ')
             Var.common_var = {}
 
     def __action_step(self, step):
