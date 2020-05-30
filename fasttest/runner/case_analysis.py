@@ -29,12 +29,12 @@ class CaseAnalysis(object):
             for key, values in steps.items():
                 if key.startswith('while'):
                     while self.case_executor(key, style):
-                        result = self.iteration(values, f'{style}    ')
+                        result = self.iteration(values, f'{style}  ')
                         if result:
                             break
                 elif key.startswith('if') or key.startswith('elif') or key.startswith('else'):
                     if self.case_executor(key, style):
-                        result = self.iteration(values, f'{style}    ')
+                        result = self.iteration(values, f'{style}  ')
                         if result:
                             return True
                         break

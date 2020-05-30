@@ -32,16 +32,11 @@ $(document).ready(function(){
             })
 
 
-    $('img.show_hide').click(function(){
-
-        if($(this)[0].src.match("show.png")){
-            $(this).attr('src','resource/hide.png');
-            var img = $(this).parent().parent('.StepsdetailsDiv').next();
+    $('pre.StepsdetailsPre').click(function(){
+        var img = $(this).parent('.steps').next();
+        if (img.is(":hidden")){
             img.show()
-
         }else {
-            $(this).attr('src','resource/show.png');
-            var img = $(this).parent().parent('.StepsdetailsDiv').next();
             img.hide()
         }
     })

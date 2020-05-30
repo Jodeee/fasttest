@@ -151,44 +151,34 @@ class Template_mixin(object):
 
     CASE_DETA_SNAPSHOT = r'''
                 <tr class="{dataId}" style="display: none">
-                    <td class="module_deta" colspan="2" style="border-right: 0">
+                    <td class="module_deta" colspan="6" style="border-right: 0">
                         <div class="errordiv">
                             <h3 style="margin-bottom: 10px">Steps</h3>
                             {steplist}
-                        </div>
-                    </td>
-                    <td class="module_deta" colspan="4">
-                        <div class="errordiv">
-                            <h3 style="margin-bottom: 10px">Logs</h3>
-                            <pre class="errorp" style="white-space: pre-wrap;overflow-wrap: break-word;margin-top: 0">{errlist}</pre>
                         </div>
                     </td>
                 </tr>
     '''
     CASE_SNAPSHOT_DIV = r'''
                             <div class="Stepsdetails">
-                                <div class="StepsdetailsDiv">
-                                    <div style="width: calc(100% - 40px);display: inline-block">
-                                        <pre class="StepsdetailsPre_duration {status}">{runtime}</pre>
-                                        <pre class="StepsdetailsPre">{steps}</pre>
-                                    </div>
-                                    <div style="width: 35px;float: right;display: inline-block">
-                                        <img class="show_hide" src="resource/show.png">
-                                    </div>
+                                <div class="steps" style="display: inline-block">
+                                        <pre class="StepsdetailsPre_duration">{runtime} | </pre>
+                                        <pre class="StepsdetailsPre {status}">{steps}</pre>
                                 </div>
-                                <img class="img" style="display: none" src="{image}">
+                                <div class="img_errorp" style="display: none;">
+                                    <img class="img" src="{image}">
+                                </div>
                             </div>
     '''
-    CASE_NOT_SNAPSHOT_DIV = r'''
+    CASE_ERROR_DIV = r'''
                             <div class="Stepsdetails">
-                                <div class="StepsdetailsDiv">
-                                    <div style="width: calc(100% - 40px);display: inline-block">
-                                        <pre class="StepsdetailsPre_duration {status}">{runtime}</pre>
-                                        <pre class="StepsdetailsPre">{steps}</pre>
-                                    </div>
-                                    <div style="width: 35px;float: right;display: inline-block">
-                                        <img class="show_hide" src="resource/show.png">
-                                    </div>
+                                <div class="steps" style="display: inline-block">
+                                        <pre class="StepsdetailsPre_duration">{runtime} | </pre>
+                                        <pre class="StepsdetailsPre {status}">{steps}</pre>
+                                </div>
+                                <div class="img_errorp" style="display: none;">
+                                    <img class="img" src="{image}">
+                                    <pre class="errorp" style="white-space: pre-wrap;overflow-wrap: break-word;">{errlist}</pre>
                                 </div>
                             </div>
     '''
@@ -218,8 +208,6 @@ class HTMLTestRunner(Template_mixin):
         resource = os.path.join(os.path.split(os.path.abspath(__file__))[0], "resource")
         shutil.copy(os.path.join(resource,"css.css"), os.path.join(result.report,'resource'))
         shutil.copy(os.path.join(resource,"js.js"), os.path.join(result.report,'resource'))
-        shutil.copy(os.path.join(resource, "hide.png"), os.path.join(result.report, 'resource'))
-        shutil.copy(os.path.join(resource, "show.png"), os.path.join(result.report, 'resource'))
         self.stream.write(output.encode('utf-8'))
 
     def _getReportAttributes(self,result,starttime,stoptime):
@@ -360,12 +348,27 @@ class HTMLTestRunner(Template_mixin):
                     f_path = testinfo.module_name + os.path.join(path, out_list[-2].replace('/', '&2F').replace('\\',
                                                                                                             '&5C').replace(
                         '*', '&2a').replace('\n', ''))
-                    case_snapshot = self.CASE_SNAPSHOT_DIV.format(
-                        status='Pass' if out_list[1] in 'True' else 'error',
-                        runtime=out_list[2],
-                        steps=out_list[-1],
-                        image=f_path
-                    )
+                    if len(out_list[2]) < 6:
+                        runtime = '{}{}'.format(out_list[2],' ' * (6-len(out_list[2])))
+                    else:
+                        runtime = out_list[2]
+                    if out_list[1] in 'True':
+                        case_snapshot = self.CASE_SNAPSHOT_DIV.format(
+                            status = 'Passfont',
+                            runtime = runtime,
+                            steps = out_list[-1],
+                            image = f_path
+                        )
+                    else:
+                        case_snapshot = self.CASE_ERROR_DIV.format(
+                            status = 'errorfont',
+                            runtime = runtime,
+                            steps = out_list[-1],
+                            image = f_path,
+                            errlist = err
+                        )
+
+
                     steps = steps + case_snapshot
             else:
                 case_snapshot = self.CASE_SNAPSHOT_DIV.format(
@@ -378,7 +381,6 @@ class HTMLTestRunner(Template_mixin):
             casedeta = self.CASE_DETA_SNAPSHOT.format(
                 dataId=dataId,
                 steplist=steps,
-                errlist=err
             )
 
         else:

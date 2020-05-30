@@ -108,11 +108,17 @@
    .Pass{
        background-color: rgba(57, 121, 4, 0.36);
    }
+   .Passfont{
+       color: #333;
+   }
    .failure{
        background-color: rgba(175, 118, 0, 0.36);
    }
    .error{
        background-color: rgba(121, 0, 12, 0.34);
+   }
+   .errorfont{
+       color:rgba(121, 0, 12, 0.34);
    }
    .skipped{
        background-color: rgba(121, 111, 112, 0.36);
@@ -141,16 +147,13 @@
 
    }
    .errorp{
-       display: block;
-       padding: 10px;
+       width: calc(100% - 300px);
+       display: inline-block;
+       vertical-align: top;
+       margin-top: 15px;
        font-size: 13px;
        color: #333;
        word-break: break-all;
-       word-wrap: break-word;
-       background-color: white;
-       border-radius: 4px;
-       border: 1px solid rgb(220,220,220);
-       white-space: pre-wrap;
        box-shadow:4px 4px 10px rgb(220,220,220);
    }
 
@@ -181,7 +184,6 @@
     .StepsdetailsPre{
         line-height: 17px;
         font-size: 13px;
-        color: #333;
         word-break: break-all;
         word-wrap: break-word;
         display: inline-block;
@@ -191,18 +193,10 @@
 
     .StepsdetailsPre_duration{
         line-height: 18px;
-        padding-bottom: 10px;
-        padding-top: 10px;
-        padding-left: 6px;
-        padding-right: 8px;
         font-size: 10px;
         color: #333;
         word-break: break-all;
-        word-wrap: break-word;
         display: inline-block;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-        width: 20px;
         text-align: center;
     }
 
@@ -212,9 +206,9 @@
     }
     .img {
         width: 250px;
+        vertical-align: top;
         background-color: white;
-        display:block;
-        margin: 10px;
+        margin: 15px;
         margin-left: 0;
         border: 1px solid rgb(220,220,220);
         box-shadow:4px 4px 10px rgb(220,220,220);

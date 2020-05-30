@@ -410,7 +410,7 @@ class ActionExecutor(object):
         elif step.type == 'Common':
             from fasttest.runner.case_analysis import CaseAnalysis
             case = CaseAnalysis()
-            case.iteration(Var.common_func[step.func].steps, f'{step.style}    ')
+            case.iteration(Var.common_func[step.func].steps, f'{step.style}  ')
             Var.common_var = {}
 
     def __action_step(self, step):
