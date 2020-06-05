@@ -40,7 +40,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('closeApp takes 1 positional argument but {} were giver'.format(len(params)))
 
-
     def __action_install_app(self, step):
         """
         行为执行：install_app
@@ -259,7 +258,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('input missing 2 required positional argument: element, text')
 
-
     def __action_if(self, step):
         """
         行为执行：if
@@ -367,7 +365,6 @@ class ActionExecutor(object):
         else:
             raise TypeError('assert missing 1 required positional argument')
 
-
     def __action_while(self, step):
         """
         行为解析：while
@@ -387,7 +384,6 @@ class ActionExecutor(object):
             return object_while
         else:
             raise TypeError('where missing 1 required positional argument')
-
 
     def __action_break(self, step):
         """

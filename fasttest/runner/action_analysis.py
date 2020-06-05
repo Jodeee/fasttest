@@ -95,7 +95,6 @@ class ActionAnalysis(object):
                 param = param
         return param
 
-
     def __join_value(self, contents, join):
         '''
         拼接字符串
