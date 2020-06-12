@@ -13,7 +13,7 @@ class ActionAnalysis(object):
         self.variables = {}
         self.action_executor = ActionExecutor()
 
-    def __analysis_json(self, path):
+    def analysis_json(self, path):
         dict = {}
         with open(os.path.join(path), 'r', encoding='utf-8') as f:
             dict = Dict(json.load(fp=f))
@@ -40,6 +40,38 @@ class ActionAnalysis(object):
             object_var = None
         return object_var
 
+    def __get_replace_string(self, content):
+        '''
+
+        :param content:
+        :return:
+        '''
+        pattern_content = re.compile(r'(\${\w+}+)')
+        while True:
+            if isinstance(content, str):
+                search_contains = re.search(pattern_content, content)
+                if search_contains:
+                    search_name = self.__get_variables(search_contains.group())
+                    if search_name is None:
+                        search_name = 'None'
+                    elif isinstance(search_name, str):
+                        if re.search(r'(\'.*?\')', search_name):
+                            search_name = '"{}"'.format(search_name)
+                        elif re.search(r'(".*?")', search_name):
+                            search_name = '\'{}\''.format(search_name)
+                        else:
+                            search_name = '\'{}\''.format(search_name)
+                    else:
+                        search_name = str(search_name)
+                    content = content[0:search_contains.span()[0]] + search_name + content[search_contains.span()[1]:]
+                else:
+                    break
+            else:
+                content = str(content)
+                break
+
+        return content
+
     def __get_params_type(self, param):
         '''
         获取参数类型
@@ -60,7 +92,7 @@ class ActionAnalysis(object):
         return param
 
     def __get_parms(self, parms):
-
+        parms = parms.strip()
         if re.match('^\(.*\)$', parms):
             params = []
             pattern_content = re.compile(r'(".*?")|(\'.*?\')|,| ')
@@ -118,7 +150,7 @@ class ActionAnalysis(object):
             raise SyntaxError(f'"{step}"')
         if re.match(r'\$\.(\w)+\(.*\)', var_value):
             key = var_value.split('(', 1)[0]
-            parms = self.__get_parms(var_value.split(key, 1)[-1].strip())
+            parms = self.__get_parms(var_value.split(key, 1)[-1])
         else:
             key = None
             parms = var_value
@@ -133,12 +165,22 @@ class ActionAnalysis(object):
 
     def __analysis_common_keywords(self, step):
         key = step.split('call', 1)[-1].strip().split('(', 1)[0].strip()
-        parms = step.split('call', 1)[-1].strip().split(key, 1)[-1].strip()
+        parms = step.split('call', 1)[-1].strip().split(key, 1)[-1]
         parms = self.__get_parms(parms)
         action_data = Dict({
             'key': key,
             'parms': parms,
             'tag': 'call'
+        })
+        return action_data
+
+    def __analysis_other_keywords(self, step):
+        key = step.split(' ', 1)[0].strip()
+        parms = self.__get_replace_string(step.lstrip(key))
+        action_data = Dict({
+            'key': key,
+            'parms': parms,
+            'tag': 'other'
         })
         return action_data
         
@@ -158,8 +200,26 @@ class ActionAnalysis(object):
             return self.__analysis_setVar_keywords(step)
         elif re.match(r'call \w+\(.*\)', step):
             return self.__analysis_common_keywords(step)
+        elif re.match(r'if |elif |while |assert .+', step):
+            return self.__analysis_other_keywords(step)
         else:
             raise SyntaxError(f'"{step}"')
+
+    def executor_keywords(self, action, keywords):
+        print(action)
+        print(keywords)
+        if action.key in keywords.keys():
+            result = self.action_executor.action_executor(action)
+
+        elif action.key in keywords.keys():
+            result =
+        else:
+            result = None
+
+        if action.tag == 'getVar':
+            self.variables[action.name] = result
+        else:
+            return result
 
     # if step in dict.keys():
     #     value = dict[step]
@@ -168,6 +228,7 @@ class ActionAnalysis(object):
 
 if __name__ == '__main__':
     action = ActionAnalysis()
-    # dict = action.__analysis_json('keywords.json')
-    action_dict = action.match_keywords("call getst('1',1)")
-    print(action_dict)
+    dict = action.analysis_json('keywords.json')
+    action_dict = action.match_keywords("click()")
+    action.executor_keywords(action_dict, dict)
+
