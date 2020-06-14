@@ -6,7 +6,6 @@ import time
 import json
 import inspect
 import unittest
-import traceback
 from fasttest.common import *
 from fasttest.utils import *
 from fasttest.runner.run_case import RunCase
@@ -24,6 +23,7 @@ class Project(object):
         self.__analytical_testcase_file()
         self.__analytical_common_file()
         self.__init_data()
+        self.__init_keywords()
         self.__init_images()
         self.__init_testcase_suite()
 
@@ -32,6 +32,7 @@ class Project(object):
         for path in [path  for path in inspect.stack() if str(path[1]).endswith("runtest.py")]:
             self.__ROOT = os.path.dirname(path[1])
             sys.path.append(self.__ROOT)
+            sys.path.append(os.path.join(self.__ROOT, 'Scripts'))
             Var.ROOT = self.__ROOT
             Var.global_var = {} # 全局变量
             Var.extensions_var = {} # 扩展数据变量
@@ -52,7 +53,7 @@ class Project(object):
 
     def __init_data(self):
 
-        if os.path.exists(os.path.join(Var.ROOT,'data.json')):
+        if os.path.exists(os.path.join(Var.ROOT, 'data.json')):
             with open(os.path.join(Var.ROOT, 'data.json'), 'r', encoding='utf-8') as f:
                 dict = Dict(json.load(fp=f))
                 if dict:
@@ -60,6 +61,19 @@ class Project(object):
                 for extensionsK, extensionsV in dict.items():
                     log_info('{}: {}'.format(extensionsK, extensionsV))
                     Var.extensions_var[extensionsK] = extensionsV
+
+    def __init_keywords(self):
+
+        default_keywords_path = os.path.join(__file__.split('project.py')[0], 'runner', 'resource', 'keywords.json')
+        if os.path.exists(default_keywords_path):
+            with open(default_keywords_path, 'r', encoding='utf-8') as f:
+                dict = Dict(json.load(fp=f))
+                if dict:
+                    Var.default_keywords_data = dict
+                else:
+                    raise KeyError('Default keyword is empty!')
+
+        Var.new_keywords_data = Var.extensions_var['keywords']
 
     def __init_images(self):
 

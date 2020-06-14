@@ -141,13 +141,14 @@ class ServerUtils(object):
 
         except Exception as e:
             log_error('Unable to connect to the server, please reconnect!', False)
-            if self.driver == 'appium':
-                os.system('adb uninstall io.appium.uiautomator2.server')
-                os.system('adb uninstall io.appium.uiautomator2.server.test')
-            else:
-                os.system('adb uninstall com.macaca.android.testing')
-                os.system('adb uninstall com.macaca.android.testing.test')
-                os.system('adb uninstall xdf.android_unlock')
+            if self.platformName.lower() == "android":
+                if self.driver == 'appium':
+                    os.system('adb uninstall io.appium.uiautomator2.server')
+                    os.system('adb uninstall io.appium.uiautomator2.server.test')
+                else:
+                    os.system('adb uninstall com.macaca.android.testing')
+                    os.system('adb uninstall com.macaca.android.testing.test')
+                    os.system('adb uninstall xdf.android_unlock')
             self.stop_server()
             raise e
 

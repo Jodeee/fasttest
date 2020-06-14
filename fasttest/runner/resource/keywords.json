@@ -1,0 +1,31 @@
+{
+    "keywords":[
+        "installApp",
+        "uninstallApp",
+        "launchApp",
+        "closeApp",
+        "tap",
+        "doubleTap",
+        "press",
+        "goBack",
+        "adb",
+        "swipe",
+        "click",
+        "check",
+        "input",
+        "sleep",
+        "break",
+        "$.getText",
+        "$.id",
+        "$.getVar",
+        "$.setVar",
+        "if",
+        "elif",
+        "else",
+        "ifcheck",
+        "elifcheck",
+        "ifiOS",
+        "ifAndroid",
+        "assert"
+    ]
+}
