@@ -72,8 +72,8 @@ class Project(object):
                     Var.default_keywords_data = dict
                 else:
                     raise KeyError('Default keyword is empty!')
-
-        Var.new_keywords_data = Var.extensions_var['keywords']
+        if 'keywords' in  Var.extensions_var.keys():
+            Var.new_keywords_data = Var.extensions_var['keywords']
 
     def __init_images(self):
 
