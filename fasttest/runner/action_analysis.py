@@ -279,6 +279,7 @@ class ActionAnalysis(object):
 
         if action.tag == 'getVar':
             self.variables[action.name] = result
+            return result
         else:
             return result
 

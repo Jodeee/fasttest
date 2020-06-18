@@ -41,6 +41,7 @@ def keywords(func, *args, **kwds):
         imagename = "Step_{}.png".format(snapshot_index)
         file = os.path.join(Var.snapshot_dir, imagename)
         action_step = args[-2].step
+        action_tag = args[-2].tag
         style = args[-1]
         try:
             if args or kwds:
@@ -59,7 +60,16 @@ def keywords(func, *args, **kwds):
                     Var.instance.save_screenshot(file)
                 stop_time = time.time()
                 duration = str('%.1f' % (stop_time - start_time))
+                if action_tag == 'getVar':
+                    # 获取变量值后需要替换掉原数据
+                    step_ = action_step.split('=', 1)
+                    if step_[-1].startswith(' '):
+                        action_step = f'{step_[0]}= {result}'
+                    else:
+                        action_step = f'{step_[0]}={result}'
+                    result = None
                 if result is not None:
+                    # if while 等需要把结果放在语句后面
                     result_step = '{}|:|{}|:|{}s|:|{}|:|{}: {}\n'.format(snapshot_index, not exception_flag, duration,
                                                                      imagename, f'{style}- {action_step}', result)
                 else:

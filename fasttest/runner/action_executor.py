@@ -332,9 +332,10 @@ class ActionExecutor(object):
                 exec(l)
             func = f'{action.key}({action.parms})'
             result = eval(func)
-            log_info(f'{action.key}: {result}')
         else:
            result = action.parms[0]
+
+        log_info(f'{action.name}: {result}')
         return result
 
     def __action_setVar(self, action):
@@ -390,7 +391,7 @@ class ActionExecutor(object):
                 exec(l)
             func = f'{action.key}({action.parms})'
             result = eval(func)
-            log_info(f'{action.key} return: {result}')
+            log_info(f'{action.key}: {result}')
             return result
         else:
             raise KeyError('The {} keyword is undefined!'.format(action.step))
