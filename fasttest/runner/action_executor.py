@@ -3,16 +3,27 @@
 import os
 import sys
 import time
-from fasttest.common import Var, log_info
+from fasttest.common import Var, log_info, log_error
 from fasttest.drivers.driver_base import DriverBase
 from fasttest.utils.opcv_utils import OpencvUtils
-try:
-    from Scripts import *
-except Exception:
-    pass
 
 
 class ActionExecutor(object):
+
+    def __from_scripts_file(self):
+
+        file_list = []
+        try:
+            for rt, dirs, files in os.walk(os.path.join(Var.ROOT, "Scripts")):
+                for f in files:
+                    if f == "__init__.py" or f.endswith("pyc") or f.startswith("."):
+                        continue
+                    file_list.append(f'from Scripts.{f[:-3]} import *')
+
+        except Exception as e:
+            log_error(e, False)
+
+        return file_list
 
     def __action_start_app(self, action):
         """
@@ -316,6 +327,9 @@ class ActionExecutor(object):
             else:
                 result = None
         elif action.key:
+            list = self.__from_scripts_file()
+            for l in list:
+                exec(l)
             func = f'{action.key}({action.parms})'
             result = eval(func)
             log_info(f'{action.key}: {result}')
@@ -371,6 +385,9 @@ class ActionExecutor(object):
     def new_action_executor(self, action):
 
         if action.key:
+            list = self.__from_scripts_file()
+            for l in list:
+                exec(l)
             func = f'{action.key}({action.parms})'
             result = eval(func)
             log_info(f'{action.key} return: {result}')
