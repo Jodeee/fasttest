@@ -352,7 +352,6 @@ class ActionExecutor(object):
         :param action:
         :return:
         '''
-        Var.common_var = {}
         key = action.key
         parms = action.parms
         if  not key in Var.common_func.keys():
@@ -360,12 +359,11 @@ class ActionExecutor(object):
         if len(Var.common_func[key].input) != len(parms):
             raise TypeError('{}() takes {} positional arguments but {} was given'.format(key, len(
                 Var.common_func[key].input), len(parms)))
-        Var.common_var = dict(zip(Var.common_func[key].input, parms))
+        common_var = dict(zip(Var.common_func[key].input, parms))
 
         from fasttest.runner.case_analysis import CaseAnalysis
         case = CaseAnalysis()
-        case.iteration(Var.common_func[key].steps, f'{action.style}  ')
-        Var.common_var = {}
+        case.iteration(Var.common_func[key].steps, f'{action.style}  ', common_var)
         return
 
     def __action_other(self, action):

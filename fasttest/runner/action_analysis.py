@@ -22,8 +22,8 @@ class ActionAnalysis(object):
         if not re.match(r'^\${(\w+)}$', name):
             raise SyntaxError(name)
         name = name[2:-1]
-        if Var.common_var and name in Var.common_var.keys():
-            object_var = Var.common_var[name]
+        if name in self.common_var.keys():
+            object_var = self.common_var[name]
         elif name in self.variables:
             object_var = self.variables[name]
         elif name in vars(Var).keys():
@@ -283,8 +283,9 @@ class ActionAnalysis(object):
         else:
             return result
 
-    def action_analysis(self, step, style):
+    def action_analysis(self, step, style, common):
         log_info(step)
+        self.common_var = common
         action_dict = self.__match_keywords(step, style)
         result = self.executor_keywords(action_dict, style)
         return result
