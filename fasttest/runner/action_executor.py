@@ -361,9 +361,14 @@ class ActionExecutor(object):
                 Var.common_func[key].input), len(parms)))
         common_var = dict(zip(Var.common_func[key].input, parms))
 
-        from fasttest.runner.case_analysis import CaseAnalysis
-        case = CaseAnalysis()
-        case.iteration(Var.common_func[key].steps, f'{action.style}  ', common_var)
+        try:
+            from fasttest.runner.case_analysis import CaseAnalysis
+            case = CaseAnalysis()
+            case.iteration(Var.common_func[key].steps, f'{action.style}  ', common_var)
+        except Exception as e:
+            # call action中如果某一句step异常，此处会往上抛异常，导致call action也是失败状态，需要标记
+            Var.exception_flag = True
+            raise e
         return
 
     def __action_other(self, action):
