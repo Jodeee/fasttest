@@ -550,7 +550,7 @@ class iOSDriver(object):
                 to_x = to_x * width
             if to_y <= 1.0:
                 to_y = to_y * height
-            Var.instance.swipe(int(from_x), int(from_y), int(to_x), int(to_y), duration * 100)
+            Var.instance.swipe(int(from_x), int(from_y), int(to_x), int(to_y), duration)
         except Exception as e:
             raise e
 
