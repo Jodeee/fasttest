@@ -267,21 +267,24 @@ class ActionAnalysis(object):
     @keywords
     def executor_keywords(self, action, style):
 
-        if action.tag in ['setVar', 'getVar', 'call', 'other']:
-            result = self.action_executor.action_executor(action)
-        elif action.key in Var.default_keywords_data.keywords:
-            result = self.action_executor.action_executor(action)
-        elif action.key in Var.new_keywords_data:
-            action.parms = self.__join_value(action.parms, ', ')
-            result = self.action_executor.new_action_executor(action)
-        else:
-            raise KeyError('The {} keyword is undefined!'.format(action.key))
+        try:
+            if action.tag in ['setVar', 'getVar', 'call', 'other']:
+                result = self.action_executor.action_executor(action)
+            elif action.key in Var.default_keywords_data.keywords:
+                result = self.action_executor.action_executor(action)
+            elif action.key in Var.new_keywords_data:
+                action.parms = self.__join_value(action.parms, ', ')
+                result = self.action_executor.new_action_executor(action)
+            else:
+                raise KeyError('The {} keyword is undefined!'.format(action.key))
 
-        if action.tag == 'getVar':
-            self.variables[action.name] = result
-            return result
-        else:
-            return result
+            if action.tag == 'getVar':
+                self.variables[action.name] = result
+                return result
+            else:
+                return result
+        except Exception as e:
+            raise e
 
     def action_analysis(self, step, style, common):
         log_info(step)

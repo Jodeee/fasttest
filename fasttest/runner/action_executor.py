@@ -394,7 +394,6 @@ class ActionExecutor(object):
                 exec(l)
             func = f'{action.key}({action.parms})'
             result = eval(func)
-            log_info(f'{action.key}: {result}')
             return result
         else:
             raise KeyError('The {} keyword is undefined!'.format(action.step))

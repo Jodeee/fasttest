@@ -444,7 +444,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_up(duration=2):
+    def swipe_up(duration=0):
         '''
         :param duration:
         :return:
@@ -516,7 +516,7 @@ class iOSDriver(object):
                 to_x = to_x * width
             if to_y <= 1.0:
                 to_y = to_y * height
-            Var.instance.touch('drag', { 'fromX': from_x, 'fromY': from_y, 'toX': to_x, 'toY': to_y, 'duration': duration * 100})
+            Var.instance.touch('drag', { 'fromX': from_x, 'fromY': from_y, 'toX': to_x, 'toY': to_y, 'duration': duration})
         except Exception as e:
             raise e
 

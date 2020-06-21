@@ -2,4 +2,4 @@
 # -*- coding: utf-8 -*-
 
 from fasttest.common import *
-driver = Var.driver_instance
+driver = Var.instance
