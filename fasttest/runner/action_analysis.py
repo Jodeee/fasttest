@@ -201,8 +201,10 @@ class ActionAnalysis(object):
             key = var_value.split('(', 1)[0]
             if key == '$.id':
                 parms = self.__get_replace_string(var_value.split(key, 1)[-1][1:-1])
-            else:
+            elif key == '$.getText':
                 parms = self.__get_parms(var_value.split(key, 1)[-1])
+            else:
+                parms = None
         elif re.match(r'(\w)+\(.*\)', var_value):
             key =  var_value.split('(', 1)[0]
             parms = self.__get_replace_string(var_value.split(key, 1)[-1][1:-1])

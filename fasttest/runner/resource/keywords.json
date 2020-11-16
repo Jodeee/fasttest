@@ -19,6 +19,7 @@
         "$.id",
         "$.getVar",
         "$.setVar",
+        "while",
         "if",
         "elif",
         "else",
