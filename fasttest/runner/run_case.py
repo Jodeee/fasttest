@@ -7,15 +7,15 @@ from fasttest.runner.case_analysis import CaseAnalysis
 class RunCase(TestCase):
 
     def setUp(self):
-        if Var.restart and not self.skip:
+        if Var.restart:
             DriverBase.launch_app(None)
-
-    def testCase(self):
         if self.skip:
             self.skipTest('skip')
+
+    def testCase(self):
         case = CaseAnalysis()
         case.iteration(self.steps)
 
     def tearDown(self):
-        if Var.restart and not self.skip:
+        if Var.restart:
             DriverBase.close_app(None)
