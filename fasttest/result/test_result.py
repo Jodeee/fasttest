@@ -3,18 +3,8 @@
 import os
 import time
 import unittest
+import collections
 from fasttest.common import *
-
-
-def testcase_name(test_method):
-    testcase = type(test_method)
-
-    # Ignore module name if it is '__main__'
-    module = testcase.__module__ + '.'
-    if module == '__main__.':
-        module = ''
-    result = module + testcase.__name__
-    return result
 
 class TestInfo(object):
     """
@@ -25,37 +15,32 @@ class TestInfo(object):
     # Possible test outcomes
     (SUCCESS, FAILURE, ERROR, SKIP) = range(4)
 
-    def __init__(self, test_result, test_method, outcome=SUCCESS, err=None, subTest=None):
-        self.test_result = test_result
-        self.outcome = outcome
+    def __init__(self, test_method, status=SUCCESS, err=None):
+        self.status = status
         self.elapsed_time = 0
         self.start_time = 0
         self.stop_time = 0
         self.err = err
-        self.stdout = test_result._stdout_data
 
-        self.test_description = self.test_result.getDescription(test_method)
-        self.test_exception_info = (
-            '' if outcome in (self.SUCCESS, self.SKIP)
-            else self.test_result._exc_info_to_string(
-                    self.err, test_method)
-        )
-        self.dataId = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
-        self.casename = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
+        self.report = None
+        self.case_path = test_method.testcase_path
+        self.data_id = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
+        self.case_name = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
         self.snapshot_dir = test_method.snapshot_dir
         self.module_name = test_method.module
         self.description = test_method.description
+        self.test_case_steps = {}
 
 class TestResult(unittest.TextTestResult):
 
-    def __init__(self,stream, descriptions, verbosity,infoclass = None):
+    def __init__(self,stream, descriptions, verbosity):
         super(TestResult,self).__init__(stream,descriptions,verbosity)
         self.stream = stream
         self.showAll = verbosity > 1
         self.descriptions = descriptions
-        self.result = []
+        self.result = collections.OrderedDict()
         self.successes = []
-        self.infoclass = TestInfo if infoclass is None else infoclass
+        self.testinfo = None
 
     def _save_output_data(self):
         '''
@@ -76,6 +61,8 @@ class TestResult(unittest.TextTestResult):
         '''
         super(TestResult,self).startTest(test)
         self.start_time = time.time()
+        Var.test_case_steps = {}
+        Var.is_debug = False
 
     def stopTest(self, test):
         '''
@@ -85,9 +72,17 @@ class TestResult(unittest.TextTestResult):
         self._save_output_data()
         unittest.TextTestResult.stopTest(self,test)
         self.stop_time = time.time()
-        self.result[-1][1].start_time = self.start_time
-        self.result[-1][1].stop_time = self.stop_time
-        self.report = Var.report
+        self.report = test.report
+        self.testinfo.start_time = self.start_time
+        self.testinfo.stop_time = self.stop_time
+        self.testinfo.report = self.report
+        self.testinfo.test_case_steps = Var.test_case_steps
+        if test.module not in self.result.keys():
+            self.result[test.module] = []
+        self.result[test.module].append(self.testinfo)
+        self.testinfo = None
+        Var.test_case_steps = {}
+        Var.is_debug = False
 
     def addSuccess(self, test):
         '''
@@ -96,9 +91,8 @@ class TestResult(unittest.TextTestResult):
         '''
         super(TestResult,self).addSuccess(test)
         self._save_output_data()
-        testinfo = self.infoclass(self,test,self.infoclass.SUCCESS)
-        self.result.append((self.infoclass.SUCCESS,testinfo,''))
-        self.successes.append(testinfo)
+        self.testinfo = TestInfo(test, TestInfo.SUCCESS)
+        self.successes.append(test)
 
     def addError(self, test, err):
         '''
@@ -107,10 +101,10 @@ class TestResult(unittest.TextTestResult):
         '''
         super(TestResult,self).addError(test,err)
         self._save_output_data()
-        testinfo = self.infoclass(self,test,self.infoclass.ERROR,err)
-        _exc_str = self._exc_info_to_string(err,test)
-        log_error(_exc_str,False)
-        self.result.append((self.infoclass.ERROR,testinfo,_exc_str))
+        _exc_str = self._exc_info_to_string(err, test)
+        self.testinfo = TestInfo(test, TestInfo.ERROR, _exc_str)
+        log_error(' case: {}'.format(self.testinfo.case_path), False)
+        log_error(_exc_str, False)
 
     def addFailure(self, test, err):
         '''
@@ -119,10 +113,10 @@ class TestResult(unittest.TextTestResult):
         '''
         super(TestResult,self).addFailure(test,err)
         self._save_output_data()
-        testinfo = self.infoclass(self,test,self.infoclass.FAILURE,err)
-        _exc_str = self._exc_info_to_string(err,test)
+        _exc_str = self._exc_info_to_string(err, test)
+        self.testinfo = TestInfo(test, TestInfo.FAILURE, _exc_str)
+        log_error(' case: {}'.format(self.testinfo.case_path), False)
         log_error(_exc_str, False)
-        self.result.append((self.infoclass.FAILURE,testinfo,_exc_str))
 
     def addSkip(self, test, reason):
         '''
@@ -131,8 +125,7 @@ class TestResult(unittest.TextTestResult):
         '''
         super(TestResult,self).addSkip(test,reason)
         self._save_output_data()
-        testinfo = self.infoclass(self,test,self.infoclass.SKIP,reason)
-        self.result.append((self.infoclass.SKIP,testinfo,reason))
+        self.testinfo = TestInfo(test, TestInfo.SKIP)
 
     def addExpectedFailure(self, test, err):
         '''
@@ -142,8 +135,8 @@ class TestResult(unittest.TextTestResult):
         '''
         super(TestResult, self).addFailure(test, err)
         self._save_output_data()
-        testinfo = self.infoclass(self, test, self.infoclass.FAILURE, err)
         _exc_str = self._exc_info_to_string(err, test)
+        self.testinfo = TestInfo(test, TestInfo.FAILURE, _exc_str)
+        log_error(' case: {}'.format(self.testinfo.case_path), False)
         log_error(_exc_str, False)
-        self.result.append((self.infoclass.FAILURE, testinfo, _exc_str))
 

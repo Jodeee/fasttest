@@ -3,6 +3,7 @@
 import os
 import sys
 import time
+from collections import Iterable
 from fasttest.common import Var, log_info, log_error
 from fasttest.drivers.driver_base import DriverBase
 from fasttest.utils.opcv_utils import OpencvUtils
@@ -16,14 +17,41 @@ class ActionExecutor(object):
         try:
             for rt, dirs, files in os.walk(os.path.join(Var.ROOT, "Scripts")):
                 for f in files:
-                    if f == "__init__.py" or f.endswith("pyc") or f.startswith("."):
+                    if f == "__init__.py" or f.endswith(".pyc") or f.startswith(".") or not f.endswith('.py'):
                         continue
                     file_list.append(f'from Scripts.{f[:-3]} import *')
 
         except Exception as e:
-            log_error(e, False)
+            log_error(' {}'.format(e), False)
 
         return file_list
+
+    def __out_result(self, key, result):
+        '''
+        input result
+        '''
+        if isinstance(result, list):
+            log_info(f' <-- {key}: {type(result)}')
+            for l in result:
+                log_info(' - {}'.format(l))
+        elif isinstance(result, dict):
+            log_info(f' <-- {key}: {type(result)}')
+            for k, v in result.items():
+                log_info(' - {}: {}'.format(k, v))
+        else:
+            log_info(f' <-- {key}: {type(result)} {result}')
+
+    def __get_value(self, action, index=0):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = action.parms
+        if len(parms) <= index or not len(parms):
+            raise TypeError('missing {} required positional argument'.format(index + 1))
+
+        value = parms[index]
+        return value
 
     def __action_start_app(self, action):
         """
@@ -149,7 +177,7 @@ class ActionExecutor(object):
         elif len(action.parms) == 5:
             DriverBase.swipe(float(action.parms[0]), float(action.parms[1]), float(action.parms[2]), float(action.parms[3]), int(action.parms[4]))
         else:
-            raise TypeError('swipe takes 1 positional argument but {} were giver'.format(len(action.action)))
+            raise TypeError('swipe takes 1 positional argument but {} were giver'.format(len(action.step)))
 
     def __action_getText(self, action):
         """
@@ -174,7 +202,7 @@ class ActionExecutor(object):
         """
         parms = action.parms
         if len(parms):
-            img_info = self.__ocr_analysis(action.action, parms[0], True)
+            img_info = self.__ocr_analysis(action.step, parms[0], True)
             if not isinstance(img_info, bool):
                 Var.ocrimg = img_info['ocrimg']
                 x = img_info['x']
@@ -195,7 +223,7 @@ class ActionExecutor(object):
         """
         parms = action.parms
         if len(parms):
-            img_info = self.__ocr_analysis(action.action, parms[0], True)
+            img_info = self.__ocr_analysis(action.step, parms[0], True)
             if not isinstance(img_info, bool):
                 if img_info is not None:
                     Var.ocrimg = img_info['ocrimg']
@@ -239,7 +267,7 @@ class ActionExecutor(object):
         """
         parms = action.parms
         if len(parms):
-            img_info = self.__ocr_analysis(action.action, parms[0], True)
+            img_info = self.__ocr_analysis(action.step, parms[0], True)
             if not isinstance(img_info, bool):
                 if img_info is not None:
                     Var.ocrimg = img_info['ocrimg']
@@ -295,11 +323,9 @@ class ActionExecutor(object):
         :param element:
         :return:
         """
-        if element not in Var.extensions_var['images_file'].keys():
+        if element not in Var.extensions_var['resource'].values():
             return False
-        time.sleep(5)
-        img_file = Var.extensions_var['images_file'][element]
-        orcimg = OpencvUtils(action, img_file)
+        orcimg = OpencvUtils(action, element)
         orcimg.save_screenshot()
         img_info = orcimg.extract_minutiae()
         if img_info:
@@ -317,6 +343,7 @@ class ActionExecutor(object):
         if action.key == '$.getText':
             result = self.__action_getText(action)
         elif action.key == '$.id':
+            action.parms = action.parms.replace('\n', '')
             result = eval(action.parms)
         elif action.key == '$.getVar':
             if Var.global_var:
@@ -327,23 +354,20 @@ class ActionExecutor(object):
             else:
                 result = None
         elif action.key:
-            list = self.__from_scripts_file()
-            for l in list:
-                exec(l)
-            func = f'{action.key}({action.parms})'
-            result = eval(func)
+            # 调用脚本
+            result = self.new_action_executor(action, False)
         else:
-           result = action.parms[0]
+            result = action.parms[0]
 
-        log_info(f'{action.name}: {result}')
+        self.__out_result(action.name, result)
         return result
 
     def __action_setVar(self, action):
         '''
         :return:
         '''
-        key = action.parms[0]
-        values = action.parms[1]
+        key = self.__get_value(action, 0)
+        values = self.__get_value(action, 1)
         Var.global_var[key] = values
         return
 
@@ -378,22 +402,48 @@ class ActionExecutor(object):
         key = action.key
         parms = action.parms
         try:
+            parms = parms.replace('\n', '')
             result = eval(parms)
-            log_info('{}: {}'.format(action.parms, result))
+            if result:
+                isTrue = True
+            else:
+                isTrue = False
+
+            log_info(' <-- {}'.format(isTrue))
             if key == 'assert':
                 assert result
-            return result
+            return isTrue
         except Exception as e:
             raise e
 
-    def new_action_executor(self, action):
+    def __action_for(self, action):
+        '''
+        :return:
+        '''
+        value = self.__get_value(action)
+        var = action.var
+        if not isinstance(value, Iterable):
+            raise TypeError(f"'{value}' object is not iterable")
+        return {'key': var, 'value': value}
 
+    def new_action_executor(self, action, output=True):
+        # 调用脚本
         if action.key:
             list = self.__from_scripts_file()
             for l in list:
                 exec(l)
-            func = f'{action.key}({action.parms})'
-            result = eval(func)
+            parms = None
+            for index, par in enumerate(action.parms):
+                if not parms:
+                    parms = 'action.parms[{}]'.format(index)
+                    continue
+                parms = '{}, action.parms[{}]'.format(parms, index)
+            if not parms:
+                result = eval('locals()[action.key]()')
+            else:
+                result = eval('locals()[action.key]({})'.format(parms))
+            if result and output:
+                self.__out_result(action.key, result)
             return result
         else:
             raise KeyError('The {} keyword is undefined!'.format(action.step))
@@ -407,14 +457,17 @@ class ActionExecutor(object):
         if action.tag and action.tag == 'getVar':
             result = self.__action_getVar(action)
 
-        elif action.tag and action.tag == 'setVar':
-            result = self.__action_setVar(action)
-
         elif action.tag and action.tag == 'call':
             result = self.__action_call(action)
 
         elif action.tag and action.tag == 'other':
             result = self.__action_other(action)
+
+        elif action.tag and action.tag == 'for':
+            result = self.__action_for(action)
+
+        elif action.key == 'setVar':
+            result = self.__action_setVar(action)
 
         elif action.key == 'installApp':
             result = self.__action_install_app(action)
@@ -471,10 +524,10 @@ class ActionExecutor(object):
             result = self.__action_ifcheck(action)
 
         elif action.key == 'break':
-            result = None
+            result = True
 
         elif action.key == 'else':
-            result = None
+            result = True
 
         else:
             raise KeyError('The {} keyword is undefined!'.format(action.key))
