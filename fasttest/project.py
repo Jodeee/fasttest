@@ -8,8 +8,8 @@ import inspect
 import unittest
 from fasttest.common import *
 from fasttest.utils import *
+from fasttest.keywords import keywords
 from fasttest.runner.run_case import RunCase
-from fasttest.common.logging import log_init
 from fasttest.drivers.driver_base import DriverBase
 from fasttest.result.test_runner import TestRunner
 
@@ -24,7 +24,7 @@ class Project(object):
         self.__analytical_common_file()
         self.__init_data()
         self.__init_keywords()
-        self.__init_images()
+        self.__init_resource()
         self.__init_testcase_suite()
 
     def __init_project(self):
@@ -59,35 +59,35 @@ class Project(object):
                 if dict:
                     log_info('******************* analytical data *******************')
                 for extensionsK, extensionsV in dict.items():
-                    log_info('{}: {}'.format(extensionsK, extensionsV))
+                    log_info(' {}: {}'.format(extensionsK, extensionsV))
                     Var.extensions_var[extensionsK] = extensionsV
+        if not Var.extensions_var:
+            Var.extensions_var = {}
+        if 'variable' not in Var.extensions_var:
+            Var.extensions_var['variable'] = {}
 
     def __init_keywords(self):
 
-        default_keywords_path = os.path.join(__file__.split('project.py')[0], 'runner', 'resource', 'keywords.json')
-        if os.path.exists(default_keywords_path):
-            with open(default_keywords_path, 'r', encoding='utf-8') as f:
-                dict = Dict(json.load(fp=f))
-                if dict:
-                    Var.default_keywords_data = dict
-                else:
-                    raise KeyError('Default keyword is empty!')
-        if 'keywords' in  Var.extensions_var.keys():
-            Var.new_keywords_data = Var.extensions_var['keywords']
+        Var.default_keywords_data = keywords.return_keywords()
 
-    def __init_images(self):
+        if 'keywords' not in  Var.extensions_var.keys():
+            Var.new_keywords_data = []
+            return
+        Var.new_keywords_data = Var.extensions_var['keywords']
 
-        if Var.extensions_var and Var.extensions_var['images']:
-            log_info('******************* analytical images *******************')
-            images_dict = {}
-            for images in Var.extensions_var['images']:
-                images_file = os.path.join(Var.ROOT, 'images/{}'.format(images))
-                if os.path.isfile(images_file):
-                    images_dict[images] = images_file
-                else:
-                    raise FileNotFoundError('No such file or directory: {}'.format(images_file))
-            Var.extensions_var['images_file'] = images_dict
-            log_info('image path: {}'.format(Var.extensions_var['images_file']))
+    def __init_resource(self):
+
+        log_info('******************* analytical resource *******************')
+        if 'resource' not in Var.extensions_var.keys():
+            Var.extensions_var['resource'] = {}
+
+        for resource, path in Var.extensions_var['resource'].items():
+            resource_file = os.path.join(Var.ROOT, path)
+            if not os.path.isfile(resource_file):
+                log_error('No such file or directory: {}'.format(resource_file), False)
+                continue
+            Var.extensions_var['resource'][resource] = resource_file
+            log_info(' {}: {}'.format(resource, resource_file))
 
     def __init_logging(self):
 
@@ -100,17 +100,19 @@ class Project(object):
         if not os.path.exists(Var.report):
             os.makedirs(Var.report)
             os.makedirs(os.path.join(Var.report, 'resource'))
-        log_init(Var.report)
 
     def __analytical_testcase_file(self):
 
         log_info('******************* analytical config *******************')
         for configK, configV in self.__config.items():
-            log_info('{}: {}'.format(configK, configV))
+            log_info(' {}: {}'.format(configK, configV))
         log_info('******************* analytical testcase *******************')
         testcase = TestCaseUtils()
         self.__testcase = testcase.testcase_path(Var.ROOT, Var.testcase)
-        log_info('testcase:{}'.format(self.__testcase))
+        log_info(' case: {}'.format(len(self.__testcase)))
+        if self.__testcase:
+            for case in self.__testcase:
+                log_info(' {}'.format(case))
 
     def __analytical_common_file(self):
 
@@ -122,7 +124,6 @@ class Project(object):
                 self.__load_common_func(rt, files)
             elif rt.split(os.sep)[-1].lower() == Var.platformName.lower():
                 self.__load_common_func(rt, files)
-        log_info('common: {}'.format(Var.common_func.keys()))
 
     def __load_common_func(self,rt ,files):
 
@@ -131,6 +132,7 @@ class Project(object):
                 continue
             for commonK, commonV in analytical_file(os.path.join(rt, f)).items():
                 Var.common_func[commonK] = commonV
+                log_info(' {}: {}'.format(commonK, commonV))
 
 
     def __init_testcase_suite(self):
@@ -154,3 +156,15 @@ class Project(object):
         runner = TestRunner()
         runner.run(suite)
         server.stop_server()
+
+        if Var.all_result:
+            if Var.all_result.errorsList:
+                log_info(' Error case:')
+            for error in Var.all_result.errorsList:
+                log_error(error, False)
+
+            if Var.all_result.failuresList:
+                log_info(' Failed case:')
+            for failure in Var.all_result.failuresList:
+                log_error(failure, False)
+        return Var.all_result

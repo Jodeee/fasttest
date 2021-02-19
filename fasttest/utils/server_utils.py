@@ -37,7 +37,7 @@ class ServerUtils(object):
                 elif key in ['activity', 'appActivity']:
                     key = 'activity'
             desired_capabilities_dict[key] = value
-            log_info('    {}: {}'.format(key, value))
+            log_info(' {}: {}'.format(key, value))
             object.__setattr__(self, key, value)
 
         self.url = 'http://127.0.0.1'

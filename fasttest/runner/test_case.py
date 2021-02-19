@@ -22,7 +22,8 @@ class TestCase(unittest.TestCase):
             raise NameError("name 'testcase' is not defined")
         for key, value in Var.testcase.items():
             setattr(self, key, value)
-        self.snapshot_dir = os.path.join(Var.report, self.module, self.testcase_path.split(os.sep)[-1].split(".")[0])
+        self.snapshot_dir = os.path.join(Var.report,'Steps', self.module, self.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0])
+        self.report = Var.report
 
     def run(self, result=None):
 
@@ -34,7 +35,7 @@ class TestCase(unittest.TestCase):
             if not os.path.exists(Var.snapshot_dir):
                 os.makedirs(Var.snapshot_dir)
             log_info("******************* TestCase {} Start *******************".format(self.description))
-            with open(self.testcase_path, 'r') as r:
+            with open(self.testcase_path, 'r', encoding='UTF-8') as r:
                 s = r.readlines()
                 index = s.index('steps:\n')
                 for step in s[index+1:]:
@@ -43,7 +44,7 @@ class TestCase(unittest.TestCase):
                             Var.testcase_steps.append(step)
             unittest.TestCase.run(self, result)
             Var.testcase_steps = []
-            log_info("******************* Total: {}, Pass: {}, Failed: {}, Error: {}, Skipped: {} ********************\n"
+            log_info("******************* Total: {}, Success: {}, Failed: {}, Error: {}, Skipped: {} ********************\n"
                     .format(result.testsRun, len(result.successes), len(result.failures), len(result.errors), len(result.skipped)))
         except:
             traceback.print_exc()

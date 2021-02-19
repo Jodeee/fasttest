@@ -15,7 +15,7 @@ class AndroidDriver(object):
         :return:
         '''
         try:
-            log_info('adb {}'.format(cmd))
+            log_info(' adb {}'.format(cmd))
             if cmd.startswith('shell'):
                 cmd = ["adb", "-s", Var.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
                 pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE,

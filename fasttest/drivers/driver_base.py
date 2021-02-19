@@ -279,7 +279,7 @@ class DriverBase(object):
         timeout = elements_info['timeout']
         interval = elements_info['interval']
         index = elements_info['index']
-        log_info("find elements: Body: {'using': '%s', 'value': '%s', 'index': %s}" % (element_type, element, index))
+        log_info(" --> body: {'using': '%s', 'value': '%s', 'index': %s, 'timeout': %s}" % (element_type, element, index, timeout))
         if element_type == 'name':
             elements = driver.wait_for_elements_by_name(name=element, timeout=timeout, interval=interval)
         elif element_type == 'id':
@@ -291,7 +291,7 @@ class DriverBase(object):
         else:
             elements = None
 
-        log_info('return elements: {}'.format(elements))
+        log_info(' <-- result: {}'.format(elements))
         if elements:
             if len(elements) <= int(index):
                 log_error('elements exists, but cannot find index({}) position'.format(index), False)

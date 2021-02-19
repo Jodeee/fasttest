@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
-import cv2
+try:
+    import cv2
+except:
+    pass
 from fasttest.common import Var
 
 
@@ -20,11 +23,10 @@ class OpencvUtils(object):
         :return:
         """
         try:
-            ocrimg = os.path.join(Var.ROOT, 'OcrImg')
+            ocrimg = os.path.join(Var.snapshot_dir, 'screenshot')
             if not os.path.exists(ocrimg):
                 os.makedirs(ocrimg)
-            imgname = self.matchimage.split(os.sep)[-1]
-            file_path = os.path.join(ocrimg, '{}_{}'.format(self.action, imgname))
+            file_path = os.path.join(ocrimg, '{}.png'.format(self.action))
             Var.instance.save_screenshot(file_path)
             self.baseimage = file_path
         except Exception as e:
@@ -72,7 +74,7 @@ class OpencvUtils(object):
                 maxMatch = matchePoints[i].distance
         if minMatch > 0.2:
             return None
-        # #获取排雷在前边的几个最优匹配结果
+        # #获取排列在前边的几个最优匹配结果
         DMatch = None
         MatchePoints = []
         for i in range(len(matchePoints)):

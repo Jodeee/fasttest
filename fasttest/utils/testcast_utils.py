@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
+from fasttest.common.log import log_error
 
 class TestCaseUtils(object):
 
@@ -20,10 +21,12 @@ class TestCaseUtils(object):
             raise Exception('test case is empty.')
         for path in paths:
             file_path = os.path.join(dirname,path)
-            if os.path.isfile(file_path):
+            if os.path.isdir(file_path):
+                self.__traversal_dir(os.path.join(dirname, path))
+            elif os.path.isfile(file_path):
                 self.__testcase_list.append(file_path)
             else:
-               self.__traversal_dir(os.path.join(dirname, path))
+               log_error(' No such file or directory: {}'.format(path), False)
         if not self.__testcase_list:
-            raise Exception('test case is empty.')
+            raise Exception('test case is empty: {}'.format(paths))
         return self.__testcase_list
