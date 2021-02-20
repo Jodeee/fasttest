@@ -103,7 +103,7 @@ class CaseAnalysis(object):
                         Var.timeout = self.timeout
                         continue
                 except Exception as e:
-                    Var.timeout = self.time_out
+                    Var.timeout = self.timeout
                     self.is_run = False
                     traceback.print_exc()
                     continue
