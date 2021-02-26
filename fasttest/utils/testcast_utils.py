@@ -14,6 +14,8 @@ class TestCaseUtils(object):
             for f in files:
                 file_path = os.path.join(rt, f)
                 if os.path.isfile(file_path):
+                    if not file_path.endswith('.yaml'):
+                        continue
                     self.__testcase_list.append(file_path)
 
     def testcase_path(self,dirname,paths):
@@ -24,6 +26,8 @@ class TestCaseUtils(object):
             if os.path.isdir(file_path):
                 self.__traversal_dir(os.path.join(dirname, path))
             elif os.path.isfile(file_path):
+                if not file_path.endswith('.yaml'):
+                    continue
                 self.__testcase_list.append(file_path)
             else:
                log_error(' No such file or directory: {}'.format(path), False)
