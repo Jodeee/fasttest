@@ -8,18 +8,36 @@
 # Created Time: 2020-1-29
 #############################################
 
+import sys
 import setuptools
 
 with open("README.md", "r", encoding='UTF-8') as fh:
     long_description = fh.read()
 
+info = sys.version_info
+if info.major == 3 and info.minor == 7:
+    requires = [
+        'PyYAML>=5.1.2',
+        'wd>=1.0.1',
+        'selenium',
+        'colorama',
+        'opencv-contrib-python==3.4.2.16'
+    ]
+else:
+    requires = [
+        'PyYAML>=5.1.2',
+        'wd>=1.0.1',
+        'selenium',
+        'colorama',
+        'opencv-contrib-python'
+    ]
 setuptools.setup(
-    name="fasttest", # 软件包发行名称
-    version="0.0.8", # 软件包版本
-    author="IMJIE", # 作者
-    author_email="imjie@outlook.com", # 邮件
-    keywords=('macaca', 'appium', 'UI自动化', '关键字驱动'),
-    description="A keyword based UI testing framework",
+    name="fasttest",
+    version="1.0.0",
+    author="IMJIE",
+    author_email="imjie@outlook.com",
+    keywords=('macaca', 'appium', 'selenium', 'APP自动化', 'WEB自动化', '关键字驱动'),
+    description="一个自动化工具",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Jodeee/fasttest",
@@ -31,4 +49,10 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
     ],
     python_requires='>=3.6',
+    install_requires=requires,
+    entry_points={
+        'console_scripts':[
+            'fasttest = fasttest.fasttest:main'
+        ]
+    }
 )
