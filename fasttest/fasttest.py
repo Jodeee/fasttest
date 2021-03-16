@@ -29,41 +29,40 @@ def init_project(dir):
             os.makedirs(path)
 
         config_path = os.path.join(dir, 'config.yaml')
-        config = '''driver: 'appium'
-browser: 'chrome'
-reStart: True
-saveScreenshot: False
-timeOut: 10
-desiredCapabilities:
-    - appium:
-        - platformName: 'Android'
-          udid: 'device_id'
-          clear: True
-          package: 'com.android.mobile'
-          activity: 'com.android.mobile.Launcher'
-          automationName: 'Appium'
-          deviceName: 'HUWWEI P40 Pro'
-          noReset: True
-      macaca:
-        - platformName: 'iOS'
-          udid: 'device_id'
-          clear: True
-          bundleId: 'com.apple.mobilesafari'
-          reuse: 3
-      selenium:
-        - maxWindow: True
-          chrome:
-              - driver: 'chromedriver_path'
-                options: 
-                    - '--headless'
-                    - '--dissble-gpu'
-                    - '--window-size=1920,1050'
-          firefox:
-              - driver: 'geckodriver_path'
-                options: 
-testcase:
-    - TestCase/case.yaml
-        '''
+        config = "driver: 'appium'\n" \
+                 "browser: 'chrome'\n" \
+                 "reStart: True\n" \
+                 "saveScreenshot: False\n" \
+                 "timeOut: 10\n" \
+                 "desiredCapabilities:\n" \
+                 "    - appium:\n" \
+                 "        - platformName: 'Android'\n" \
+                 "          udid: 'device_id'\n" \
+                 "          clear: True\n" \
+                 "          package: 'com.android.mobile'\n" \
+                 "          activity: 'com.android.mobile.Launcher'\n" \
+                 "          automationName: 'Appium'\n" \
+                 "          deviceName: 'HUWWEI P40 Pro'\n" \
+                 "          noReset: True\n" \
+                 "      macaca:\n" \
+                 "          - platformName: 'iOS'\n" \
+                 "            udid: 'device_id'\n" \
+                 "            clear: True\n" \
+                 "            bundleId: 'com.apple.mobilesafari'\n" \
+                 "            reuse: 3\n" \
+                 "      selenium:\n" \
+                 "          - maxWindow: True\n" \
+                 "            chrome:\n" \
+                 "                - driver: 'chromedriver_path'\n" \
+                 "                  options: \n" \
+                 "                      - '--headless'\n" \
+                 "                      - '--dissble-gpu'\n" \
+                 "                      - '--window-size=1920,1050'\n" \
+                 "            firefox:\n" \
+                 "                - driver: 'geckodriver_path'\n" \
+                 "                  options: \n" \
+                 "testcase:\n" \
+                 "    - TestCase/case.yaml"
         with open(config_path, "w") as f:
             f.write(config)
 
@@ -77,44 +76,37 @@ testcase:
             json.dump(data, fp=f)
 
         common_path = os.path.join(dir, 'Common', 'common.yaml')
-        common = '''CommonTest:
- description: 'common test'
- input: [value]
- output: []
- steps:
-    - for ${i} in ${value}:
-      - if ${i} == 3:
-          - break
-'''
+        common = "CommonTest:\n" \
+                 " description: 'common test'\n" \
+                 " input: [value]\n" \
+                 " output: []\n" \
+                 " steps:\n" \
+                 "    - for ${i} in ${value}:\n" \
+                 "        - if ${i} == 3:\n" \
+                 "            - break"
         with open(common_path, "w") as f:
             f.write(common)
 
         case_path = os.path.join(dir, 'TestCase', 'case.yaml')
-        case = '''module: test_module
-skip: False
-description: 'this is a test case'
-steps:
-    - ${t1} = $.id(1+2*3)
-    
-    - ${t2} = 6
-    
-    - assert ${t1} > ${t2}
-    
-    - ${ls} = ScriptsTest(${t2})
-    
-    - call CommonTest(${ls})
-'''
+        case = "module: test_module\n" \
+               "skip: False\n" \
+               "description: 'this is a test case'\n" \
+               "steps:\n" \
+               "    - ${t1} = $.id(1+2*3)\n\n" \
+               "    - ${t2} = 6\n\n" \
+               "    - assert ${t1} > ${t2}\n\n" \
+               "    - ${ls} = ScriptsTest(${t2})\n\n" \
+               "    - call CommonTest(${ls})"
+
         with open(case_path, "w") as f:
             f.write(case)
 
         scripts_path = os.path.join(dir, 'Scripts', 'case.py')
-        scripts = '''#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-def ScriptsTest(value):
-    l = range(value)
-    return l
-'''
+        scripts = '#!/usr/bin/env python3\n' \
+                  '# -*- coding: utf-8 -*-\n\n' \
+                  'def ScriptsTest(value):\n\n' \
+                  '    l = range(value)\n' \
+                  '    return l'
         with open(scripts_path, "w") as f:
             f.write(scripts)
 
