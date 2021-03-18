@@ -86,7 +86,7 @@ class TestRunner(unittest.TextTestRunner):
             'failuresList': failures_list
         })
 
-        properties_path = os.path.join(Var.ROOT, 'result.properties')
+        properties_path = os.path.join(Var.root, 'result.properties')
         with open(properties_path, "w") as f:
             f.write(f'report={result.report}\n')
             f.write(f'total={result.total}\n')

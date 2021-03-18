@@ -16,9 +16,9 @@ class DriverBase(object):
             else:
                 from fasttest.drivers.macaca import AndroidDriver, iOSDriver
 
-            if Var.platformName.lower() == "ios":
+            if Var.desired_caps['platformName'].lower() == "ios":
                 driver = iOSDriver
-            elif Var.platformName.lower() == "android":
+            elif Var.desired_caps['platformName'].lower() == "android":
                 driver = AndroidDriver
             Var.driver_instance = driver
         except Exception as e:
@@ -247,7 +247,7 @@ class DriverBase(object):
             'interval': interval,
             'index': index
         }
-        if Var.platformName.lower() == 'android':
+        if Var.desired_caps['platformName'].lower() == 'android':
             if re.match(r'[a-zA-Z]+\.[a-zA-Z]+[\.\w]+:id/\S+', key):
                 dict['element_type'] = 'id'
             elif re.match(r'android\.[a-zA-Z]+[\.(a-zA-Z)]+', key) or re.match(r'[a-zA-Z]+\.[a-zA-Z]+[\.(a-zA-Z)]+', key):

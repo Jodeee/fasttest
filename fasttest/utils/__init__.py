@@ -5,5 +5,6 @@ from fasttest.utils.devices_utils import DevicesUtils
 from fasttest.utils.opcv_utils import OpencvUtils
 from fasttest.utils.server_utils import ServerUtils
 from fasttest.utils.testcast_utils import TestCaseUtils
+from fasttest.utils.server_utils_selenium import ServerUtilsSelenium
 
-__all__ = ['analytical_file', 'DevicesUtils', 'OpencvUtils', 'ServerUtils', 'TestCaseUtils']
+__all__ = ['analytical_file', 'DevicesUtils', 'OpencvUtils', 'ServerUtils', 'TestCaseUtils', 'ServerUtilsSelenium']

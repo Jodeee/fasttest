@@ -15,7 +15,7 @@ class ActionExecutor(object):
 
         file_list = []
         try:
-            for rt, dirs, files in os.walk(os.path.join(Var.ROOT, "Scripts")):
+            for rt, dirs, files in os.walk(os.path.join(Var.root, "Scripts")):
                 for f in files:
                     if f == "__init__.py" or f.endswith(".pyc") or f.startswith(".") or not f.endswith('.py'):
                         continue
@@ -187,9 +187,9 @@ class ActionExecutor(object):
         """
         parms = action.parms
         if len(parms) == 1:
-            text = DriverBase.get_text(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=0)
+            text = DriverBase.get_text(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=0)
         elif len(parms) == 2:
-            text = DriverBase.get_text(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=parms[-1])
+            text = DriverBase.get_text(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=parms[-1])
         else:
             raise TypeError('getText missing 1 required positional argument: element')
         return text
@@ -209,9 +209,9 @@ class ActionExecutor(object):
                 y = img_info['y']
                 DriverBase.tap(x, y)
             elif len(parms) == 1:
-                DriverBase.click(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=0)
+                DriverBase.click(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=0)
             elif len(parms) == 2:
-                DriverBase.click(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=parms[1])
+                DriverBase.click(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=parms[1])
         else:
             raise TypeError('click missing 1 required positional argument: element')
 
@@ -231,9 +231,9 @@ class ActionExecutor(object):
                 else:
                     check = False
             elif len(parms) == 1:
-                check = DriverBase.check(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=0)
+                check = DriverBase.check(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=0)
             elif len(parms) == 2:
-                check = DriverBase.check(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=parms[1])
+                check = DriverBase.check(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=parms[1])
             else:
                 raise TypeError('check takes 2 positional arguments but {} was given'.format(len(parms)))
 
@@ -251,10 +251,10 @@ class ActionExecutor(object):
         """
         parms = action.parms
         if len(parms) == 2:
-            DriverBase.input(key=parms[0], text=parms[1], timeout=Var.timeout, interval=Var.interval,
+            DriverBase.input(key=parms[0], text=parms[1], timeout=Var.timeOut, interval=Var.interval,
                              index=0)
         elif len(parms) == 3:
-            DriverBase.input(key=parms[0], text=parms[1], timeout=Var.timeout, interval=Var.interval,
+            DriverBase.input(key=parms[0], text=parms[1], timeout=Var.timeOut, interval=Var.interval,
                              index=parms[2])
         else:
             raise TypeError('input missing 2 required positional argument: element, text')
@@ -275,9 +275,9 @@ class ActionExecutor(object):
                 else:
                     check = False
             elif len(parms) == 1:
-                check = DriverBase.check(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=0)
+                check = DriverBase.check(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=0)
             elif len(parms) == 2:
-                check = DriverBase.check(key=parms[0], timeout=Var.timeout, interval=Var.interval, index=parms[1])
+                check = DriverBase.check(key=parms[0], timeout=Var.timeOut, interval=Var.interval, index=parms[1])
             else:
                 raise TypeError('check takes 2 positional arguments but {} was given'.format(len(parms)))
 
@@ -291,7 +291,7 @@ class ActionExecutor(object):
         :param action:
         :return:
         """
-        if Var.platformName.lower() == 'ios':
+        if Var.desired_caps['platformName'].lower() == 'ios':
             return True
         return False
 
@@ -301,7 +301,7 @@ class ActionExecutor(object):
         :param action:
         :return:
         """
-        if Var.platformName.lower() == 'android':
+        if Var.desired_caps['platformName'].lower() == 'android':
             return True
         return False
 

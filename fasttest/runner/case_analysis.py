@@ -97,13 +97,13 @@ class CaseAnalysis(object):
                     else:
                         # runtime
                         self.is_run = False
-                        self.timeout = Var.timeout
-                        Var.timeout = 0.5
+                        self.timeout = Var.timeOut
+                        Var.timeOut = 0.5
                         result = self.action_nalysis.action_analysis(out, style, common, iterating_var)
-                        Var.timeout = self.timeout
+                        Var.timeOut = self.timeout
                         continue
                 except Exception as e:
-                    Var.timeout = self.timeout
+                    Var.timeOut = self.timeout
                     self.is_run = False
                     traceback.print_exc()
                     continue

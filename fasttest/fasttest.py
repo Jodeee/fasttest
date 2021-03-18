@@ -32,22 +32,23 @@ def init_project(dir):
         config = "driver: 'appium'\n" \
                  "browser: 'chrome'\n" \
                  "reStart: True\n" \
+                 "clear: True\n" \
                  "saveScreenshot: False\n" \
                  "timeOut: 10\n" \
                  "desiredCapabilities:\n" \
                  "    - appium:\n" \
                  "        - platformName: 'Android'\n" \
                  "          udid: 'device_id'\n" \
-                 "          clear: True\n" \
-                 "          package: 'com.android.mobile'\n" \
-                 "          activity: 'com.android.mobile.Launcher'\n" \
+                 "          appPackage: 'com.android.mobile'\n" \
+                 "          appActivity: 'com.android.mobile.Launcher'\n" \
                  "          automationName: 'Appium'\n" \
                  "          deviceName: 'HUWWEI P40 Pro'\n" \
                  "          noReset: True\n" \
                  "      macaca:\n" \
                  "          - platformName: 'iOS'\n" \
                  "            udid: 'device_id'\n" \
-                 "            clear: True\n" \
+                 "            package: 'com.android.mobile'\n" \
+                 "            activity: 'com.android.mobile.Launcher'\n" \
                  "            bundleId: 'com.apple.mobilesafari'\n" \
                  "            reuse: 3\n" \
                  "      selenium:\n" \
@@ -105,8 +106,7 @@ def init_project(dir):
         scripts = '#!/usr/bin/env python3\n' \
                   '# -*- coding: utf-8 -*-\n\n' \
                   'def ScriptsTest(value):\n\n' \
-                  '    l = range(value)\n' \
-                  '    return l'
+                  '    return [1,2,3,4,5,value]'
         with open(scripts_path, "w") as f:
             f.write(scripts)
 
