@@ -18,12 +18,12 @@ class AndroidDriver(object):
         try:
             log_info(' adb: {}'.format(cmd))
             if cmd.startswith('shell'):
-                cmd = ["adb", "-s", Var.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
+                cmd = ["adb", "-s", Var.desired_caps.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
                 pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE)
                 out = pipe.communicate()
             else:
-                cmd = ["adb", "-s", Var.udid, "{}".format(cmd)]
+                cmd = ["adb", "-s", Var.desired_caps.udid, "{}".format(cmd)]
                 os.system(' '.join(cmd))
         except:
             raise Exception(traceback.format_exc())
@@ -309,11 +309,7 @@ class AndroidDriver(object):
         :return:
         '''
         try:
-            Var.instance.implicitly_wait(int(timeout)/2)
-            elements = Var.instance.find_elements_by_accessibility_id(name)
-            if not elements:
-                elements = Var.instance.find_elements_by_android_uiautomator('new UiSelector().text("{}")'.format(name))
-            Var.instance.implicitly_wait(timeout)
+            elements = Var.instance.find_elements_by_android_uiautomator('new UiSelector().text("{}")'.format(name))
             return elements
         except Exception as e:
             raise e
@@ -530,7 +526,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe(from_x, from_y, to_x, to_y, duration=3):
+    def swipe(from_x, from_y, to_x, to_y, duration=100):
         '''
         :param from_x:
         :param from_y:

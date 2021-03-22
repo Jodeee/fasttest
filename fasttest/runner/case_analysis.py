@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-import os
+import sys
 import traceback
 from fasttest.common import Var
 from fasttest.runner.action_analysis import ActionAnalysis
@@ -93,17 +93,17 @@ class CaseAnalysis(object):
                         return result
                     elif out.lower() == 'q':
                         # quit
-                        os._exit(0)
+                        sys.exit()
                     else:
                         # runtime
                         self.is_run = False
-                        self.timeout = Var.timeOut
-                        Var.timeOut = 0.5
-                        result = self.action_nalysis.action_analysis(out, style, common, iterating_var)
-                        Var.timeOut = self.timeout
+                        self.timeout = Var.time_out
+                        Var.time_out = 0.5
+                        self.action_nalysis.action_analysis(out, style, common, iterating_var)
+                        Var.time_out = self.timeout
                         continue
                 except Exception as e:
-                    Var.timeOut = self.timeout
+                    Var.time_out = self.timeout
                     self.is_run = False
                     traceback.print_exc()
                     continue

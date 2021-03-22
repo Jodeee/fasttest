@@ -6,14 +6,18 @@ import json
 from colorama import Fore, Back, Style
 from fasttest.common import Var, Dict, log_info
 from fasttest.common.decorator import mach_keywords, executor_keywords
-from fasttest.runner.action_executor import ActionExecutor
+from fasttest.runner.action_executor_app import ActionExecutorApp
+from fasttest.runner.action_executor_web import ActionExecutorWeb
 
 class ActionAnalysis(object):
 
     def __init__(self):
         self.variables = {}
         self.for_variables = {}
-        self.action_executor = ActionExecutor()
+        if Var.driver != 'selenium':
+            self.action_executor = ActionExecutorApp()
+        else:
+            self.action_executor = ActionExecutorWeb()
 
     def __get_variables(self, name):
         '''

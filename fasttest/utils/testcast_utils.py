@@ -17,8 +17,10 @@ class TestCaseUtils(object):
                     if not file_path.endswith('.yaml'):
                         continue
                     self.__testcase_list.append(file_path)
+                else:
+                    log_error(' No such file or directory: {}'.format(path), False)
 
-    def testcase_path(self,dirname,paths):
+    def test_case_path(self,dirname,paths):
         if not paths:
             raise Exception('test case is empty.')
         for path in paths:
@@ -32,5 +34,5 @@ class TestCaseUtils(object):
             else:
                log_error(' No such file or directory: {}'.format(path), False)
         if not self.__testcase_list:
-            raise Exception('test case is empty: {}'.format(paths))
+            raise Exception('test case is empty.')
         return self.__testcase_list

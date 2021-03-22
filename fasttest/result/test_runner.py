@@ -65,12 +65,12 @@ class TestRunner(unittest.TextTestRunner):
         failures_list = []
         for failure in result.failures:
             cast_info = failure[0]
-            failures_list.append(cast_info.testcase_path)
+            failures_list.append(cast_info.test_case_path)
 
         errors_list = []
         for errors in result.errors:
             cast_info = errors[0]
-            errors_list.append(cast_info.testcase_path)
+            errors_list.append(cast_info.test_case_path)
 
         result = Dict({
             'report': result.report,

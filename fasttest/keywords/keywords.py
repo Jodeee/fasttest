@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-def return_keywords(type):
+def return_keywords(driver):
     keywords_common = [
         "click",  # 点击
         "check",  # 检查
@@ -21,7 +21,7 @@ def return_keywords(type):
         "setTimeout",  # 设置等待时间
         "$.getLen",  # 获取长度
     ]
-    keywords_mobile = [
+    keywords_app= [
         "installApp", # 安装app
         "uninstallApp", # 卸载app
         "launchApp", # 启动app
@@ -124,8 +124,8 @@ def return_keywords(type):
         # "assert"
     ]
 
-    if type != 'selenium':
-        keywords = list(set(keywords_common).union(set(keywords_mobile)))
+    if driver != 'selenium':
+        keywords = list(set(keywords_common).union(set(keywords_app)))
     else:
         keywords = list(set(keywords_common).union(set(keywords_web)))
     return keywords

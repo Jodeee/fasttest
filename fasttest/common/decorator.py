@@ -80,7 +80,7 @@ def executor_keywords(func, *args, **kwds):
                     # matchImage，绘制图片
                     cv2.imwrite(file, Var.ocrimg)
                     Var.ocrimg = None
-                elif Var.saveScreenshot:
+                elif Var.save_screenshot:
                     # 全局参数
                     Var.instance.save_screenshot(file)
                 elif not Var.exception_flag and exception_flag:

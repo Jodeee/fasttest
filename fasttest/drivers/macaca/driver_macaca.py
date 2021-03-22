@@ -17,12 +17,12 @@ class AndroidDriver(object):
         try:
             log_info(' adb {}'.format(cmd))
             if cmd.startswith('shell'):
-                cmd = ["adb", "-s", Var.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
+                cmd = ["adb", "-s", Var.desired_caps.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
                 pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE)
                 out = pipe.communicate()
             else:
-                cmd = ["adb", "-s", Var.udid, "{}".format(cmd)]
+                cmd = ["adb", "-s", Var.desired_caps.udid, "{}".format(cmd)]
                 os.system(' '.join(cmd))
         except:
             raise Exception(traceback.format_exc())
@@ -60,7 +60,7 @@ class AndroidDriver(object):
         '''
         try:
             if not package_info:
-                AndroidDriver.adb_shell('shell am start -W {}/{}'.format(Var.package, Var.activity))
+                AndroidDriver.adb_shell('shell am start -W {}/{}'.format(Var.desired_caps.package, Var.desired_caps.activity))
             else:
                 AndroidDriver.adb_shell('shell am start -W {}'.format(package_info))
 
@@ -76,7 +76,7 @@ class AndroidDriver(object):
         '''
         try:
             if not package_info:
-                AndroidDriver.adb_shell('shell am force-stop {}'.format(Var.package))
+                AndroidDriver.adb_shell('shell am force-stop {}'.format(Var.desired_caps.package))
             else:
                 AndroidDriver.adb_shell('shell am force-stop {}'.format(package_info))
         except Exception as e:
@@ -336,7 +336,7 @@ class iOSDriver(object):
         :return:
         '''
         try:
-            os.system('ideviceinstaller -u {} -i {}'.format(Var.udid, app_path))
+            os.system('ideviceinstaller -u {} -i {}'.format(Var.desired_caps.udid, app_path))
         except Exception as e:
             raise e
 
@@ -348,7 +348,7 @@ class iOSDriver(object):
         :return:
         '''
         try:
-            os.system('ideviceinstaller -u {} -U {}'.format(Var.udid, package_info))
+            os.system('ideviceinstaller -u {} -U {}'.format(Var.desired_caps.udid, package_info))
         except Exception as e:
             raise e
 

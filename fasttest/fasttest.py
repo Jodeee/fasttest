@@ -30,38 +30,18 @@ def init_project(dir):
 
         config_path = os.path.join(dir, 'config.yaml')
         config = "driver: 'appium'\n" \
-                 "browser: 'chrome'\n" \
                  "reStart: True\n" \
                  "clear: True\n" \
                  "saveScreenshot: False\n" \
                  "timeOut: 10\n" \
                  "desiredCapabilities:\n" \
-                 "    - appium:\n" \
-                 "        - platformName: 'Android'\n" \
-                 "          udid: 'device_id'\n" \
-                 "          appPackage: 'com.android.mobile'\n" \
-                 "          appActivity: 'com.android.mobile.Launcher'\n" \
-                 "          automationName: 'Appium'\n" \
-                 "          deviceName: 'HUWWEI P40 Pro'\n" \
-                 "          noReset: True\n" \
-                 "      macaca:\n" \
-                 "          - platformName: 'iOS'\n" \
-                 "            udid: 'device_id'\n" \
-                 "            package: 'com.android.mobile'\n" \
-                 "            activity: 'com.android.mobile.Launcher'\n" \
-                 "            bundleId: 'com.apple.mobilesafari'\n" \
-                 "            reuse: 3\n" \
-                 "      selenium:\n" \
-                 "          - maxWindow: True\n" \
-                 "            chrome:\n" \
-                 "                - driver: 'chromedriver_path'\n" \
-                 "                  options: \n" \
-                 "                      - '--headless'\n" \
-                 "                      - '--dissble-gpu'\n" \
-                 "                      - '--window-size=1920,1050'\n" \
-                 "            firefox:\n" \
-                 "                - driver: 'geckodriver_path'\n" \
-                 "                  options: \n" \
+                 "    - platformName: 'Android'\n" \
+                 "      udid: 'device_id'\n" \
+                 "      appPackage: 'com.android.mobile'\n" \
+                 "      appActivity: 'com.android.mobile.Launcher'\n" \
+                 "      automationName: 'Appium'\n" \
+                 "      deviceName: 'HUWWEI P40 Pro'\n" \
+                 "      noReset: True\n" \
                  "testcase:\n" \
                  "    - TestCase/case.yaml"
         with open(config_path, "w") as f:
@@ -125,8 +105,11 @@ def main():
             elif o in ('-i', '--init'):
                 init_project(a)
             elif o in ('-r', '--run'):
-                pass
-
+                print('等我开发完[狗头]...')
+            else:
+                raise
+        else:
+            raise
     except Exception as e:
         print('usage: fasttest ... [-i init | -r [run]] [arg] ...')
         print("Try `fasttest -h' for more information.")

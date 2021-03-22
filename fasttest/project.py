@@ -11,7 +11,8 @@ from fasttest.common import *
 from fasttest.utils import *
 from fasttest.keywords import keywords
 from fasttest.runner.run_case import RunCase
-from fasttest.drivers.driver_base import DriverBase
+from fasttest.drivers.driver_base_app import DriverBaseApp
+from fasttest.drivers.driver_base_web import DriverBaseWeb
 from fasttest.result.test_runner import TestRunner
 
 class Project(object):
@@ -24,92 +25,52 @@ class Project(object):
         self.__analytical_testcase_file()
         self.__analytical_common_file()
         self.__init_data()
-        self.__init_keywords()
-        self.__init_resource()
         self.__init_testcase_suite()
 
     def __init_project(self):
 
         # Var.root= os.getcwd()
-        Var.root = '/Users/xiongjunjie/code/fasttest'
+        Var.root = 'D:\\fasttest\\fasttestDemo'
         sys.path.append(Var.root)
         sys.path.append(os.path.join(Var.root, 'Scripts'))
-        Var.global_var = {}
-        Var.extensions_var = {}
-        Var.common_var = {}
+        Var.global_var = Dict()
+        Var.extensions_var = Dict()
+        Var.common_var = Dict()
+        Var.common_func = Dict()
 
     def __init_config(self):
 
         self.__config = analytical_file(os.path.join(Var.root, 'config.yaml'))
-        driver = self.__config.driver
-        browser = self.__config.browser
+        Var.driver = self.__config.driver
+        Var.re_start = self.__config.reStart
+        Var.save_screenshot = self.__config.saveScreenshot
+        Var.time_out = self.__config.timeOut
+        Var.test_case = self.__config.testcase
+        Var.desired_caps = Dict()
+        for configK, configV in self.__config.desiredCapabilities[0].items():
+            Var.desired_caps[configK] = configV
 
-        if not driver or driver.lower() not in ['appium', 'macaca', 'selenium']:
+        if not Var.driver or Var.driver.lower() not in ['appium', 'macaca', 'selenium']:
             raise ValueError('Missing/incomplete configuration file: config.yaml, No driver type specified.')
-        if driver == 'selenium' and (not browser or browser not in ['chrome', 'safari', 'firefox', 'ie', 'opera', 'phantomjs']):
-            raise ValueError('browser parameter is illegal!')
-        for configK, configV in self.__config.items():
-            if configK == 'desiredCapabilities':
-                Var.desired_caps = configV[0]
-            else:
-                Var[configK] = configV
-        # 默认时间
-        if not Var.timeOut or not isinstance(Var.timeOut, int):
-            Var.timeOut = 10
 
-        if driver != 'selenium':
-            if 'platformName' not in Var.desired_caps:
+        if not Var.time_out or not isinstance(Var.time_out, int):
+            Var.time_out = 10
+
+        if Var.driver != 'selenium':
+            if not Var.desired_caps.platformName:
                 raise ValueError('Missing/incomplete configuration file: config.yaml, No platformName type specified.')
-            if 'udid' not in Var.desired_caps:
-                Var.desired_caps['udid'] = None
-            DriverBase.init()
-
-
-    def __init_data(self):
-
-        if os.path.exists(os.path.join(Var.root, 'data.json')):
-            with open(os.path.join(Var.root, 'data.json'), 'r', encoding='utf-8') as f:
-                dict = Dict(json.load(fp=f))
-                if dict:
-                    log_info('******************* analytical data *******************')
-                for extensionsK, extensionsV in dict.items():
-                    log_info(' {}: {}'.format(extensionsK, extensionsV))
-                    Var.extensions_var[extensionsK] = extensionsV
-        if not Var.extensions_var:
-            Var.extensions_var = {}
-        if 'variable' not in Var.extensions_var:
-            Var.extensions_var['variable'] = {}
-
-    def __init_keywords(self):
-
-        Var.default_keywords_data = keywords.return_keywords(Var.driver)
-
-        if 'keywords' not in  Var.extensions_var.keys():
-            Var.new_keywords_data = []
-            return
-        Var.new_keywords_data = Var.extensions_var['keywords']
-
-    def __init_resource(self):
-
-        log_info('******************* analytical resource *******************')
-        if 'resource' not in Var.extensions_var.keys():
-            Var.extensions_var['resource'] = {}
-
-        for resource, path in Var.extensions_var['resource'].items():
-            resource_file = os.path.join(Var.root, path)
-            if not os.path.isfile(resource_file):
-                log_error('No such file or directory: {}'.format(resource_file), False)
-                continue
-            Var.extensions_var['resource'][resource] = resource_file
-            log_info(' {}: {}'.format(resource, resource_file))
+            DriverBaseApp.init()
+        else:
+            if not Var.desired_caps.browser or Var.desired_caps.browser not in ['chrome', 'safari', 'firefox', 'ie', 'opera', 'phantomjs']:
+                raise ValueError('browser parameter is illegal!')
 
     def __init_logging(self):
 
         if Var.driver != 'selenium':
-            devices = DevicesUtils(Var.desired_caps['platformName'], Var.desired_caps['udid'])
+            devices = DevicesUtils(Var.desired_caps.platformName, Var.desired_caps.udid)
             Var.desired_caps['udid'], info = devices.device_info()
         else:
-            info = Var.browser
+            info = Var.desired_caps.browser
 
         thr_name = threading.currentThread().getName()
         report_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
@@ -127,7 +88,7 @@ class Project(object):
             log_info(' {}: {}'.format(configK, configV))
         log_info('******************* analytical testcase *******************')
         testcase = TestCaseUtils()
-        self.__testcase = testcase.testcase_path(Var.root, Var.testcase)
+        self.__testcase = testcase.test_case_path(Var.root, Var.test_case)
         log_info(' case: {}'.format(len(self.__testcase)))
         for case in self.__testcase:
             log_info(' {}'.format(case))
@@ -135,14 +96,12 @@ class Project(object):
     def __analytical_common_file(self):
 
         log_info('******************* analytical common *******************')
-        Var.common_func = Dict()
         common_dir = os.path.join(Var.root, "Common")
         for rt, dirs, files in os.walk(common_dir):
             if rt == common_dir:
                 self.__load_common_func(rt, files)
-            elif Var.driver != 'selenium':
-                if rt.split(os.sep)[-1].lower() == Var.desired_caps['platformName'].lower():
-                    self.__load_common_func(rt, files)
+            elif Var.desired_caps.platformName and (rt.split(os.sep)[-1].lower() == Var.desired_caps.platformName.lower()):
+                self.__load_common_func(rt, files)
 
     def __load_common_func(self,rt ,files):
 
@@ -153,43 +112,81 @@ class Project(object):
                 Var.common_func[commonK] = commonV
                 log_info(' {}: {}'.format(commonK, commonV))
 
+    def __init_data(self):
+
+        if os.path.exists(os.path.join(Var.root, 'data.json')):
+            with open(os.path.join(Var.root, 'data.json'), 'r', encoding='utf-8') as f:
+                dict = Dict(json.load(fp=f))
+                Var.extensions_var['variable'] = dict.variable
+                Var.extensions_var['resource'] = dict.resource
+                Var.extensions_var['keywords'] = dict.keywords
+                if not Var.extensions_var.variable:
+                    Var.extensions_var['variable'] = Dict()
+                if not Var.extensions_var.resource:
+                    Var.extensions_var['resource'] = Dict()
+                if not Var.extensions_var.keywords:
+                    Var.extensions_var['keywords'] = Dict()
+        # 注册全局变量
+        log_info('******************* register variable *******************')
+        for key, value in Var.extensions_var.variable.items():
+            Var.extensions_var.variable[key] = value
+            log_info(' {}: {}'.format(key, value))
+        # 解析文件路径
+        log_info('******************* register resource *******************')
+        for resource, path in Var.extensions_var.resource.items():
+            resource_file = os.path.join(Var.root, path)
+            if not os.path.isfile(resource_file):
+                log_error('No such file or directory: {}'.format(resource_file), False)
+                continue
+            Var.extensions_var.resource[resource] = resource_file
+            log_info(' {}: {}'.format(resource, resource_file))
+        # 注册关键字
+        log_info('******************* register keywords *******************')
+        Var.default_keywords_data = keywords.return_keywords(Var.driver)
+        Var.new_keywords_data = Var.extensions_var.keywords
+        for key in Var.extensions_var.keywords:
+            log_info(' {}'.format(key))
 
     def __init_testcase_suite(self):
 
         self.__suite = []
         for case_path in self.__testcase:
-            testcase = analytical_file(case_path)
-            testcase['testcase_path'] = case_path
-            Var.testcase = testcase
+            test_case = analytical_file(case_path)
+            test_case['test_case_path'] = case_path
+            Var.case_info = test_case
             subsuite = unittest.TestLoader().loadTestsFromTestCase(RunCase)
             self.__suite.append(subsuite)
-            Var.testcase = None
+            Var.case_info = None
 
     def start(self):
         log_info('******************* analytical desired capabilities *******************')
-        desired_capabilities = Dict({
+        Var.desired_capabilities = Dict({
             'driver': Var.driver.lower(),
-            'timeOut': Var.timeOut,
-            'browser': Var.browser,
+            'timeOut': Var.time_out,
             'desired': Var.desired_caps
         })
+        # 启动服务
         if Var.driver != 'selenium':
-            self.server_mobile = ServerUtils(desired_capabilities)
-            Var.instance = self.server_mobile.start_server()
-        elif not Var.reStart:
-            self.server_web = ServerUtilsSelenium(desired_capabilities)
-            Var.instance = self.server_web.start_server()
-            DriverBase.init()
-
+            server = ServerUtilsApp(Var.desired_capabilities)
+            Var.instance = server.start_server()
+        elif not Var.re_start:
+            server = ServerUtilsWeb(Var.desired_capabilities)
+            Var.instance = server.start_server()
+            DriverBaseWeb.init()
+        else:
+            server = None
+        # 用例运行
         suite = unittest.TestSuite(tuple(self.__suite))
         runner = TestRunner()
         runner.run(suite)
 
+        # 结束服务
         if Var.driver != 'selenium':
-            self.server_mobile.stop_server()
-        elif not Var.reStart:
-            self.server_web.stop_server()
+            server.stop_server()
+        elif not Var.re_start:
+            server.stop_server(Var.instance)
 
+        # 打印失败结果
         if Var.all_result:
             if Var.all_result.errorsList:
                 log_info(' Error case:')
