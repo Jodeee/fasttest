@@ -19,7 +19,7 @@ class ActionExecutorWeb(object):
 
         file_list = []
         try:
-            for rt, dirs, files in os.walk(os.path.join(Var.ROOT, "Scripts")):
+            for rt, dirs, files in os.walk(os.path.join(Var.root, "Scripts")):
                 for f in files:
                     if f == "__init__.py" or f.endswith(".pyc") or f.startswith(".") or not f.endswith('.py'):
                         continue
@@ -596,10 +596,7 @@ class ActionExecutorWeb(object):
         :param :
         :return:
         '''
-        timeout = Var.time_out
-        if not timeout:
-            timeout = 10
-        endTime = datetime.datetime.now() + datetime.timedelta(seconds=int(timeout))
+        endTime = datetime.datetime.now() + datetime.timedelta(seconds=int(Var.time_out))
         while True:
             try:
                 js_value = self.__get_value(action)
@@ -607,7 +604,7 @@ class ActionExecutorWeb(object):
             except JavascriptException as e:
                 if datetime.datetime.now() >= endTime:
                     raise e
-                time.sleep(1)
+                time.sleep(0.1)
             except Exception as e:
                 raise e
 
@@ -623,7 +620,8 @@ class ActionExecutorWeb(object):
             raise FileNotFoundError("No such file: {}".format(match_image))
         if not os.path.isfile(base_image):
             raise FileNotFoundError("No such file: {}".format(base_image))
-        orc_img = OpencvUtils(base_image, match_image)
+        height = Var.instance.get_window_size()['height']
+        orc_img = OpencvUtils(base_image, match_image, height)
         img_info = orc_img.extract_minutiae()
         if img_info:
             Var.ocrimg = img_info['ocrimg']
@@ -654,7 +652,6 @@ class ActionExecutorWeb(object):
         :return:
         '''
         parms = action.parms
-        step = action.step
         if not len(parms):
             raise TypeError('missing 1 required positional argument')
         if not re.match(r'^(id|name|class|tag_name|link_text|partial_link_text|xpath|css_selector)\s*=.+',

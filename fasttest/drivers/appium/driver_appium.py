@@ -474,7 +474,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_up(duration=2):
+    def swipe_up(duration=100):
         '''
         :param duration:
         :return:
@@ -487,7 +487,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_down(duration=2):
+    def swipe_down(duration=100):
         '''
         :param duration:
         :return:
@@ -500,7 +500,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_left(duration=2):
+    def swipe_left(duration=100):
         '''
         :param duration:
         :return:
@@ -513,7 +513,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_right(duration=2):
+    def swipe_right(duration=100):
         '''
         :param duration:
         :return:

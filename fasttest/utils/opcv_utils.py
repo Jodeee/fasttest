@@ -5,32 +5,15 @@ try:
     import cv2
 except:
     pass
-from fasttest.common import Var
-
 
 class OpencvUtils(object):
 
-    def __init__(self,action, matchimage):
+    def __init__(self,baseimage, matchimage, height):
 
-        self.action = action
-        self.baseimage = None
+        self.baseimage = baseimage
         self.matchimage = matchimage
+        self.height = height
         self.iszoom = False
-
-    def save_screenshot(self):
-        """
-        截图
-        :return:
-        """
-        try:
-            ocrimg = os.path.join(Var.snapshot_dir, 'screenshot')
-            if not os.path.exists(ocrimg):
-                os.makedirs(ocrimg)
-            file_path = os.path.join(ocrimg, '{}.png'.format(self.action))
-            Var.instance.save_screenshot(file_path)
-            self.baseimage = file_path
-        except Exception as e:
-            raise e
 
     def extract_minutiae(self):
         """
@@ -42,7 +25,7 @@ class OpencvUtils(object):
             # self.baseimage = cv2.resize(self.baseimage, dsize=(int(self.baseimage.shape[1] / 2), int(self.baseimage.shape[0] / 2)))
             self.matchimage = cv2.imread(self.matchimage)
 
-            view_height = Var.instance.get_window_size()['height']
+            view_height = self.height
             image_height = self.baseimage.shape[0]
             if view_height * 2 == image_height:
                 self.iszoom = True
@@ -79,17 +62,19 @@ class OpencvUtils(object):
         MatchePoints = []
         for i in range(len(matchePoints)):
             if matchePoints[i].distance == minMatch:
+                try:
+                    keypoint = keypoints1[matchePoints[i].queryIdx]
+                    x, y = keypoint.pt
+                    if self.iszoom:
+                        x = x / 2.0
+                        y = y / 2.0
+                    keypoints1 = [keypoint]
 
-                keypoint = keypoints1[matchePoints[i].queryIdx]
-                x, y = keypoint.pt
-                if self.iszoom:
-                    x = x / 2.0
-                    y = y / 2.0
-                keypoints1 = [keypoint]
-
-                dmatch = matchePoints[i]
-                dmatch.queryIdx = 0
-                MatchePoints.append(dmatch)
+                    dmatch = matchePoints[i]
+                    dmatch.queryIdx = 0
+                    MatchePoints.append(dmatch)
+                except:
+                    continue
 
         # 绘制最优匹配点
         outImg = None

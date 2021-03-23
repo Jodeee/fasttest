@@ -218,10 +218,8 @@ class DriverBaseApp(object):
         :param index:
         :return:
         '''
-        if not timeout:
-            timeout = 10
         if not interval:
-            interval = 1
+            interval = 0.5
         dict = {
             'element': key,
             'timeout': timeout,
@@ -272,8 +270,10 @@ class DriverBaseApp(object):
         else:
             elements = None
 
-        log_info(' <-- result: {}'.format(elements))
         if elements:
+            log_info(' <-- result:')
+            for e in elements:
+                log_info(' - {}'.format(e))
             if len(elements) <= int(index):
                 log_error('elements exists, but cannot find index({}) position'.format(index), False)
                 raise Exception('list index out of range, index:{}'.format(index))

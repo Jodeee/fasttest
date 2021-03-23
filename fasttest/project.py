@@ -29,8 +29,7 @@ class Project(object):
 
     def __init_project(self):
 
-        # Var.root= os.getcwd()
-        Var.root = 'D:\\fasttest\\fasttestDemo'
+        Var.root= os.getcwd()
         sys.path.append(Var.root)
         sys.path.append(os.path.join(Var.root, 'Scripts'))
         Var.global_var = Dict()

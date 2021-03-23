@@ -49,15 +49,9 @@ class ActionExecutorApp(object):
         :return:
         '''
         if Var.driver == 'appium':
-            try:
-                from appium.webdriver import WebElement
-            except:
-                pass
+            from appium.webdriver import WebElement
         if Var.driver == 'macaca':
-            try:
-                from macaca.webdriver import WebElement
-            except:
-                pass
+            from macaca.webdriver import WebElement
         if isinstance(key, WebElement):
             element = key
         else:
@@ -228,8 +222,9 @@ class ActionExecutorApp(object):
         """
         parms = action.parms
         if len(parms):
-            img_info = self.__ocr_analysis(action.step, parms[0], True)
-            if not isinstance(img_info, bool):
+            image_name = '{}.png'.format(action.step)
+            img_info = self.__ocr_analysis(image_name, parms[0], True)
+            if img_info:
                 Var.ocrimg = img_info['ocrimg']
                 x = img_info['x']
                 y = img_info['y']
@@ -251,23 +246,22 @@ class ActionExecutorApp(object):
         """
         parms = action.parms
         if len(parms):
-            img_info = self.__ocr_analysis(action.step, parms[0], True)
-            if not isinstance(img_info, bool):
+            image_name = '{}.png'.format(action.step)
+            img_info = self.__ocr_analysis(image_name, parms[0], True)
+            if img_info:
                 if img_info is not None:
                     Var.ocrimg = img_info['ocrimg']
                     check = True
                 else:
                     check = False
+                if not check:
+                    raise Exception("Can't find element {}".format(parms[0]))
             elif len(parms) == 1:
-                check = self.__get_elements(key=parms[0], index=0)
+                self.__get_elements(key=parms[0], index=0)
             elif len(parms) == 2:
-                check = self.__get_elements(key=parms[0], index=parms[-1])
+                self.__get_elements(key=parms[0], index=parms[-1])
             else:
                 raise TypeError('check takes 2 positional arguments but {} was given'.format(len(parms)))
-
-            if not check:
-                raise Exception("Can't find element {}".format(parms[0]))
-            return check
         else:
             raise TypeError('click missing 1 required positional argument: element')
 
@@ -318,24 +312,32 @@ class ActionExecutorApp(object):
         elif len(parms) == 1:
             time.sleep(float(parms[0]))
 
-    def __ocr_analysis(self, action, element, israise):
+    def __ocr_analysis(self,image_name, match_image, israise):
         """
-        :param action:
-        :param element:
+        :param match_image:
         :return:
         """
-        if element not in Var.extensions_var['resource'].values():
-            return False
-        orcimg = OpencvUtils(action, element)
-        orcimg.save_screenshot()
-        img_info = orcimg.extract_minutiae()
-        if img_info:
-            return img_info
-        else:
-            if israise:
-                raise Exception("Can't find element {}".format(element))
+        try:
+            if not isinstance(match_image, str):
+                return False
+            if not os.path.isfile(match_image):
+                return False
+
+            image_dir = os.path.join(Var.snapshot_dir, 'screenshot')
+            if not os.path.exists(image_dir):
+                os.makedirs(image_dir)
+            base_image = os.path.join(image_dir, '{}'.format(image_name))
+            Var.instance.save_screenshot(base_image)
+            height = Var.instance.get_window_size()['height']
+
+            orcimg = OpencvUtils(base_image, match_image, height)
+            img_info = orcimg.extract_minutiae()
+            if img_info:
+                return img_info
             else:
-                return None
+                return False
+        except:
+            return False
 
     def __action_getVar(self, action):
         '''

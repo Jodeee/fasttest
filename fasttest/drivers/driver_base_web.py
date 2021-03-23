@@ -573,8 +573,6 @@ class DriverBaseWeb(object):
         :param text:
         :return:
         '''
-        if not timeout:
-            timeout = 10
         if element:
             try:
                 WebDriverWait(Var.instance, int(timeout)).until(
@@ -599,8 +597,6 @@ class DriverBaseWeb(object):
         :param text:
         :return:
         '''
-        if not timeout:
-            timeout = 10
         if element:
             try:
                 WebDriverWait(Var.instance, int(timeout)).until(
@@ -626,8 +622,6 @@ class DriverBaseWeb(object):
         :return:
         '''
         type = type.lower()
-        if not timeout:
-            timeout = 10
         endTime = datetime.datetime.now() + datetime.timedelta(seconds=int(timeout))
         index = 3
         while True:
@@ -641,11 +635,9 @@ class DriverBaseWeb(object):
                         return element
                 if datetime.datetime.now() >= endTime:
                     return element
-                time.sleep(0.5)
             except NoSuchElementException:
                 if datetime.datetime.now() >= endTime:
                     return None
-                time.sleep(0.5)
             except Exception as e:
                 raise e
 
