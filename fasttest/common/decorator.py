@@ -64,7 +64,6 @@ def executor_keywords(func, *args, **kwds):
         imagename = "Step_{}.png".format(snapshot_index)
         file = os.path.join(Var.snapshot_dir, imagename)
         action_step = args[-2].step
-        action_tag = args[-2].tag
         style = args[-1]
         try:
             if args or kwds:
@@ -90,17 +89,15 @@ def executor_keywords(func, *args, **kwds):
                 Var.ocrimg = None
                 log_error(' screenshot failed!', False)
 
+            # 步骤执行时间
             stop_time = time.time()
             duration = str('%.2f' % (stop_time - start_time))
-            # 获取变量值后需要替换掉原数据
-            if action_tag == 'getVar':
-                step_ = action_step.split('=', 1)
-                step_result = f'{result}'.replace("<", "{").replace(">", "}")
-                if step_[-1].startswith(' '):
-                    action_step = f'{step_[0]}= {step_result}'
-                else:
-                    action_step = f'{step_[0]}={step_result}'
-                result = None
+
+            # 步骤执行结果
+            if result is not None:
+                action_result = f'{result}'.replace("<", "{").replace(">", "}")
+            else:
+                action_result = ''
 
             # call action中某一语句抛出异常，会导致call action状态也是false,需要处理
             status = not exception_flag
@@ -113,7 +110,7 @@ def executor_keywords(func, *args, **kwds):
                 'duration': duration,
                 'snapshot': file,
                 'step': f'{style}- {action_step}',
-                'result': result if result is not None else ''
+                'result': action_result
             }
             if exception_flag:
                 raise exception

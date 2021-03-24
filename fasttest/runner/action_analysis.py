@@ -34,12 +34,10 @@ class ActionAnalysis(object):
             object_var = self.variables[name]
         elif name in self.common_var.keys():
             object_var = self.common_var[name]
-        elif name in Var.extensions_var['variable'].keys():
-            object_var = Var.extensions_var['variable'][name]
-        elif name in Var.extensions_var['resource'].keys():
-            object_var = Var.extensions_var['resource'][name]
-        elif name in vars(Var).keys():
-            object_var = vars(Var)[name]
+        elif name in Var.extensions_var.variable.keys():
+            object_var = Var.extensions_var.variable[name]
+        elif name in Var.extensions_var.resource.keys():
+            object_var = Var.extensions_var.resource[name]
         else:
             raise NameError("name '{}' is not defined".format(name))
         return object_var
@@ -262,7 +260,7 @@ class ActionAnalysis(object):
         elif re.match(r'for\s+(\$\{\w+\})\s+in\s+(\S+)+', step):
             return self.__analysis_for_keywords(step)
         else:
-            raise SyntaxError(f'"{step}"')
+            raise SyntaxError(step)
 
     @executor_keywords
     def executor_keywords(self, action, style):

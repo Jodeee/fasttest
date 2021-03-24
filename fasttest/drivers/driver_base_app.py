@@ -210,12 +210,13 @@ class DriverBaseApp(object):
         return text
 
     @staticmethod
-    def find_elements_by_key(key, timeout=10, interval=1, index=0):
+    def find_elements_by_key(key, timeout=10, interval=1, index=0, not_processing=False):
         '''
         :param key:
         :param timeout:
         :param interval:
         :param index:
+        :param not_processing: 不处理数据
         :return:
         '''
         if not interval:
@@ -224,7 +225,8 @@ class DriverBaseApp(object):
             'element': key,
             'timeout': timeout,
             'interval': interval,
-            'index': index
+            'index': index,
+            'not_processing': not_processing
         }
         if Var.desired_caps.platformName.lower() == 'android':
             if re.match(r'[a-zA-Z]+\.[a-zA-Z]+[\.\w]+:id/\S+', key):
@@ -258,6 +260,7 @@ class DriverBaseApp(object):
         timeout = elements_info['timeout']
         interval = elements_info['interval']
         index = elements_info['index']
+        not_processing = elements_info['not_processing']
         log_info(" --> body: {'using': '%s', 'value': '%s', 'index': %s, 'timeout': %s}" % (element_type, element, index, timeout))
         if element_type == 'name':
             elements = driver.wait_for_elements_by_name(name=element, timeout=timeout, interval=interval)
@@ -277,5 +280,7 @@ class DriverBaseApp(object):
             if len(elements) <= int(index):
                 log_error('elements exists, but cannot find index({}) position'.format(index), False)
                 raise Exception('list index out of range, index:{}'.format(index))
+            if not_processing:
+                return elements
             return elements[index]
         return None

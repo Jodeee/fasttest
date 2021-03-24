@@ -41,7 +41,7 @@ class ActionExecutorApp(object):
         else:
             log_info(f' <-- {key}: {type(result)} {result}')
 
-    def __get_elements(self, key=None, index=0):
+    def __get_element(self, key=None, index=0):
         '''
         :param action:
         :param index:
@@ -59,6 +59,19 @@ class ActionExecutorApp(object):
         if not element:
             raise Exception("Can't find element {}".format(key))
         return element
+
+    def __action_get_elements(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = action.parms
+        if not isinstance(parms[0], str):
+            raise TypeError('bad operand type: {}'.format(type(parms[0])))
+        elements = DriverBaseApp.find_elements_by_key(key=parms[0], timeout=Var.time_out, interval=Var.interval, not_processing=True)
+        if not elements:
+            raise Exception("Can't find element {}".format(parms[0]))
+        return elements
 
     def __get_value(self, action, index=0):
         '''
@@ -206,9 +219,9 @@ class ActionExecutorApp(object):
         """
         parms = action.parms
         if len(parms) == 1:
-            element = self.__get_elements(key=parms[0], index=0)
+            element = self.__get_element(key=parms[0], index=0)
         elif len(parms) == 2:
-            element = self.__get_elements(key=parms[0], index=parms[-1])
+            element = self.__get_element(key=parms[0], index=parms[-1])
         else:
             raise TypeError('getText missing 1 required positional argument: element')
         text = DriverBaseApp.get_text(element)
@@ -230,10 +243,10 @@ class ActionExecutorApp(object):
                 y = img_info['y']
                 DriverBaseApp.tap(x, y)
             elif len(parms) == 1:
-                element = self.__get_elements(key=parms[0], index=0)
+                element = self.__get_element(key=parms[0], index=0)
                 DriverBaseApp.click(element)
             elif len(parms) == 2:
-                element = self.__get_elements(key=parms[0], index=parms[-1])
+                element = self.__get_element(key=parms[0], index=parms[-1])
                 DriverBaseApp.click(element)
         else:
             raise TypeError('click missing 1 required positional argument: element')
@@ -257,9 +270,9 @@ class ActionExecutorApp(object):
                 if not check:
                     raise Exception("Can't find element {}".format(parms[0]))
             elif len(parms) == 1:
-                self.__get_elements(key=parms[0], index=0)
+                self.__get_element(key=parms[0], index=0)
             elif len(parms) == 2:
-                self.__get_elements(key=parms[0], index=parms[-1])
+                self.__get_element(key=parms[0], index=parms[-1])
             else:
                 raise TypeError('check takes 2 positional arguments but {} was given'.format(len(parms)))
         else:
@@ -273,9 +286,9 @@ class ActionExecutorApp(object):
         """
         parms = action.parms
         if len(parms) == 2:
-            element = self.__get_elements(key=parms[0], index=0)
+            element = self.__get_element(key=parms[0], index=0)
         elif len(parms) == 3:
-            element = self.__get_elements(key=parms[0], index=parms[-1])
+            element = self.__get_element(key=parms[0], index=parms[-1])
         else:
             raise TypeError('input missing 2 required positional argument: element, text')
         DriverBaseApp.input(element, parms[1])
@@ -356,6 +369,11 @@ class ActionExecutorApp(object):
                     result = None
             else:
                 result = None
+        elif action.key == '$.getElement':
+            parms = action.parms[0]
+            result = self.__get_element(parms, index=0)
+        elif action.key == '$.getElements':
+            result = self.__action_get_elements(action)
         elif action.key:
             # 调用脚本
             result = self.new_action_executor(action, False)

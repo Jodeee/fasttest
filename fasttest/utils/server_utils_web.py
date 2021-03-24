@@ -39,7 +39,6 @@ class ServerUtilsWeb(object):
         try:
             if not os.path.isfile(self.driver_path):
                 self.driver_path = None
-                log_error(' No such file : {}'.format(self.driver_path), False)
 
             if self.browser == 'chrome':
                 options = webdriver.ChromeOptions()

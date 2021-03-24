@@ -4,7 +4,6 @@ import os
 import sys
 import time
 import json
-import inspect
 import unittest
 import threading
 from fasttest.common import *
