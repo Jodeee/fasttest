@@ -13,13 +13,15 @@ def return_keywords(driver):
         "$.getVar",  # 获取全局变量
         "$.getElement",  # 获取元素
         "$.getElements",  # 获取元素
+        "$.getLen",  # 获取长度
+        "$.isExist", # 是否存在
+        "$.isNotExist", # 不存在
         "while",
         "if",
         "elif",
         "else",
         "assert",
         "setTimeout",  # 设置等待时间
-        "$.getLen",  # 获取长度
     ]
     keywords_app= [
         "installApp", # 安装app
@@ -32,21 +34,7 @@ def return_keywords(driver):
         "goBack", # 返回
         "adb", # adb
         "swipe", # 滑动
-        # "click", # 点击
-        # "check", # 检查
         "input", # 输入
-        # "sleep", # 等待
-        # "setVar", # 设置全局变量
-        # "break",
-        # "$.getText", # 获取文案
-        # "$.id",
-        # "$.getVar", # 获取全局变量
-        # "$.getElement",  # 获取元素
-        # "$.getElements",  # 获取元素
-        # "while",
-        # "if",
-        # "elif",
-        # "else",
         "ifiOS",
         "ifAndroid"
     ]
@@ -58,10 +46,8 @@ def return_keywords(driver):
         "back",  # 后退
         "forward", # 前进
         "refresh", # 刷新
-        # "check",  # 检查元素
         "queryDisplayed", # 等待元素可见
         "queryNotDisplayed", # 等待元素不可见
-        # "click",  # 单击
         "contextClick",  # 右击
         "doubleClick",  # 双击
         "holdClick",  # 按下鼠标左键
@@ -70,13 +56,11 @@ def return_keywords(driver):
         "moveByOffset", # 鼠标从当前位置移动到某个坐标
         "moveToElement",  # 鼠标移动
         "moveToElementWithOffset", #移动到距某个元素(左上角坐标)多少距离的位置
-        # "keyDownAndkeyUp", # 按下某个键盘上的键
         "sendKeys",  # 输入
         "clear",  # 清除
         "maxWindow",  # 窗口最大化
         "minWindow",  # 窗口最小化
         "fullscreenWindow", # 全屏窗口
-        # "setTimeout", # 设置等待时间
         "deleteAllCookies",  # 删除所有cookies
         "deleteCookie",  # 删除指定cookies
         "addCookie", # 添加cookies
@@ -97,7 +81,6 @@ def return_keywords(driver):
         "$.getLocation",  # 获取元素坐标
         "$.getRect", # 获取元素位置大小
         "$.getAttribute",  # 获取元素属性
-        # "$.getText",  # 获取元素文案
         "$.getTagName",  # 获取元素tag Name
         "$.getCssProperty",  # 获取元素css
         "$.getName",  # 获取浏览器名字
@@ -109,19 +92,6 @@ def return_keywords(driver):
         "$.getCookie",  # 获取指定cookie
         "$.getWindowPosition",  # 获取窗口坐标
         "$.getWindowSize",  # 获取窗口大小
-        # "$.getElement",  # 获取元素
-        # "$.getElements",  # 获取元素
-        # "$.id",  # 科学运算
-        # "$.getLen", # 获取长度
-        # "$.getVar",  # 获取全局变量
-        # "setVar",  # 设置全局变量
-        # "sleep",
-        # "break",
-        # "while",
-        # "if",
-        # "elif",
-        # "else",
-        # "assert"
     ]
 
     if driver != 'selenium':

@@ -664,19 +664,8 @@ class ActionExecutorWeb(object):
             raise Exception("Can't find elements: {}".format(parms[0]))
         return elements
 
-    @check
-    def __action_ifcheck(self, action):
-        """
-        行为执行：ifcheck
-        :param action:
-        :return:
-        """
-        element = self.__get_element_info(action, is_return=True)
-        if not element:
-            return False
-        return True
 
-    def __action_len(self, action):
+    def __action_get_len(self, action):
         """
         len
         :param action:
@@ -686,6 +675,38 @@ class ActionExecutorWeb(object):
         if value:
             return len(value)
         return 0
+
+    def __action_is_exist(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = action.parms
+        if not len(parms):
+            raise TypeError('missing 1 required positional argument')
+        if not re.match(r'^(id|name|class|tag_name|link_text|partial_link_text|xpath|css_selector)\s*=.+',
+                        parms[0].strip(), re.I):
+            raise TypeError('input parameter format error:{}'.format(parms[0]))
+        key = parms[0].strip().split('=', 1)[0]
+        value = parms[0].strip().split('=', 1)[-1]
+        elements = DriverBaseWeb.get_elements(key, value, Var.time_out)
+        return bool(elements)
+
+    def __action_is_not_exist(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = action.parms
+        if not len(parms):
+            raise TypeError('missing 1 required positional argument')
+        if not re.match(r'^(id|name|class|tag_name|link_text|partial_link_text|xpath|css_selector)\s*=.+',
+                        parms[0].strip(), re.I):
+            raise TypeError('input parameter format error:{}'.format(parms[0]))
+        key = parms[0].strip().split('=', 1)[0]
+        value = parms[0].strip().split('=', 1)[-1]
+        elements = DriverBaseWeb.get_elements(key, value, 0)
+        return not bool(elements)
 
     def __action_sleep(self, action):
         """
@@ -752,7 +773,11 @@ class ActionExecutorWeb(object):
             action.parms = action.parms.replace('\n', '')
             result = eval(action.parms)
         elif action.key == '$.getLen':
-            result = self.__action_len(action)
+            result = self.__action_get_len(action)
+        elif action.key == '$.isExist':
+            result = self.__action_is_exist(action)
+        elif action.key == '$.isNotExist':
+            result = self.__action_is_not_exist(action)
         elif action.key == '$.getVar':
             if Var.global_var:
                 if action.parms[0] in Var.global_var:
@@ -812,15 +837,10 @@ class ActionExecutorWeb(object):
         try:
             parms = parms.replace('\n', '')
             result = eval(parms)
-            if result:
-                isTrue = True
-            else:
-                isTrue = False
-
-            log_info(' <-- {}'.format(isTrue))
+            log_info(' <-- {}'.format(bool(result)))
             if key == 'assert':
                 assert result
-            return isTrue
+            return bool(result)
         except Exception as e:
             raise e
 
@@ -987,12 +1007,6 @@ class ActionExecutorWeb(object):
 
         elif action.key == 'sleep':
             result = self.__action_sleep(action)
-
-        elif action.key == 'ifcheck':
-            result = self.__action_ifcheck(action)
-
-        elif action.key == 'elifcheck':
-            result = self.__action_ifcheck(action)
 
         elif action.key == 'break':
             result = True

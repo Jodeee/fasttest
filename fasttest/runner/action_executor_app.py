@@ -41,37 +41,6 @@ class ActionExecutorApp(object):
         else:
             log_info(f' <-- {key}: {type(result)} {result}')
 
-    def __get_element(self, key=None, index=0):
-        '''
-        :param action:
-        :param index:
-        :param is_return:
-        :return:
-        '''
-        if Var.driver == 'appium':
-            from appium.webdriver import WebElement
-        if Var.driver == 'macaca':
-            from macaca.webdriver import WebElement
-        if isinstance(key, WebElement):
-            element = key
-        else:
-            element = DriverBaseApp.find_elements_by_key(key=key, timeout=Var.time_out, interval=Var.interval, index=index)
-        if not element:
-            raise Exception("Can't find element {}".format(key))
-        return element
-
-    def __action_get_elements(self, action):
-        '''
-        :param action:
-        :return:
-        '''
-        parms = action.parms
-        if not isinstance(parms[0], str):
-            raise TypeError('bad operand type: {}'.format(type(parms[0])))
-        elements = DriverBaseApp.find_elements_by_key(key=parms[0], timeout=Var.time_out, interval=Var.interval, not_processing=True)
-        if not elements:
-            raise Exception("Can't find element {}".format(parms[0]))
-        return elements
 
     def __get_value(self, action, index=0):
         '''
@@ -84,6 +53,86 @@ class ActionExecutorApp(object):
 
         value = parms[index]
         return value
+
+
+    def __get_element(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = self.__get_value(action, 0)
+        if Var.driver == 'appium':
+            from appium.webdriver import WebElement
+        if Var.driver == 'macaca':
+            from macaca.webdriver import WebElement
+        if isinstance(parms, WebElement):
+            element = parms
+        else:
+            element = DriverBaseApp.find_elements_by_key(key=parms, timeout=Var.time_out, interval=Var.interval)
+        if not element:
+            raise Exception("Can't find element {}".format(parms))
+        return element
+
+    def __action_get_elements(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = self.__get_value(action, 0)
+        if not isinstance(parms, str):
+            raise TypeError('bad operand type: {}'.format(type(parms)))
+        elements = DriverBaseApp.find_elements_by_key(key=parms, timeout=Var.time_out, interval=Var.interval, not_processing=True)
+        if not elements:
+            raise Exception("Can't find element {}".format(parms))
+        return elements
+
+    def __action_get_len(self, action):
+        """
+        len
+        :param action:
+        :return:
+        """
+        value = self.__get_value(action)
+        if value:
+            return len(value)
+        return 0
+
+    def __action_is_exist(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = self.__get_value(action, 0)
+        image_name = '{}.png'.format(action.step)
+        img_info = self.__ocr_analysis(image_name, parms, True)
+        result = True
+        if not isinstance(img_info, bool):
+            if img_info is not None:
+                Var.ocrimg = img_info['ocrimg']
+            else:
+                result = False
+        else:
+            elements = DriverBaseApp.find_elements_by_key(key=parms, timeout=Var.time_out, interval=Var.interval, not_processing=True)
+            result = bool(elements)
+        return result
+
+    def __action_is_not_exist(self, action):
+        '''
+        :param action:
+        :return:
+        '''
+        parms = self.__get_value(action, 0)
+        image_name = '{}.png'.format(action.step)
+        img_info = self.__ocr_analysis(image_name, parms, True)
+        result = False
+        if not isinstance(img_info, bool):
+            if img_info is not None:
+                Var.ocrimg = img_info['ocrimg']
+                result = True
+        else:
+            elements = DriverBaseApp.find_elements_by_key(key=parms, timeout=0, interval=Var.interval, not_processing=True)
+            result = bool(elements)
+        return not result
 
     def __action_start_app(self, action):
         """
@@ -217,13 +266,7 @@ class ActionExecutorApp(object):
         :param action:
         :return:
         """
-        parms = action.parms
-        if len(parms) == 1:
-            element = self.__get_element(key=parms[0], index=0)
-        elif len(parms) == 2:
-            element = self.__get_element(key=parms[0], index=parms[-1])
-        else:
-            raise TypeError('getText missing 1 required positional argument: element')
+        element = self.__get_element(action)
         text = DriverBaseApp.get_text(element)
         return text
 
@@ -233,23 +276,20 @@ class ActionExecutorApp(object):
         :param action:
         :return:
         """
-        parms = action.parms
-        if len(parms):
-            image_name = '{}.png'.format(action.step)
-            img_info = self.__ocr_analysis(image_name, parms[0], True)
-            if img_info:
+        parms = self.__get_value(action, 0)
+        image_name = '{}.png'.format(action.step)
+        img_info = self.__ocr_analysis(image_name, parms, True)
+        if not isinstance(img_info, bool):
+            if img_info is not None:
                 Var.ocrimg = img_info['ocrimg']
                 x = img_info['x']
                 y = img_info['y']
                 DriverBaseApp.tap(x, y)
-            elif len(parms) == 1:
-                element = self.__get_element(key=parms[0], index=0)
-                DriverBaseApp.click(element)
-            elif len(parms) == 2:
-                element = self.__get_element(key=parms[0], index=parms[-1])
-                DriverBaseApp.click(element)
+            else:
+                raise Exception("Can't find element {}".format(parms))
         else:
-            raise TypeError('click missing 1 required positional argument: element')
+            element = self.__get_element(action)
+            DriverBaseApp.click(element)
 
     def __action_check(self, action):
         """
@@ -257,26 +297,16 @@ class ActionExecutorApp(object):
         :param action:
         :return:
         """
-        parms = action.parms
-        if len(parms):
-            image_name = '{}.png'.format(action.step)
-            img_info = self.__ocr_analysis(image_name, parms[0], True)
-            if img_info:
-                if img_info is not None:
-                    Var.ocrimg = img_info['ocrimg']
-                    check = True
-                else:
-                    check = False
-                if not check:
-                    raise Exception("Can't find element {}".format(parms[0]))
-            elif len(parms) == 1:
-                self.__get_element(key=parms[0], index=0)
-            elif len(parms) == 2:
-                self.__get_element(key=parms[0], index=parms[-1])
+        parms = self.__get_value(action, 0)
+        image_name = '{}.png'.format(action.step)
+        img_info = self.__ocr_analysis(image_name, parms, True)
+        if not isinstance(img_info, bool):
+            if img_info is not None:
+                Var.ocrimg = img_info['ocrimg']
             else:
-                raise TypeError('check takes 2 positional arguments but {} was given'.format(len(parms)))
+                raise Exception("Can't find element {}".format(parms))
         else:
-            raise TypeError('click missing 1 required positional argument: element')
+            self.__get_element(action)
 
     def __action_input(self, action):
         """
@@ -284,14 +314,9 @@ class ActionExecutorApp(object):
         :param action:
         :return:
         """
-        parms = action.parms
-        if len(parms) == 2:
-            element = self.__get_element(key=parms[0], index=0)
-        elif len(parms) == 3:
-            element = self.__get_element(key=parms[0], index=parms[-1])
-        else:
-            raise TypeError('input missing 2 required positional argument: element, text')
-        DriverBaseApp.input(element, parms[1])
+        text = self.__get_value(action, -1)
+        element = self.__get_element(action)
+        DriverBaseApp.input(element, text)
 
     def __action_ifiOS(self, action):
         """
@@ -348,7 +373,7 @@ class ActionExecutorApp(object):
             if img_info:
                 return img_info
             else:
-                return False
+                return None
         except:
             return False
 
@@ -370,10 +395,15 @@ class ActionExecutorApp(object):
             else:
                 result = None
         elif action.key == '$.getElement':
-            parms = action.parms[0]
-            result = self.__get_element(parms, index=0)
+            result = self.__get_element(action)
         elif action.key == '$.getElements':
             result = self.__action_get_elements(action)
+        elif action.key == '$.getLen':
+            result = self.__action_get_len(action)
+        elif action.key == '$.isExist':
+            result = self.__action_is_exist(action)
+        elif action.key == '$.isNotExist':
+            result = self.__action_is_not_exist(action)
         elif action.key:
             # 调用脚本
             result = self.new_action_executor(action, False)
@@ -425,15 +455,10 @@ class ActionExecutorApp(object):
         try:
             parms = parms.replace('\n', '')
             result = eval(parms)
-            if result:
-                isTrue = True
-            else:
-                isTrue = False
-
-            log_info(' <-- {}'.format(isTrue))
+            log_info(' <-- {}'.format(bool(result)))
             if key == 'assert':
                 assert result
-            return isTrue
+            return bool(result)
         except Exception as e:
             raise e
 
