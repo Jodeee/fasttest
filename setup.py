@@ -37,7 +37,7 @@ setuptools.setup(
     author="IMJIE",
     author_email="imjie@outlook.com",
     keywords=('macaca', 'appium', 'selenium', 'APP自动化', 'WEB自动化', '关键字驱动'),
-    description="一个自动化工具",
+    description="关键字驱动自动化框架",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Jodeee/fasttest",

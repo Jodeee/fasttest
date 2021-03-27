@@ -24,8 +24,8 @@ class ServerUtilsApp(object):
         self.driver = desired_capabilities.driver
         self.time_out = desired_capabilities.timeOut
         self.url = 'http://127.0.0.1'
-        self.desired_capabilities = self.__check_desired_capabilities(desired_capabilities.desired)
-        self.port = self.__get_device_port()
+        self.desired_capabilities = self._check_desired_capabilities(desired_capabilities.desired)
+        self.port = self._get_device_port()
         self.browser = desired_capabilities.browser
 
     def start_server(self):
@@ -37,7 +37,7 @@ class ServerUtilsApp(object):
                 self.pipe = subprocess.Popen(
                     'appium -a {} -p {} --session-override --log-level info'.format('127.0.0.1', self.port),
                     stdout=subprocess.PIPE, shell=True)
-                thread = threading.Thread(target=self.__print_appium_log)
+                thread = threading.Thread(target=self._print_appium_log)
                 thread.start()
                 time.sleep(5)
 
@@ -83,7 +83,7 @@ class ServerUtilsApp(object):
                 self.instance.quit()
 
             if self.port is not None:
-                result, pid = self.__check_port_is_used(self.port)
+                result, pid = self._check_port_is_used(self.port)
                 if result:
                     p = platform.system()
                     if p == "Windows":
@@ -96,7 +96,7 @@ class ServerUtilsApp(object):
         except Exception as e:
             raise e
 
-    def __check_desired_capabilities(self, desired_capabilities):
+    def _check_desired_capabilities(self, desired_capabilities):
         desired_capabilities_dict = {}
         for key, value in desired_capabilities.items():
             if self.driver == 'appium':
@@ -114,7 +114,7 @@ class ServerUtilsApp(object):
             object.__setattr__(self, key, value)
         return desired_capabilities_dict
 
-    def __check_port_is_used(self, port):
+    def _check_port_is_used(self, port):
 
         p = platform.system()
         if p == 'Windows':
@@ -137,11 +137,11 @@ class ServerUtilsApp(object):
         else:
             log_error('The platform is {} ,this platform is not support.'.format(p))
 
-    def __get_device_port(self):
+    def _get_device_port(self):
 
         for i in range(10):
             port = random.randint(3456, 9999)
-            result, pid = self.__check_port_is_used(port)
+            result, pid = self._check_port_is_used(port)
             if result:
                 continue
             else:
@@ -149,7 +149,7 @@ class ServerUtilsApp(object):
                 return port
         return 3456
 
-    def __print_appium_log(self):
+    def _print_appium_log(self):
 
         log_tag = False
         while True:

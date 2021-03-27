@@ -23,23 +23,20 @@ class ServerUtilsWeb(object):
         self.browser =  self.desired_capabilities.browser
         self.max_window =  self.desired_capabilities.maxWindow
         self.remote =  self.desired_capabilities.remote
-        if 'driver' in self.desired_capabilities[self.browser][0].keys():
+        if self.desired_capabilities[self.browser] and 'driver' in self.desired_capabilities[self.browser][0].keys():
             self.driver_path = self.desired_capabilities[self.browser][0]['driver']
         else:
             self.driver_path = None
-        if 'options' in self.desired_capabilities[self.browser][0].keys():
+        if self.desired_capabilities[self.browser] and 'options' in self.desired_capabilities[self.browser][0].keys():
             self.options = self.desired_capabilities[self.browser][0]['options']
         else:
-            self.driver_path = None
+            self.options = None
         if self.remote is None:
             self.remote = False
 
     def start_server(self):
 
         try:
-            if not os.path.isfile(self.driver_path):
-                self.driver_path = None
-
             if self.browser == 'chrome':
                 options = webdriver.ChromeOptions()
                 if self.options:

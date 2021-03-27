@@ -11,7 +11,7 @@ from fasttest.utils.opcv_utils import OpencvUtils
 
 class ActionExecutorApp(object):
 
-    def __from_scripts_file(self):
+    def _from_scripts_file(self):
 
         file_list = []
         try:
@@ -26,7 +26,7 @@ class ActionExecutorApp(object):
 
         return file_list
 
-    def __out_result(self, key, result):
+    def _out_result(self, key, result):
         '''
         input result
         '''
@@ -42,7 +42,7 @@ class ActionExecutorApp(object):
             log_info(f' <-- {key}: {type(result)} {result}')
 
 
-    def __get_value(self, action, index=0):
+    def _get_value(self, action, index=0):
         '''
         :param action:
         :return:
@@ -55,12 +55,12 @@ class ActionExecutorApp(object):
         return value
 
 
-    def __get_element(self, action):
+    def _get_element(self, action):
         '''
         :param action:
         :return:
         '''
-        parms = self.__get_value(action, 0)
+        parms = self._get_value(action, 0)
         if Var.driver == 'appium':
             from appium.webdriver import WebElement
         if Var.driver == 'macaca':
@@ -73,12 +73,12 @@ class ActionExecutorApp(object):
             raise Exception("Can't find element {}".format(parms))
         return element
 
-    def __action_get_elements(self, action):
+    def _action_get_elements(self, action):
         '''
         :param action:
         :return:
         '''
-        parms = self.__get_value(action, 0)
+        parms = self._get_value(action, 0)
         if not isinstance(parms, str):
             raise TypeError('bad operand type: {}'.format(type(parms)))
         elements = DriverBaseApp.find_elements_by_key(key=parms, timeout=Var.time_out, interval=Var.interval, not_processing=True)
@@ -86,25 +86,25 @@ class ActionExecutorApp(object):
             raise Exception("Can't find element {}".format(parms))
         return elements
 
-    def __action_get_len(self, action):
+    def _action_get_len(self, action):
         """
         len
         :param action:
         :return:
         """
-        value = self.__get_value(action)
+        value = self._get_value(action)
         if value:
             return len(value)
         return 0
 
-    def __action_is_exist(self, action):
+    def _action_is_exist(self, action):
         '''
         :param action:
         :return:
         '''
-        parms = self.__get_value(action, 0)
+        parms = self._get_value(action, 0)
         image_name = '{}.png'.format(action.step)
-        img_info = self.__ocr_analysis(image_name, parms, True)
+        img_info = self._ocr_analysis(image_name, parms, True)
         result = True
         if not isinstance(img_info, bool):
             if img_info is not None:
@@ -116,14 +116,14 @@ class ActionExecutorApp(object):
             result = bool(elements)
         return result
 
-    def __action_is_not_exist(self, action):
+    def _action_is_not_exist(self, action):
         '''
         :param action:
         :return:
         '''
-        parms = self.__get_value(action, 0)
+        parms = self._get_value(action, 0)
         image_name = '{}.png'.format(action.step)
-        img_info = self.__ocr_analysis(image_name, parms, True)
+        img_info = self._ocr_analysis(image_name, parms, True)
         result = False
         if not isinstance(img_info, bool):
             if img_info is not None:
@@ -134,7 +134,7 @@ class ActionExecutorApp(object):
             result = bool(elements)
         return not result
 
-    def __action_start_app(self, action):
+    def _action_start_app(self, action):
         """
         行为执行：start_app
         :param action:
@@ -146,7 +146,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('launchApp missing 1 required positional argument: package_info')
 
-    def __action_stop_app(self, action):
+    def _action_stop_app(self, action):
         """
         行为执行：stop_app
         :param action:
@@ -160,7 +160,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('closeApp takes 1 positional argument but {} were giver'.format(len(parms)))
 
-    def __action_install_app(self, action):
+    def _action_install_app(self, action):
         """
         行为执行：install_app
         :param action:
@@ -171,7 +171,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('installApp missing 1 required positional argument: app_path')
 
-    def __action_uninstall_app(self, action):
+    def _action_uninstall_app(self, action):
         """
         行为执行：uninstall_app
         :param action:
@@ -182,7 +182,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('uninstallApp missing 1 required positional argument: package_info')
 
-    def __action_adb(self, action):
+    def _action_adb(self, action):
         """
         行为执行：adb
         :param action:
@@ -193,7 +193,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('adb missing 1 required positional argument')
 
-    def __action_goback(self, action):
+    def _action_goback(self, action):
         """
         行为执行：goback
         :param action:
@@ -201,7 +201,7 @@ class ActionExecutorApp(object):
         """
         DriverBaseApp.adb_shell('shell input keyevent 4')
 
-    def __action_tap(self, action):
+    def _action_tap(self, action):
         """
         行为执行：tap
         :param action:
@@ -212,7 +212,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('tap missing 2 required positional argument: x, y')
 
-    def __action_doubleTap(self, action):
+    def _action_doubleTap(self, action):
         """
         行为执行：doubleTap
         :param action:
@@ -223,7 +223,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('doubleTap missing 2 required positional argument: x, y')
 
-    def __action_press(self, action):
+    def _action_press(self, action):
         """
         行为执行：press
         :param action:
@@ -236,7 +236,7 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('press missing 2 required positional argument: x, y')
 
-    def __action_swipe(self, action):
+    def _action_swipe(self, action):
         """
         行为执行：swipe
         :param action:
@@ -260,25 +260,25 @@ class ActionExecutorApp(object):
         else:
             raise TypeError('swipe takes 1 positional argument but {} were giver'.format(len(action.step)))
 
-    def __action_getText(self, action):
+    def _action_getText(self, action):
         """
         行为执行：getText
         :param action:
         :return:
         """
-        element = self.__get_element(action)
+        element = self._get_element(action)
         text = DriverBaseApp.get_text(element)
         return text
 
-    def __action_click(self, action):
+    def _action_click(self, action):
         """
         行为执行：click
         :param action:
         :return:
         """
-        parms = self.__get_value(action, 0)
+        parms = self._get_value(action, 0)
         image_name = '{}.png'.format(action.step)
-        img_info = self.__ocr_analysis(image_name, parms, True)
+        img_info = self._ocr_analysis(image_name, parms, True)
         if not isinstance(img_info, bool):
             if img_info is not None:
                 Var.ocrimg = img_info['ocrimg']
@@ -288,37 +288,37 @@ class ActionExecutorApp(object):
             else:
                 raise Exception("Can't find element {}".format(parms))
         else:
-            element = self.__get_element(action)
+            element = self._get_element(action)
             DriverBaseApp.click(element)
 
-    def __action_check(self, action):
+    def _action_check(self, action):
         """
         行为执行：check
         :param action:
         :return:
         """
-        parms = self.__get_value(action, 0)
+        parms = self._get_value(action, 0)
         image_name = '{}.png'.format(action.step)
-        img_info = self.__ocr_analysis(image_name, parms, True)
+        img_info = self._ocr_analysis(image_name, parms, True)
         if not isinstance(img_info, bool):
             if img_info is not None:
                 Var.ocrimg = img_info['ocrimg']
             else:
                 raise Exception("Can't find element {}".format(parms))
         else:
-            self.__get_element(action)
+            self._get_element(action)
 
-    def __action_input(self, action):
+    def _action_input(self, action):
         """
         行为执行：input
         :param action:
         :return:
         """
-        text = self.__get_value(action, -1)
-        element = self.__get_element(action)
+        text = self._get_value(action, -1)
+        element = self._get_element(action)
         DriverBaseApp.input(element, text)
 
-    def __action_ifiOS(self, action):
+    def _action_ifiOS(self, action):
         """
         行为执行：ifiOS
         :param action:
@@ -328,7 +328,7 @@ class ActionExecutorApp(object):
             return True
         return False
 
-    def __action_ifAndroid(self, action):
+    def _action_ifAndroid(self, action):
         """
         行为执行：ifAndroid
         :param action:
@@ -338,7 +338,7 @@ class ActionExecutorApp(object):
             return True
         return False
 
-    def __action_sleep(self, action):
+    def _action_sleep(self, action):
         """
         行为执行
         :param action:
@@ -350,7 +350,16 @@ class ActionExecutorApp(object):
         elif len(parms) == 1:
             time.sleep(float(parms[0]))
 
-    def __ocr_analysis(self,image_name, match_image, israise):
+    def _action_set_timeout(self, action):
+        """
+        行为执行：setTimeout
+        :param action:
+        :return:
+        """
+        time = self._get_value(action)
+        Var.time_out = int(time)
+
+    def _ocr_analysis(self,image_name, match_image, israise):
         """
         :param match_image:
         :return:
@@ -377,12 +386,12 @@ class ActionExecutorApp(object):
         except:
             return False
 
-    def __action_getVar(self, action):
+    def _action_getVar(self, action):
         '''
         :return:
         '''
         if action.key == '$.getText':
-            result = self.__action_getText(action)
+            result = self._action_getText(action)
         elif action.key == '$.id':
             action.parms = action.parms.replace('\n', '')
             result = eval(action.parms)
@@ -395,34 +404,34 @@ class ActionExecutorApp(object):
             else:
                 result = None
         elif action.key == '$.getElement':
-            result = self.__get_element(action)
+            result = self._get_element(action)
         elif action.key == '$.getElements':
-            result = self.__action_get_elements(action)
+            result = self._action_get_elements(action)
         elif action.key == '$.getLen':
-            result = self.__action_get_len(action)
+            result = self._action_get_len(action)
         elif action.key == '$.isExist':
-            result = self.__action_is_exist(action)
+            result = self._action_is_exist(action)
         elif action.key == '$.isNotExist':
-            result = self.__action_is_not_exist(action)
+            result = self._action_is_not_exist(action)
         elif action.key:
             # 调用脚本
             result = self.new_action_executor(action, False)
         else:
             result = action.parms[0]
 
-        self.__out_result(action.name, result)
+        self._out_result(action.name, result)
         return result
 
-    def __action_setVar(self, action):
+    def _action_setVar(self, action):
         '''
         :return:
         '''
-        key = self.__get_value(action, 0)
-        values = self.__get_value(action, 1)
+        key = self._get_value(action, 0)
+        values = self._get_value(action, 1)
         Var.global_var[key] = values
         return
 
-    def __action_call(self, action):
+    def _action_call(self, action):
         '''
         :param action:
         :return:
@@ -446,7 +455,7 @@ class ActionExecutorApp(object):
             raise e
         return
 
-    def __action_other(self, action):
+    def _action_other(self, action):
         '''
         :return:
         '''
@@ -462,11 +471,11 @@ class ActionExecutorApp(object):
         except Exception as e:
             raise e
 
-    def __action_for(self, action):
+    def _action_for(self, action):
         '''
         :return:
         '''
-        value = self.__get_value(action)
+        value = self._get_value(action)
         var = action.var
         if not isinstance(value, Iterable):
             raise TypeError(f"'{value}' object is not iterable")
@@ -475,7 +484,7 @@ class ActionExecutorApp(object):
     def new_action_executor(self, action, output=True):
         # 调用脚本
         if action.key:
-            list = self.__from_scripts_file()
+            list = self._from_scripts_file()
             for l in list:
                 exec(l)
             parms = None
@@ -489,7 +498,7 @@ class ActionExecutorApp(object):
             else:
                 result = eval('locals()[action.key]({})'.format(parms))
             if result and output:
-                self.__out_result(action.key, result)
+                self._out_result(action.key, result)
             return result
         else:
             raise KeyError('The {} keyword is undefined!'.format(action.step))
@@ -501,67 +510,70 @@ class ActionExecutorApp(object):
         :return:
         """
         if action.tag and action.tag == 'getVar':
-            result = self.__action_getVar(action)
+            result = self._action_getVar(action)
 
         elif action.tag and action.tag == 'call':
-            result = self.__action_call(action)
+            result = self._action_call(action)
 
         elif action.tag and action.tag == 'other':
-            result = self.__action_other(action)
+            result = self._action_other(action)
 
         elif action.tag and action.tag == 'for':
-            result = self.__action_for(action)
+            result = self._action_for(action)
 
         elif action.key == 'setVar':
-            result = self.__action_setVar(action)
+            result = self._action_setVar(action)
 
         elif action.key == 'installApp':
-            result = self.__action_install_app(action)
+            result = self._action_install_app(action)
 
         elif action.key == 'uninstallApp':
-            result = self.__action_uninstall_app(action)
+            result = self._action_uninstall_app(action)
 
         elif action.key == 'launchApp':
-            result = self.__action_start_app(action)
+            result = self._action_start_app(action)
 
         elif action.key == 'closeApp':
-            result = self.__action_stop_app(action)
+            result = self._action_stop_app(action)
 
         elif action.key == 'tap':
-            result = self.__action_tap(action)
+            result = self._action_tap(action)
 
         elif action.key == 'doubleTap':
-            result = self.__action_doubleTap(action)
+            result = self._action_doubleTap(action)
 
         elif action.key == 'press':
-            result = self.__action_press(action)
+            result = self._action_press(action)
 
         elif action.key == 'goBack':
-            result = self.__action_goback(action)
+            result = self._action_goback(action)
 
         elif action.key == 'adb':
-            result = self.__action_adb(action)
+            result = self._action_adb(action)
 
         elif action.key == 'swipe':
-            result = self.__action_swipe(action)
+            result = self._action_swipe(action)
 
         elif action.key == 'click':
-            result = self.__action_click(action)
+            result = self._action_click(action)
 
         elif action.key == 'check':
-            result = self.__action_check(action)
+            result = self._action_check(action)
 
         elif action.key == 'input':
-            result = self.__action_input(action)
+            result = self._action_input(action)
 
         elif action.key == 'sleep':
-            result = self.__action_sleep(action)
+            result = self._action_sleep(action)
+
+        elif action.key == 'setTimeout':
+            result = self._action_set_timeout(action)
 
         elif action.key == 'ifiOS':
-            result = self.__action_ifiOS(action)
+            result = self._action_ifiOS(action)
 
         elif action.key == 'ifAndroid':
-            result = self.__action_ifAndroid(action)
+            result = self._action_ifAndroid(action)
 
         elif action.key == 'break':
             result = True

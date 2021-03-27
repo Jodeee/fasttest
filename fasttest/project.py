@@ -18,34 +18,34 @@ class Project(object):
 
     def __init__(self):
 
-        self.__init_project()
-        self.__init_config()
-        self.__init_logging()
-        self.__analytical_testcase_file()
-        self.__analytical_common_file()
-        self.__init_data()
-        self.__init_testcase_suite()
+        self._init_project()
+        self._init_config()
+        self._init_logging()
+        self._analytical_testcase_file()
+        self._analytical_common_file()
+        self._init_data()
+        self._init_testcase_suite()
 
-    def __init_project(self):
+    def _init_project(self):
 
-        Var.root= os.getcwd()
-        sys.path.append(Var.root)
-        sys.path.append(os.path.join(Var.root, 'Scripts'))
+        sys.path.append(os.getcwd())
+        sys.path.append(os.path.join(os.getcwd(), 'Scripts'))
+        Var.root = os.getcwd()
         Var.global_var = Dict()
         Var.extensions_var = Dict()
         Var.common_var = Dict()
         Var.common_func = Dict()
 
-    def __init_config(self):
+    def _init_config(self):
 
-        self.__config = analytical_file(os.path.join(Var.root, 'config.yaml'))
-        Var.driver = self.__config.driver
-        Var.re_start = self.__config.reStart
-        Var.save_screenshot = self.__config.saveScreenshot
-        Var.time_out = self.__config.timeOut
-        Var.test_case = self.__config.testcase
+        self._config = analytical_file(os.path.join(Var.root, 'config.yaml'))
+        Var.driver = self._config.driver
+        Var.re_start = self._config.reStart
+        Var.save_screenshot = self._config.saveScreenshot
+        Var.time_out = self._config.timeOut
+        Var.test_case = self._config.testcase
         Var.desired_caps = Dict()
-        for configK, configV in self.__config.desiredCapabilities[0].items():
+        for configK, configV in self._config.desiredCapabilities[0].items():
             Var.desired_caps[configK] = configV
 
         if not Var.driver or Var.driver.lower() not in ['appium', 'macaca', 'selenium']:
@@ -62,7 +62,7 @@ class Project(object):
             if not Var.desired_caps.browser or Var.desired_caps.browser not in ['chrome', 'safari', 'firefox', 'ie', 'opera', 'phantomjs']:
                 raise ValueError('browser parameter is illegal!')
 
-    def __init_logging(self):
+    def _init_logging(self):
 
         if Var.driver != 'selenium':
             devices = DevicesUtils(Var.desired_caps.platformName, Var.desired_caps.udid)
@@ -79,29 +79,29 @@ class Project(object):
             os.makedirs(Var.report)
             os.makedirs(os.path.join(Var.report, 'resource'))
 
-    def __analytical_testcase_file(self):
+    def _analytical_testcase_file(self):
 
         log_info('******************* analytical config *******************')
-        for configK, configV in self.__config.items():
+        for configK, configV in self._config.items():
             log_info(' {}: {}'.format(configK, configV))
         log_info('******************* analytical testcase *******************')
         testcase = TestCaseUtils()
-        self.__testcase = testcase.test_case_path(Var.root, Var.test_case)
-        log_info(' case: {}'.format(len(self.__testcase)))
-        for case in self.__testcase:
+        self._testcase = testcase.test_case_path(Var.root, Var.test_case)
+        log_info(' case: {}'.format(len(self._testcase)))
+        for case in self._testcase:
             log_info(' {}'.format(case))
 
-    def __analytical_common_file(self):
+    def _analytical_common_file(self):
 
         log_info('******************* analytical common *******************')
         common_dir = os.path.join(Var.root, "Common")
         for rt, dirs, files in os.walk(common_dir):
             if rt == common_dir:
-                self.__load_common_func(rt, files)
+                self._load_common_func(rt, files)
             elif Var.desired_caps.platformName and (rt.split(os.sep)[-1].lower() == Var.desired_caps.platformName.lower()):
-                self.__load_common_func(rt, files)
+                self._load_common_func(rt, files)
 
-    def __load_common_func(self,rt ,files):
+    def _load_common_func(self,rt ,files):
 
         for f in files:
             if not f.endswith('yaml'):
@@ -110,20 +110,19 @@ class Project(object):
                 Var.common_func[commonK] = commonV
                 log_info(' {}: {}'.format(commonK, commonV))
 
-    def __init_data(self):
+    def _init_data(self):
 
-        if os.path.exists(os.path.join(Var.root, 'data.json')):
-            with open(os.path.join(Var.root, 'data.json'), 'r', encoding='utf-8') as f:
-                dict = Dict(json.load(fp=f))
-                Var.extensions_var['variable'] = dict.variable
-                Var.extensions_var['resource'] = dict.resource
-                Var.extensions_var['keywords'] = dict.keywords
-                if not Var.extensions_var.variable:
-                    Var.extensions_var['variable'] = Dict()
-                if not Var.extensions_var.resource:
-                    Var.extensions_var['resource'] = Dict()
-                if not Var.extensions_var.keywords:
-                    Var.extensions_var['keywords'] = Dict()
+        data = analytical_file(os.path.join(Var.root, 'data.yaml'))
+        dict = Dict(data)
+        Var.extensions_var['variable'] = dict.variable[0]
+        Var.extensions_var['resource'] = dict.resource[0]
+        Var.extensions_var['keywords'] = dict.keywords
+        if not Var.extensions_var.variable:
+            Var.extensions_var['variable'] = Dict()
+        if not Var.extensions_var.resource:
+            Var.extensions_var['resource'] = Dict()
+        if not Var.extensions_var.keywords:
+            Var.extensions_var['keywords'] = Dict()
         # 注册全局变量
         log_info('******************* register variable *******************')
         for key, value in Var.extensions_var.variable.items():
@@ -145,15 +144,15 @@ class Project(object):
         for key in Var.extensions_var.keywords:
             log_info(' {}'.format(key))
 
-    def __init_testcase_suite(self):
+    def _init_testcase_suite(self):
 
-        self.__suite = []
-        for case_path in self.__testcase:
+        self._suite = []
+        for case_path in self._testcase:
             test_case = analytical_file(case_path)
             test_case['test_case_path'] = case_path
             Var.case_info = test_case
             subsuite = unittest.TestLoader().loadTestsFromTestCase(RunCase)
-            self.__suite.append(subsuite)
+            self._suite.append(subsuite)
             Var.case_info = None
 
     def start(self):
@@ -174,7 +173,7 @@ class Project(object):
         else:
             server = None
         # 用例运行
-        suite = unittest.TestSuite(tuple(self.__suite))
+        suite = unittest.TestSuite(tuple(self._suite))
         runner = TestRunner()
         runner.run(suite)
 

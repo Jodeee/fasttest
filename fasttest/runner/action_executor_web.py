@@ -15,7 +15,7 @@ from fasttest.utils.opcv_utils import OpencvUtils
 
 class ActionExecutorWeb(object):
 
-    def __from_scripts_file(self):
+    def _from_scripts_file(self):
 
         file_list = []
         try:
@@ -30,7 +30,7 @@ class ActionExecutorWeb(object):
 
         return file_list
 
-    def __out_result(self, key, result):
+    def _out_result(self, key, result):
         '''
         input result
         '''
@@ -45,7 +45,7 @@ class ActionExecutorWeb(object):
         else:
             log_info(f' <-- {key}: {type(result)} {result}')
 
-    def __get_element_info(self, action, index=0, is_return=False):
+    def _get_element_info(self, action, index=0, is_return=False):
         '''
         :param action:
         :return:
@@ -69,7 +69,7 @@ class ActionExecutorWeb(object):
         return element
 
 
-    def __get_value(self, action, index=0):
+    def _get_value(self, action, index=0):
         '''
         :param action:
         :return:
@@ -81,16 +81,16 @@ class ActionExecutorWeb(object):
         value = parms[index]
         return value
 
-    def __action_open_url(self, action):
+    def _action_open_url(self, action):
         """
         openUrl
         :param action:
         :return:
         """
-        url = self.__get_value(action)
+        url = self._get_value(action)
         DriverBaseWeb.open_url(url)
 
-    def __action_close(self, action):
+    def _action_close(self, action):
         """
         close
         :param action:
@@ -98,7 +98,7 @@ class ActionExecutorWeb(object):
         """
         DriverBaseWeb.close()
 
-    def __action_quit(self, action):
+    def _action_quit(self, action):
         """
         行为执行：quit
         :param action:
@@ -106,7 +106,7 @@ class ActionExecutorWeb(object):
         """
         DriverBaseWeb.quit()
 
-    def __action_back(self, action):
+    def _action_back(self, action):
         '''
         back
         :param action:
@@ -114,7 +114,7 @@ class ActionExecutorWeb(object):
         '''
         DriverBaseWeb.back()
 
-    def __action_forward(self, action):
+    def _action_forward(self, action):
         '''
         forward
         :param action:
@@ -122,7 +122,7 @@ class ActionExecutorWeb(object):
         '''
         DriverBaseWeb.forward()
 
-    def __action_refresh(self, action):
+    def _action_refresh(self, action):
         '''
         refresh
         :param action:
@@ -130,183 +130,183 @@ class ActionExecutorWeb(object):
         '''
         DriverBaseWeb.refresh()
 
-    def __action_set_timeout(self, action):
+    def _action_set_timeout(self, action):
         """
         行为执行：setTimeout
         :param action:
         :return:
         """
-        time = self.__get_value(action)
+        time = self._get_value(action)
         Var.time_out = int(time)
 
-    def __action_maximize_window(self, action):
+    def _action_maximize_window(self, action):
         '''
         maxWindow
         :return:
         '''
         DriverBaseWeb.maximize_window()
 
-    def __action_minimize_window(self, action):
+    def _action_minimize_window(self, action):
         '''
         minWindow
         :return:
         '''
         DriverBaseWeb.minimize_window()
 
-    def __action_fullscreen_window(self, action):
+    def _action_fullscreen_window(self, action):
         '''
         fullscreenWindow
         :return:
         '''
         DriverBaseWeb.fullscreen_window()
 
-    def __action_delete_all_cookies(self, action):
+    def _action_delete_all_cookies(self, action):
         '''
         deleteAllCookies
         :return:
         '''
         DriverBaseWeb.delete_all_cookies()
 
-    def __action_delete_cookie(self, action):
+    def _action_delete_cookie(self, action):
         '''
         deleteCookie
         :return:
         '''
-        key = self.__get_value(action)
+        key = self._get_value(action)
         DriverBaseWeb.delete_cookie(key)
 
-    def __action_add_cookie(self, action):
+    def _action_add_cookie(self, action):
         '''
         addCookie
         :return:
         '''
-        key = self.__get_value(action)
+        key = self._get_value(action)
         DriverBaseWeb.add_cookie(key)
 
     @check
-    def __action_clear(self, action):
+    def _action_clear(self, action):
         '''
         clear
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.clear(element)
 
     @check
-    def __action_submit(self, action):
+    def _action_submit(self, action):
         '''
         submit
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.submit(element)
 
     @check
-    def __action_click(self, action):
+    def _action_click(self, action):
         '''
         click
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.click(element)
 
     @check
-    def __action_context_click(self, action):
+    def _action_context_click(self, action):
         '''
         contextClick
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.context_click(element)
 
     @check
-    def __action_double_click(self, action):
+    def _action_double_click(self, action):
         '''
         doubleClick
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.double_click(element)
 
     @check
-    def __action_click_and_hold(self, action):
+    def _action_click_and_hold(self, action):
         '''
         holdClick
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.click_and_hold(element)
 
     @check
-    def __action_drag_and_drop(self, action):
+    def _action_drag_and_drop(self, action):
         '''
         dragDrop
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action, 0)
-        target = self.__get_element_info(action, 1)
+        element = self._get_element_info(action, 0)
+        target = self._get_element_info(action, 1)
         DriverBaseWeb.drag_and_drop(element, target)
 
     @check
-    def __action_drag_and_drop_by_offset(self, action):
+    def _action_drag_and_drop_by_offset(self, action):
         '''
         dragDropByOffset
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
-        xoffset = self.__get_value(action, 1)
-        yoffset = self.__get_value(action, 2)
+        element = self._get_element_info(action)
+        xoffset = self._get_value(action, 1)
+        yoffset = self._get_value(action, 2)
         DriverBaseWeb.drag_and_drop_by_offse(element, float(xoffset), float(yoffset))
 
-    def __action_move_by_offset(self, action):
+    def _action_move_by_offset(self, action):
         '''
         moveByOffset
         :param action:
         :return:
         '''
-        xoffset = self.__get_value(action, 0)
-        yoffset = self.__get_value(action, 1)
+        xoffset = self._get_value(action, 0)
+        yoffset = self._get_value(action, 1)
         DriverBaseWeb.move_by_offset(float(xoffset), float(yoffset))
 
     @check
-    def __action_move_to_element(self, action):
+    def _action_move_to_element(self, action):
         '''
         moveToElement
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         DriverBaseWeb.move_to_element(element)
 
     @check
-    def __action_move_to_element_with_offset(self, action):
+    def _action_move_to_element_with_offset(self, action):
         '''
         moveToElementWithOffset
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
-        xoffset = self.__get_value(action, 1)
-        yoffset = self.__get_value(action, 2)
+        element = self._get_element_info(action)
+        xoffset = self._get_value(action, 1)
+        yoffset = self._get_value(action, 2)
         DriverBaseWeb.move_to_element_with_offset(element, float(xoffset), float(yoffset))
 
-    def __action_switch_to_frame(self, action):
+    def _action_switch_to_frame(self, action):
         '''
         switchToFrame
         :param action:
         :return:
         '''
-        frame_reference = self.__get_value(action)
+        frame_reference = self._get_value(action)
         DriverBaseWeb.switch_to_frame(frame_reference)
 
-    def __action_switch_to_default_content(self, action):
+    def _action_switch_to_default_content(self, action):
         '''
         switchToDefaultContent
         :param action:
@@ -314,7 +314,7 @@ class ActionExecutorWeb(object):
         '''
         DriverBaseWeb.switch_to_default_content()
 
-    def __action_switch_to_parent_frame(self, action):
+    def _action_switch_to_parent_frame(self, action):
         '''
         switchToParentFrame
         :param action:
@@ -322,49 +322,49 @@ class ActionExecutorWeb(object):
         '''
         DriverBaseWeb.switch_to_parent_frame()
 
-    def __action_switch_to_window(self, action):
+    def _action_switch_to_window(self, action):
         '''
         switchToWindow
         :param action:
         :return:
         '''
-        handle = self.__get_value(action)
+        handle = self._get_value(action)
         DriverBaseWeb.switch_to_window(handle)
 
     @check
-    def __action_send_keys(self, action):
+    def _action_send_keys(self, action):
         '''
         sendKeys
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         text_list = []
         if len(action.parms) == 2:
-            text_list.append(self.__get_value(action, 1))
+            text_list.append(self._get_value(action, 1))
         elif len(action.parms) == 3:
-            text_list.append(self.__get_value(action, 1))
-            text_list.append(self.__get_value(action, 2))
+            text_list.append(self._get_value(action, 1))
+            text_list.append(self._get_value(action, 2))
         else:
             raise TypeError('missing 1 required positional argument')
         DriverBaseWeb.send_keys(element, text_list)
 
     @check
-    def __action_check(self, action):
+    def _action_check(self, action):
         '''
         check
         :param action:
         :return:
         '''
-        self.__get_element_info(action)
+        self._get_element_info(action)
 
-    def __action_query_displayed(self, action):
+    def _action_query_displayed(self, action):
         '''
         queryDisplayed
         :param action:
         :return:
         '''
-        parms = self.__get_value(action)
+        parms = self._get_value(action)
         if isinstance(parms, WebElement):
             element = parms
             DriverBaseWeb.query_displayed(element=element, timeout=Var.time_out)
@@ -378,13 +378,13 @@ class ActionExecutorWeb(object):
         else:
             raise TypeError('the parms type must be: WebElement or str')
 
-    def __action_query_not_displayed(self, action):
+    def _action_query_not_displayed(self, action):
         '''
         queryNotDisplayed
         :param action:
         :return:
         '''
-        parms = self.__get_value(action)
+        parms = self._get_value(action)
         if isinstance(parms, WebElement):
             element = parms
             DriverBaseWeb.query_not_displayed(element=element, timeout=Var.time_out)
@@ -399,7 +399,7 @@ class ActionExecutorWeb(object):
             raise TypeError('the parms type must be: WebElement or str')
 
     @check
-    def __action_save_screenshot(self, action):
+    def _action_save_screenshot(self, action):
         '''
         saveScreenshot
         :param action:
@@ -407,115 +407,115 @@ class ActionExecutorWeb(object):
         '''
         if len(action.parms) == 1:
             element = None
-            name = self.__get_value(action)
+            name = self._get_value(action)
         else:
-            element = self.__get_element_info(action)
-            name = self.__get_value(action, 1)
+            element = self._get_element_info(action)
+            name = self._get_value(action, 1)
         return DriverBaseWeb.save_screenshot(element, name)
 
     @check
-    def __action_is_selected(self, action):
+    def _action_is_selected(self, action):
         '''
         isSelected
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.is_selected(element)
 
     @check
-    def __action_is_displayed(self, action):
+    def _action_is_displayed(self, action):
         '''
         isDisplayed
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.is_displayed(element)
 
     @check
-    def __action_is_enabled(self, action):
+    def _action_is_enabled(self, action):
         '''
         isEnabled
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.is_enabled(element)
 
     @check
-    def __action_get_size(self, action):
+    def _action_get_size(self, action):
         '''
         getSize
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.get_size(element)
 
     @check
-    def __action_get_attribute(self, action):
+    def _action_get_attribute(self, action):
         '''
         getAttribute
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
-        attribute = self.__get_value(action, 1)
+        element = self._get_element_info(action)
+        attribute = self._get_value(action, 1)
         return DriverBaseWeb.get_attribute(element, attribute)
 
     @check
-    def __action_get_text(self, action):
+    def _action_get_text(self, action):
         '''
         getText
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.get_text(element)
 
     @check
-    def __action_get_tag_name(self, action):
+    def _action_get_tag_name(self, action):
         '''
         getTagName
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.get_tag_name(element)
 
     @check
-    def __action_get_css_property(self, action):
+    def _action_get_css_property(self, action):
         '''
         getCssProperty
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
-        css_value = self.__get_value(action, 1)
+        element = self._get_element_info(action)
+        css_value = self._get_value(action, 1)
         return DriverBaseWeb.get_css_property(element, css_value)
 
     @check
-    def __action_get_location(self, action):
+    def _action_get_location(self, action):
         '''
         getLocation
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.get_location(element)
 
     @check
-    def __action_get_rect(self, action):
+    def _action_get_rect(self, action):
         '''
         getRect
         :param action:
         :return:
         '''
-        element = self.__get_element_info(action)
+        element = self._get_element_info(action)
         return DriverBaseWeb.get_rect(element)
 
-    def __action_get_name(self, action):
+    def _action_get_name(self, action):
         '''
         getName
         :param :
@@ -523,7 +523,7 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_name()
 
-    def __action_get_title(self, action):
+    def _action_get_title(self, action):
         '''
         getTitle
         :param action:
@@ -531,7 +531,7 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_title()
 
-    def __action_get_current_url(self, action):
+    def _action_get_current_url(self, action):
         '''
         getTitle
         :param :
@@ -539,7 +539,7 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_current_url()
 
-    def __action_get_current_window_handle(self, action):
+    def _action_get_current_window_handle(self, action):
         '''
         getCurrentWindowHandle
         :param :
@@ -547,7 +547,7 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_current_window_handle()
 
-    def __action_get_window_handles(self, action):
+    def _action_get_window_handles(self, action):
         '''
         getWindowHandles
         :param :
@@ -555,7 +555,7 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_window_handles()
 
-    def __action_get_cookies(self, action):
+    def _action_get_cookies(self, action):
         '''
         getCookies
         :param :
@@ -563,16 +563,16 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_cookies()
 
-    def __action_get_cookie(self, action):
+    def _action_get_cookie(self, action):
         '''
         getCookie
         :param :
         :return:
         '''
-        key = self.__get_value(action)
+        key = self._get_value(action)
         return DriverBaseWeb.get_cookie(key)
 
-    def __action_get_window_position(self, action):
+    def _action_get_window_position(self, action):
         '''
         getWindowPosition
         :param :
@@ -580,17 +580,17 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_window_position()
 
-    def __action_set_window_position(self, action):
+    def _action_set_window_position(self, action):
         '''
         setWindowPosition
         :param :
         :return:
         '''
-        x = self.__get_value(action)
-        y = self.__get_value(action, 1)
+        x = self._get_value(action)
+        y = self._get_value(action, 1)
         DriverBaseWeb.set_window_position(float(x), float(y))
 
-    def __action_execute_script(self, action):
+    def _action_execute_script(self, action):
         '''
         executeScript
         :param :
@@ -599,7 +599,7 @@ class ActionExecutorWeb(object):
         endTime = datetime.datetime.now() + datetime.timedelta(seconds=int(Var.time_out))
         while True:
             try:
-                js_value = self.__get_value(action)
+                js_value = self._get_value(action)
                 return DriverBaseWeb.execute_script(js_value)
             except JavascriptException as e:
                 if datetime.datetime.now() >= endTime:
@@ -608,14 +608,14 @@ class ActionExecutorWeb(object):
             except Exception as e:
                 raise e
 
-    def __action_match_image(self, action):
+    def _action_match_image(self, action):
         '''
         matchImage
         :param :
         :return:
         '''
-        base_image = self.__get_value(action)
-        match_image = self.__get_value(action,1)
+        base_image = self._get_value(action)
+        match_image = self._get_value(action,1)
         if not os.path.isfile(match_image):
             raise FileNotFoundError("No such file: {}".format(match_image))
         if not os.path.isfile(base_image):
@@ -628,7 +628,7 @@ class ActionExecutorWeb(object):
         else:
             raise Exception("Can't find image {}".format(match_image))
 
-    def __action_get_window_size(self, action):
+    def _action_get_window_size(self, action):
         '''
         getWindowSize
         :param :
@@ -636,17 +636,17 @@ class ActionExecutorWeb(object):
         '''
         return DriverBaseWeb.get_window_size()
 
-    def __action_set_window_size(self, action):
+    def _action_set_window_size(self, action):
         '''
         setWindowSize
         :param :
         :return:
         '''
-        width = self.__get_value(action)
-        height = self.__get_value(action)
+        width = self._get_value(action)
+        height = self._get_value(action)
         DriverBaseWeb.set_window_size(float(width), float(height))
 
-    def __action_get_elements(self, action):
+    def _action_get_elements(self, action):
         '''
         :param action:
         :return:
@@ -665,18 +665,18 @@ class ActionExecutorWeb(object):
         return elements
 
 
-    def __action_get_len(self, action):
+    def _action_get_len(self, action):
         """
         len
         :param action:
         :return:
         """
-        value = self.__get_value(action)
+        value = self._get_value(action)
         if value:
             return len(value)
         return 0
 
-    def __action_is_exist(self, action):
+    def _action_is_exist(self, action):
         '''
         :param action:
         :return:
@@ -692,7 +692,7 @@ class ActionExecutorWeb(object):
         elements = DriverBaseWeb.get_elements(key, value, Var.time_out)
         return bool(elements)
 
-    def __action_is_not_exist(self, action):
+    def _action_is_not_exist(self, action):
         '''
         :param action:
         :return:
@@ -708,76 +708,76 @@ class ActionExecutorWeb(object):
         elements = DriverBaseWeb.get_elements(key, value, 0)
         return not bool(elements)
 
-    def __action_sleep(self, action):
+    def _action_sleep(self, action):
         """
         行为执行
         :param action:
         :return:
         """
-        sleep = self.__get_value(action)
+        sleep = self._get_value(action)
         time.sleep(float(sleep))
 
-    def __action_getVar(self, action):
+    def _action_getVar(self, action):
         '''
         :return:
         '''
         if action.key == '$.isSelected':
-            result = self.__action_is_selected(action)
+            result = self._action_is_selected(action)
         elif action.key == '$.isDisplayed':
-            result = self.__action_is_displayed(action)
+            result = self._action_is_displayed(action)
         elif action.key == '$.isEnabled':
-            result = self.__action_is_enabled(action)
+            result = self._action_is_enabled(action)
         elif action.key == '$.saveScreenshot':
-            result = self.__action_save_screenshot(action)
+            result = self._action_save_screenshot(action)
         elif action.key == '$.executeScript':
-            result = self.__action_execute_script(action)
+            result = self._action_execute_script(action)
         elif action.key == '$.getText':
-            result = self.__action_get_text(action)
+            result = self._action_get_text(action)
         elif action.key == '$.getSize':
-            result = self.__action_get_size(action)
+            result = self._action_get_size(action)
         elif action.key == '$.getAttribute':
-            result = self.__action_get_attribute(action)
+            result = self._action_get_attribute(action)
         elif action.key == '$.getText':
-            result = self.__action_get_text(action)
+            result = self._action_get_text(action)
         elif action.key == '$.getTagName':
-            result = self.__action_get_tag_name(action)
+            result = self._action_get_tag_name(action)
         elif action.key == '$.getCssProperty':
-            result = self.__action_get_css_property(action)
+            result = self._action_get_css_property(action)
         elif action.key == '$.getLocation':
-            result = self.__action_get_location(action)
+            result = self._action_get_location(action)
         elif action.key == '$.getRect':
-            result = self.__action_get_rect(action)
+            result = self._action_get_rect(action)
         elif action.key == '$.getName':
-            result = self.__action_get_name(action)
+            result = self._action_get_name(action)
         elif action.key == '$.getTitle':
-            result = self.__action_get_title(action)
+            result = self._action_get_title(action)
         elif action.key == '$.getCurrentUrl':
-            result = self.__action_get_current_url(action)
+            result = self._action_get_current_url(action)
         elif action.key == '$.getCurrentWindowHandle':
-            result = self.__action_get_current_window_handle(action)
+            result = self._action_get_current_window_handle(action)
         elif action.key == '$.getWindowHandles':
-            result = self.__action_get_window_handles(action)
+            result = self._action_get_window_handles(action)
         elif action.key == '$.getCookies':
-            result = self.__action_get_cookies(action)
+            result = self._action_get_cookies(action)
         elif action.key == '$.getCookie':
-            result = self.__action_get_cookie(action)
+            result = self._action_get_cookie(action)
         elif action.key == '$.getWindowPosition':
-            result = self.__action_get_window_position(action)
+            result = self._action_get_window_position(action)
         elif action.key == '$.getWindowSize':
-            result = self.__action_get_window_size(action)
+            result = self._action_get_window_size(action)
         elif action.key == '$.getElement':
-            result = self.__get_element_info(action)
+            result = self._get_element_info(action)
         elif action.key == '$.getElements':
-            result = self.__action_get_elements(action)
+            result = self._action_get_elements(action)
         elif action.key == '$.id':
             action.parms = action.parms.replace('\n', '')
             result = eval(action.parms)
         elif action.key == '$.getLen':
-            result = self.__action_get_len(action)
+            result = self._action_get_len(action)
         elif action.key == '$.isExist':
-            result = self.__action_is_exist(action)
+            result = self._action_is_exist(action)
         elif action.key == '$.isNotExist':
-            result = self.__action_is_not_exist(action)
+            result = self._action_is_not_exist(action)
         elif action.key == '$.getVar':
             if Var.global_var:
                 if action.parms[0] in Var.global_var:
@@ -792,19 +792,19 @@ class ActionExecutorWeb(object):
         else:
            result = action.parms[0]
 
-        self.__out_result(action.name, result)
+        self._out_result(action.name, result)
         return result
 
-    def __action_set_var(self, action):
+    def _action_set_var(self, action):
         '''
         setVar
         :return:
         '''
-        key = self.__get_value(action, 0)
-        values = self.__get_value(action, 1)
+        key = self._get_value(action, 0)
+        values = self._get_value(action, 1)
         Var.global_var[key] = values
 
-    def __action_call(self, action):
+    def _action_call(self, action):
         '''
         :param action:
         :return:
@@ -828,7 +828,7 @@ class ActionExecutorWeb(object):
             raise e
         return
 
-    def __action_other(self, action):
+    def _action_other(self, action):
         '''
         :return:
         '''
@@ -844,11 +844,11 @@ class ActionExecutorWeb(object):
         except Exception as e:
             raise e
 
-    def __action_for(self, action):
+    def _action_for(self, action):
         '''
         :return:
         '''
-        value = self.__get_value(action)
+        value = self._get_value(action)
         var = action.var
         if not isinstance(value, Iterable):
             raise TypeError(f"'{value}' object is not iterable")
@@ -857,7 +857,7 @@ class ActionExecutorWeb(object):
     def new_action_executor(self, action, output=True):
         # 调用脚本
         if action.key:
-            list = self.__from_scripts_file()
+            list = self._from_scripts_file()
             for l in list:
                 exec(l)
             parms = None
@@ -871,7 +871,7 @@ class ActionExecutorWeb(object):
             else:
                 result = eval('locals()[action.key]({})'.format(parms))
             if result and output:
-                self.__out_result(action.key, result)
+                self._out_result(action.key, result)
             return result
         else:
             raise KeyError('The {} keyword is undefined!'.format(action.step))
@@ -883,130 +883,130 @@ class ActionExecutorWeb(object):
         :return:
         """
         if action.tag and action.tag == 'getVar':
-            result = self.__action_getVar(action)
+            result = self._action_getVar(action)
 
         elif action.tag and action.tag == 'call':
-            result = self.__action_call(action)
+            result = self._action_call(action)
 
         elif action.tag and action.tag == 'other':
-            result = self.__action_other(action)
+            result = self._action_other(action)
 
         elif action.tag and action.tag == 'for':
-            result = self.__action_for(action)
+            result = self._action_for(action)
 
         elif action.key == 'setVar':
-            result = self.__action_set_var(action)
+            result = self._action_set_var(action)
 
         elif action.key == 'openUrl':
-            result = self.__action_open_url(action)
+            result = self._action_open_url(action)
 
         elif action.key == 'close':
-            result = self.__action_close(action)
+            result = self._action_close(action)
 
         elif action.key == 'quit':
-            result = self.__action_quit(action)
+            result = self._action_quit(action)
 
         elif action.key == 'setTimeout':
-            result = self.__action_set_timeout(action)
+            result = self._action_set_timeout(action)
 
         elif action.key == 'back':
-            result = self.__action_back(action)
+            result = self._action_back(action)
 
         elif action.key == 'forward':
-            result = self.__action_forward(action)
+            result = self._action_forward(action)
 
         elif action.key == 'refresh':
-            result = self.__action_refresh(action)
+            result = self._action_refresh(action)
 
         elif action.key == 'maxWindow':
-            result = self.__action_maximize_window(action)
+            result = self._action_maximize_window(action)
 
         elif action.key == 'minWindow':
-            result = self.__action_minimize_window(action)
+            result = self._action_minimize_window(action)
 
         elif action.key == 'fullscreenWindow':
-            result = self.__action_fullscreen_window(action)
+            result = self._action_fullscreen_window(action)
 
         elif action.key == 'deleteAllCookies':
-            result = self.__action_delete_all_cookies(action)
+            result = self._action_delete_all_cookies(action)
 
         elif action.key == 'deleteCookie':
-            result = self.__action_delete_cookie(action)
+            result = self._action_delete_cookie(action)
 
         elif action.key == 'addCookie':
-            result = self.__action_add_cookie(action)
+            result = self._action_add_cookie(action)
 
         elif action.key == 'clear':
-            result = self.__action_clear(action)
+            result = self._action_clear(action)
 
         elif action.key == 'submit':
-            result = self.__action_submit(action)
+            result = self._action_submit(action)
 
         elif action.key == 'click':
-            result = self.__action_click(action)
+            result = self._action_click(action)
 
         elif action.key == 'contextClick':
-            result = self.__action_context_click(action)
+            result = self._action_context_click(action)
 
         elif action.key == 'doubleClick':
-            result = self.__action_double_click(action)
+            result = self._action_double_click(action)
 
         elif action.key == 'holdClick':
-            result = self.__action_click_and_hold(action)
+            result = self._action_click_and_hold(action)
 
         elif action.key == 'dragDrop':
-            result = self.__action_drag_and_drop(action)
+            result = self._action_drag_and_drop(action)
 
         elif action.key == 'dragDropByOffset':
-            result = self.__action_drag_and_drop_by_offset(action)
+            result = self._action_drag_and_drop_by_offset(action)
 
         elif action.key == 'moveByOffset':
-            result = self.__action_move_by_offset(action)
+            result = self._action_move_by_offset(action)
 
         elif action.key == 'moveToElement':
-            result = self.__action_move_to_element(action)
+            result = self._action_move_to_element(action)
 
         elif action.key == 'moveToElementWithOffset':
-            result = self.__action_move_to_element_with_offset(action)
+            result = self._action_move_to_element_with_offset(action)
 
         elif action.key == 'switchToFrame':
-            result = self.__action_switch_to_frame(action)
+            result = self._action_switch_to_frame(action)
 
         elif action.key == 'switchToDefaultContent':
-            result = self.__action_switch_to_default_content(action)
+            result = self._action_switch_to_default_content(action)
 
         elif action.key == 'switchToParentFrame':
-            result = self.__action_switch_to_parent_frame(action)
+            result = self._action_switch_to_parent_frame(action)
 
         elif action.key == 'switchToWindow':
-            result = self.__action_switch_to_window(action)
+            result = self._action_switch_to_window(action)
 
         elif action.key == 'setWindowSize':
-            result = self.__action_set_window_size(action)
+            result = self._action_set_window_size(action)
 
         elif action.key == 'setWindowPosition':
-            result = self.__action_set_window_position(action)
+            result = self._action_set_window_position(action)
 
         elif action.key == 'executeScript':
-            result = self.__action_execute_script(action)
+            result = self._action_execute_script(action)
 
         elif action.key == 'matchImage':
-            result = self.__action_match_image(action)
+            result = self._action_match_image(action)
 
         elif action.key == 'sendKeys':
-            result = self.__action_send_keys(action)
+            result = self._action_send_keys(action)
 
         elif action.key == 'check':
-            result = self.__action_check(action)
+            result = self._action_check(action)
 
         elif action.key == 'queryDisplayed':
-            result = self.__action_query_displayed(action)
+            result = self._action_query_displayed(action)
 
         elif action.key == 'queryNotDisplayed':
-            result = self.__action_query_not_displayed(action)
+            result = self._action_query_not_displayed(action)
 
         elif action.key == 'sleep':
-            result = self.__action_sleep(action)
+            result = self._action_sleep(action)
 
         elif action.key == 'break':
             result = True
