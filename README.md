@@ -10,7 +10,7 @@
 - 支持`if`、`while`、`for`等语法用于构造复杂场景
 - 支持`CLI`命令，支持`Jenkins`持续集成
 
-更多介绍请点击[fasttest](https://www.yuque.com/jodeee/kb/ywq037)
+更多介绍请点击[fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
 
 #### 运行示例
 ```
