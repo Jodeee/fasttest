@@ -21,6 +21,7 @@ class ServerUtilsWeb(object):
         self.time_out = desired_capabilities.timeOut
         self.desired_capabilities = desired_capabilities.desired
         self.index = desired_capabilities.index
+        self.root = desired_capabilities.root
         self.browser =  self.desired_capabilities.browser
         self.max_window =  self.desired_capabilities.maxWindow
         # hub url
@@ -34,6 +35,8 @@ class ServerUtilsWeb(object):
         # driver path
         if self.desired_capabilities[self.browser] and 'driver' in self.desired_capabilities[self.browser][0].keys():
             self.driver_path = self.desired_capabilities[self.browser][0]['driver']
+            if not os.path.isfile(self.driver_path):
+                self.driver_path = os.path.join(self.root, self.driver_path)
         else:
             self.driver_path = None
         # options

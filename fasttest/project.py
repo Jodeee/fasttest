@@ -203,7 +203,8 @@ class Project(object):
             'driver': Var.driver.lower(),
             'timeOut': Var.time_out,
             'desired': Var.desired_caps,
-            'index': self._index
+            'index': self._index,
+            'root': self._root
         })
         # 启动服务
         if Var.driver != 'selenium':

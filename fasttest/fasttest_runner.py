@@ -176,7 +176,7 @@ def main():
     start_time = time.time()
     result = _start_project(workers, project_path)
     end_time = time.time()
-    print('run time: {}'.format(int(end_time-start_time)))
+    print('run time: {}s'.format(int(end_time-start_time)))
     print('result:')
     if isinstance(result, list):
         for r in result:
