@@ -273,7 +273,7 @@ class ActionAnalysis(object):
             elif action.key in Var.new_keywords_data:
                 result = self.action_executor.new_action_executor(action)
             else:
-                raise KeyError("keyword '{}' is not defined".format(action.key))
+                raise ValueError("'{}' is not defined".format(action.key))
 
             if action.tag == 'getVar':
                 # 变量赋值

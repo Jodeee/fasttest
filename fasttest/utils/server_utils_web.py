@@ -20,19 +20,27 @@ class ServerUtilsWeb(object):
         self.driver = desired_capabilities.driver
         self.time_out = desired_capabilities.timeOut
         self.desired_capabilities = desired_capabilities.desired
+        self.index = desired_capabilities.index
         self.browser =  self.desired_capabilities.browser
         self.max_window =  self.desired_capabilities.maxWindow
-        self.remote =  self.desired_capabilities.remote
+        # hub url
+        remote_url =  self.desired_capabilities.remoteUrl
+        if remote_url and isinstance(remote_url, str):
+            self.remote_url = remote_url if self.index == 0 else None
+        elif remote_url and isinstance(remote_url, list):
+            self.remote_url = remote_url[self.index] if self.index < len(remote_url) else None
+        else:
+            self.remote_url = None
+        # driver path
         if self.desired_capabilities[self.browser] and 'driver' in self.desired_capabilities[self.browser][0].keys():
             self.driver_path = self.desired_capabilities[self.browser][0]['driver']
         else:
             self.driver_path = None
+        # options
         if self.desired_capabilities[self.browser] and 'options' in self.desired_capabilities[self.browser][0].keys():
             self.options = self.desired_capabilities[self.browser][0]['options']
         else:
             self.options = None
-        if self.remote is None:
-            self.remote = False
 
     def start_server(self):
 
@@ -42,8 +50,8 @@ class ServerUtilsWeb(object):
                 if self.options:
                     for opt in self.options:
                         options.add_argument(opt)
-                if self.remote:
-                    self.instance = webdriver.Remote(command_executor=self.remote,
+                if self.remote_url:
+                    self.instance = webdriver.Remote(command_executor=self.remote_url,
                                                      desired_capabilities={
                                                          'platform': 'ANY',
                                                          'browserName': self.browser,
@@ -62,8 +70,8 @@ class ServerUtilsWeb(object):
                 if self.options:
                     for opt in self.options:
                         options.add_argument(opt)
-                if self.remote:
-                    self.instance = webdriver.Remote(command_executor=self.remote,
+                if self.remote_url:
+                    self.instance = webdriver.Remote(command_executor=self.remote_url,
                                                      desired_capabilities={
                                                          'platform': 'ANY',
                                                          'browserName': self.browser,

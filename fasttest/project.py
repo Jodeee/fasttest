@@ -3,7 +3,7 @@
 import os
 import sys
 import time
-import json
+import math
 import unittest
 import threading
 from fasttest.common import *
@@ -16,8 +16,11 @@ from fasttest.result.test_runner import TestRunner
 
 class Project(object):
 
-    def __init__(self):
+    def __init__(self, index=0, workers=1, path='.'):
 
+        self._index = index
+        self._workers = workers
+        self._root = path
         self._init_project()
         self._init_config()
         self._init_logging()
@@ -28,9 +31,13 @@ class Project(object):
 
     def _init_project(self):
 
-        sys.path.append(os.getcwd())
-        sys.path.append(os.path.join(os.getcwd(), 'Scripts'))
-        Var.root = os.getcwd()
+        if not os.path.isdir(self._root):
+            raise Exception('No such directory: {}'.format(self._root))
+        if self._root == '.':
+            self._root = os.getcwd()
+        Var.root = self._root
+        sys.path.append(Var.root)
+        sys.path.append(os.path.join(Var.root, 'Scripts'))
         Var.global_var = Dict()
         Var.extensions_var = Dict()
         Var.common_var = Dict()
@@ -65,8 +72,29 @@ class Project(object):
     def _init_logging(self):
 
         if Var.driver != 'selenium':
-            devices = DevicesUtils(Var.desired_caps.platformName, Var.desired_caps.udid)
-            Var.desired_caps['udid'], info = devices.device_info()
+            # 重置udid
+            if self._workers > 1:
+                if isinstance(Var.desired_caps.udid, list):
+                    if not Var.desired_caps.udid:
+                        raise Exception('Can‘t find device, udid("{}") is empty.'.format(Var.desired_caps.udid))
+                    if self._index >= len(Var.desired_caps.udid):
+                        raise Exception('the number of workers is larger than the list of udid.')
+                    if not Var.desired_caps.udid[self._index]:
+                        raise Exception('Can‘t find device, udid("{}") is empty.'.format(Var.desired_caps.udid[self._index]))
+                    devices = DevicesUtils(Var.desired_caps.platformName, Var.desired_caps.udid[self._index])
+                    Var.desired_caps['udid'], info = devices.device_info()
+                else:
+                    raise Exception('the udid list is not configured properly.')
+            else:
+                if isinstance(Var.desired_caps.udid, list):
+                    if Var.desired_caps.udid:
+                        devices = DevicesUtils(Var.desired_caps.platformName, Var.desired_caps.udid[0])
+                    else:
+                        devices = DevicesUtils(Var.desired_caps.platformName, None)
+                else:
+                    devices = DevicesUtils(Var.desired_caps.platformName, Var.desired_caps.udid)
+                Var.desired_caps['udid'], info = devices.device_info()
+
         else:
             info = Var.desired_caps.browser
 
@@ -74,7 +102,6 @@ class Project(object):
         report_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
         report_child = "{}_{}_{}".format(info, report_time, thr_name)
         Var.report = os.path.join(Var.root, "Report", report_child)
-
         if not os.path.exists(Var.report):
             os.makedirs(Var.report)
             os.makedirs(os.path.join(Var.report, 'resource'))
@@ -100,6 +127,8 @@ class Project(object):
                 self._load_common_func(rt, files)
             elif Var.desired_caps.platformName and (rt.split(os.sep)[-1].lower() == Var.desired_caps.platformName.lower()):
                 self._load_common_func(rt, files)
+        for commonk, commonv in Var.common_func.items():
+            log_info(' {}: {}'.format(commonk, commonv))
 
     def _load_common_func(self,rt ,files):
 
@@ -108,7 +137,6 @@ class Project(object):
                 continue
             for commonK, commonV in analytical_file(os.path.join(rt, f)).items():
                 Var.common_func[commonK] = commonV
-                log_info(' {}: {}'.format(commonK, commonV))
 
     def _init_data(self):
 
@@ -147,6 +175,11 @@ class Project(object):
     def _init_testcase_suite(self):
 
         self._suite = []
+        if self._workers > 1:
+            i = self._index
+            n = self._workers
+            l = len(self._testcase)
+            self._testcase = self._testcase[math.floor(i / n * l):math.floor((i + 1) / n * l)]
         for case_path in self._testcase:
             test_case = analytical_file(case_path)
             test_case['test_case_path'] = case_path
@@ -160,7 +193,8 @@ class Project(object):
         Var.desired_capabilities = Dict({
             'driver': Var.driver.lower(),
             'timeOut': Var.time_out,
-            'desired': Var.desired_caps
+            'desired': Var.desired_caps,
+            'index': self._index
         })
         # 启动服务
         if Var.driver != 'selenium':

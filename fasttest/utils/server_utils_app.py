@@ -35,7 +35,9 @@ class ServerUtilsApp(object):
             self.stop_server()
             if self.driver == 'appium':
                 self.pipe = subprocess.Popen(
-                    'appium -a {} -p {} --session-override --log-level info'.format('127.0.0.1', self.port),
+                    'appium -a {} -p {} -U {} --session-override --log-level info'.format('127.0.0.1',
+                                                                                          self.port,
+                                                                                          self.desired_capabilities['udid']),
                     stdout=subprocess.PIPE, shell=True)
                 thread = threading.Thread(target=self._print_appium_log)
                 thread.start()
@@ -79,8 +81,10 @@ class ServerUtilsApp(object):
             elif self.platformName.lower() == "ios":
                 pass
 
-            if self.instance:
+            try:
                 self.instance.quit()
+            except:
+                pass
 
             if self.port is not None:
                 result, pid = self._check_port_is_used(self.port)

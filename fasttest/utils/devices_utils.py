@@ -7,7 +7,7 @@ import platform
 
 class DevicesUtils(object):
 
-    def __init__(self,platformName,udid):
+    def __init__(self, platformName, udid):
         self._platformName = platformName
         self._udid = udid
 
@@ -16,7 +16,7 @@ class DevicesUtils(object):
         if self._platformName.lower() == 'android':
             devices = self.get_devices()
             if self._udid and (self._udid not in devices):
-                raise Exception("device '{}' not found!".format(self._udid))
+                raise Exception("device {} not found!".format(self._udid))
             elif not self._udid and devices:
                 self._udid = devices[0]
             elif not self._udid:
@@ -36,7 +36,7 @@ class DevicesUtils(object):
             devices = self.get_devices('idevice_id -l')
             simulator_devices = self.get_devices('instruments -s Devices')
             if self._udid and (self._udid not in (devices or simulator_devices)):
-                raise Exception("device '{}' not found!".format(self._udid))
+                raise Exception("device {} not found!".format(self._udid))
             elif not self._udid and devices:
                 self._udid = devices[0]
             elif not self._udid:

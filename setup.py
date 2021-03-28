@@ -52,7 +52,7 @@ setuptools.setup(
     install_requires=requires,
     entry_points={
         'console_scripts':[
-            'fasttest = fasttest.fasttest:main'
+            'fasttest = fasttest.runner:main'
         ]
     }
 )
