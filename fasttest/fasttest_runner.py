@@ -142,15 +142,19 @@ def _run_project(run_info):
         result = project.start()
         return result
     except Exception as e:
-        raise e
+        traceback.print_exc()
+        return None
 
 def main():
     '''
     :return:
     '''
-    opts, args = getopt.getopt(sys.argv[1:], 'hVi:r:', ['help', 'Version', 'init=', 'run=', 'workers='])
-    project_path = '/Users/xiongjunjie/code/fasttestDemo'
-    workers = 2
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'hVi:r:w:', ['help', 'Version', 'init=', 'run=', 'workers='])
+    except:
+        _usage()
+    project_path = '.'
+    workers = 1
     for o, a in opts:
         if o in ('-h', '--help'):
             _usage()
@@ -162,14 +166,18 @@ def main():
             sys.exit()
         elif o in ('-r', '--run'):
             project_path = a
-        elif o in ('--workers'):
+        elif o in ('-w', '--workers'):
             workers = int(a)
         else:
             _usage()
     if not os.path.isdir(project_path):
         print('No such directory: {}'.format(project_path))
         _usage()
+    start_time = time.time()
     result = _start_project(workers, project_path)
+    end_time = time.time()
+    print('run time: {}'.format(int(end_time-start_time)))
+    print('result:')
     if isinstance(result, list):
         for r in result:
             print(r)

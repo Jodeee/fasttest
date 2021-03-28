@@ -175,6 +175,11 @@ class Project(object):
     def _init_testcase_suite(self):
 
         self._suite = []
+        # 线程数大于用例数量时，取用例数
+        if 1 < self._index > len(self._testcase):
+            self._workers = len(self._testcase)
+            if self._index == len(self._testcase):
+                return
         if self._workers > 1:
             i = self._index
             n = self._workers
@@ -189,6 +194,10 @@ class Project(object):
             Var.case_info = None
 
     def start(self):
+
+        if not self._suite:
+            return None
+        # 组装启动参数
         log_info('******************* analytical desired capabilities *******************')
         Var.desired_capabilities = Dict({
             'driver': Var.driver.lower(),
