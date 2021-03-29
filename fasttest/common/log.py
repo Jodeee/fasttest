@@ -13,9 +13,12 @@ if platform.system() != 'Windows':
 init(autoreset=True)
 
 def write(message):
-    log_file_path = os.path.join(Var.report, "project.log")
-    with open(log_file_path, 'a+', encoding='UTF-8') as f:
-        f.write(f'{message}\n')
+    try:
+        log_file_path = os.path.join(Var.report, "project.log")
+        with open(log_file_path, 'a+', encoding='UTF-8') as f:
+            f.write(f'{message}\n')
+    except:
+        pass
 
 def log_info(message,color=None):
 

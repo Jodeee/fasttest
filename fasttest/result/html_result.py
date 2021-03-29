@@ -212,8 +212,8 @@ class HTMLTestRunner(Template_mixin):
         self.description = description if description else self.DEFAULT_DESCRIPTION
 
     def generate_report(self, result):
-        heading = self.__generate_heading(result)
-        report = self.__generate_tabdiv(result)
+        heading = self._generate_heading(result)
+        report = self._generate_tabdiv(result)
         tabdiv = self.TABDIV_TMPL.format(
             trlist = report
         )
@@ -226,7 +226,7 @@ class HTMLTestRunner(Template_mixin):
         shutil.copy(os.path.join(resource,"js.js"), os.path.join(result.report,'resource'))
         self.stream.write(output.encode('utf-8'))
 
-    def __generate_heading(self, report):
+    def _generate_heading(self, report):
 
         if report:
             heading = self.HEADING_TMPL.format(
@@ -241,7 +241,7 @@ class HTMLTestRunner(Template_mixin):
             )
             return heading
 
-    def __generate_tabdiv(self, result):
+    def _generate_tabdiv(self, result):
         '''
         解析结果
         :param result:
@@ -256,13 +256,13 @@ class HTMLTestRunner(Template_mixin):
             cls_list = []
             for test_info in module_list:
                 # case模块
-                case_module = self.__generate_case(test_info)
+                case_module = self._generate_case(test_info)
                 cls_list.append(case_module)
 
                 # 具体case
                 status = test_info.status
                 if status != 3: # skip
-                    case_deta = self.__generate_case_deta(test_info)
+                    case_deta = self._generate_case_deta(test_info)
                     cls_list.append(case_deta)
 
                 # 统计结果
@@ -294,7 +294,7 @@ class HTMLTestRunner(Template_mixin):
         return tr_
 
 
-    def __generate_case(self, test_info):
+    def _generate_case(self, test_info):
         '''
         module 样式
         :param testinfo:
@@ -322,7 +322,7 @@ class HTMLTestRunner(Template_mixin):
         )
         return caseinfo
 
-    def __generate_case_deta(self, test_info):
+    def _generate_case_deta(self, test_info):
         '''
         具体case
         :param testinfo:

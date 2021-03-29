@@ -23,9 +23,9 @@ class TestInfo(object):
         self.err = err
 
         self.report = None
-        self.case_path = test_method.testcase_path
-        self.data_id = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
-        self.case_name = test_method.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
+        self.case_path = test_method.test_case_path
+        self.data_id = test_method.test_case_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
+        self.case_name = test_method.test_case_path.split('/')[-1].split(os.sep)[-1].split(".")[0]
         self.snapshot_dir = test_method.snapshot_dir
         self.module_name = test_method.module
         self.description = test_method.description

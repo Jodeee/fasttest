@@ -18,11 +18,9 @@ class TestCase(unittest.TestCase):
 
     def __init__(self, methodName="runTest"):
         super(TestCase, self).__init__(methodName)
-        if not Var.testcase:
-            raise NameError("name 'testcase' is not defined")
-        for key, value in Var.testcase.items():
+        for key, value in Var.case_info.items():
             setattr(self, key, value)
-        self.snapshot_dir = os.path.join(Var.report,'Steps', self.module, self.testcase_path.split('/')[-1].split(os.sep)[-1].split(".")[0])
+        self.snapshot_dir = os.path.join(Var.report,'Steps', self.module, self.test_case_path.split('/')[-1].split(os.sep)[-1].split(".")[0])
         self.report = Var.report
 
     def run(self, result=None):
@@ -30,20 +28,19 @@ class TestCase(unittest.TestCase):
         try:
             Var.case_step_index = 0
             Var.case_snapshot_index = 0
-            Var.testcase_steps = []
             Var.snapshot_dir = self.snapshot_dir
+            testcase_steps = []
             if not os.path.exists(Var.snapshot_dir):
                 os.makedirs(Var.snapshot_dir)
-            log_info("******************* TestCase {} Start *******************".format(self.description))
-            with open(self.testcase_path, 'r', encoding='UTF-8') as r:
+            with open(self.test_case_path, 'r', encoding='UTF-8') as r:
                 s = r.readlines()
                 index = s.index('steps:\n')
                 for step in s[index+1:]:
                     if not (step.lstrip().startswith('#') or re.match('#', step.lstrip().lstrip('-').lstrip())):
                         if step != '\n':
-                            Var.testcase_steps.append(step)
+                            testcase_steps.append(step)
+            log_info("******************* TestCase {} Start *******************".format(self.description))
             unittest.TestCase.run(self, result)
-            Var.testcase_steps = []
             log_info("******************* Total: {}, Success: {}, Failed: {}, Error: {}, Skipped: {} ********************\n"
                     .format(result.testsRun, len(result.successes), len(result.failures), len(result.errors), len(result.skipped)))
         except:

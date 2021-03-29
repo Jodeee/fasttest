@@ -18,12 +18,12 @@ class AndroidDriver(object):
         try:
             log_info(' adb: {}'.format(cmd))
             if cmd.startswith('shell'):
-                cmd = ["adb", "-s", Var.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
+                cmd = ["adb", "-s", Var.desired_caps.udid, "shell", "{}".format(cmd.lstrip('shell').strip())]
                 pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE)
                 out = pipe.communicate()
             else:
-                cmd = ["adb", "-s", Var.udid, "{}".format(cmd)]
+                cmd = ["adb", "-s", Var.desired_caps.udid, "{}".format(cmd)]
                 os.system(' '.join(cmd))
         except:
             raise Exception(traceback.format_exc())
@@ -474,7 +474,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_up(duration=2):
+    def swipe_up(duration=100):
         '''
         :param duration:
         :return:
@@ -487,7 +487,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_down(duration=2):
+    def swipe_down(duration=100):
         '''
         :param duration:
         :return:
@@ -500,7 +500,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_left(duration=2):
+    def swipe_left(duration=100):
         '''
         :param duration:
         :return:
@@ -513,7 +513,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_right(duration=2):
+    def swipe_right(duration=100):
         '''
         :param duration:
         :return:

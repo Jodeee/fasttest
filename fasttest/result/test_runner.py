@@ -65,12 +65,12 @@ class TestRunner(unittest.TextTestRunner):
         failures_list = []
         for failure in result.failures:
             cast_info = failure[0]
-            failures_list.append(cast_info.testcase_path)
+            failures_list.append(cast_info.test_case_path)
 
         errors_list = []
         for errors in result.errors:
             cast_info = errors[0]
-            errors_list.append(cast_info.testcase_path)
+            errors_list.append(cast_info.test_case_path)
 
         result = Dict({
             'report': result.report,
@@ -86,7 +86,7 @@ class TestRunner(unittest.TextTestRunner):
             'failuresList': failures_list
         })
 
-        properties_path = os.path.join(Var.ROOT, 'result.properties')
+        properties_path = os.path.join(Var.root, 'result.properties')
         with open(properties_path, "w") as f:
             f.write(f'report={result.report}\n')
             f.write(f'total={result.total}\n')

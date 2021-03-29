@@ -2,6 +2,19 @@
 # -*- coding: utf-8 -*-
 from fasttest.common import Var
 
-def driver():
-    return Var.instance
-driver = driver()
+class WebDriver(object):
+
+    def __init__(self):
+        self.driver = None
+
+    def __getattribute__(self, item):
+        try:
+            if item == 'driver':
+                self.driver = Var.instanc
+                return Var.instance
+            else:
+                return None
+        except:
+            return None
+
+wd = WebDriver()
