@@ -34,11 +34,18 @@ class ServerUtilsApp(object):
             log_info('Start the server...')
             self.stop_server()
             if self.driver == 'appium':
-                self.pipe = subprocess.Popen(
-                    'appium -a {} -p {} -U {} --session-override --log-level info'.format('127.0.0.1',
-                                                                                          self.port,
-                                                                                          self.desired_capabilities['udid']),
-                    stdout=subprocess.PIPE, shell=True)
+                bp_port = self._get_device_port()
+                wda_port = self._get_device_port()
+                udid = self.desired_capabilities['udid']
+                p = f'appium ' \
+                    f'-a 127.0.0.1 ' \
+                    f'-p {self.port} ' \
+                    f'-U {udid} ' \
+                    f'-bp {bp_port} ' \
+                    f'--webdriveragent-port {wda_port} ' \
+                    f'--session-override  ' \
+                    f'--log-level info'
+                self.pipe = subprocess.Popen(p, stdout=subprocess.PIPE, shell=True)
                 thread = threading.Thread(target=self._print_appium_log)
                 thread.start()
                 time.sleep(5)
@@ -64,11 +71,13 @@ class ServerUtilsApp(object):
         except Exception as e:
             log_error('Unable to connect to the server, please reconnect!', False)
             if self.platformName.lower() == "android":
-                os.system('adb uninstall io.appium.uiautomator2.server')
-                os.system('adb uninstall io.appium.uiautomator2.server.test')
-                os.system('adb uninstall com.macaca.android.testing')
-                os.system('adb uninstall com.macaca.android.testing.test')
-                os.system('adb uninstall xdf.android_unlock')
+                if self.driver == 'macaca':
+                    os.system('adb uninstall io.appium.uiautomator2.server')
+                    os.system('adb uninstall io.appium.uiautomator2.server.test')
+                else:
+                    os.system('adb uninstall com.macaca.android.testing')
+                    os.system('adb uninstall com.macaca.android.testing.test')
+                    os.system('adb uninstall xdf.android_unlock')
             self.stop_server()
             raise e
 
