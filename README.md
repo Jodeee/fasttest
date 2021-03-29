@@ -9,6 +9,7 @@
 - 支持`PO`模式、支持`iOS`、`Android`两端共用一份用例
 - 支持`if`、`while`、`for`等语法用于构造复杂场景
 - 支持`CLI`命令，支持`Jenkins`持续集成
+- 支持多设备并行执行
 
 更多介绍请点击[fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
 
@@ -25,12 +26,12 @@ steps:
         {'key':'外卖', 'value':'新增地址'}
         ]
     - for ${module} in ${modules}:
-          - click(${module}['key'])
-          - check(${module}['value'])
-          - if ${module}['key'] == '自取':
-              - click('首页')
-            else:
-              - goBack
+        - click(${module}['key'])
+        - check(${module}['value'])
+        - if ${module}['key'] == '自取':
+            - click('首页')
+          else:
+            - goBack
     - click('订单')
     - click('去点餐')
 ```
