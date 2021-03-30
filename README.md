@@ -12,26 +12,3 @@
 - 支持多设备并行执行
 
 更多介绍请点击[fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
-
-#### 运行示例
-```
-module: OpenAlipay
-skip: false
-description: 打开支付宝小程序
-steps:
-    - click('我的小程序')
-    - click('奈雪点单')
-    - ${modules} = [
-        {'key':'自取', 'value':'霸气玉油柑'},
-        {'key':'外卖', 'value':'新增地址'}
-        ]
-    - for ${module} in ${modules}:
-        - click(${module}['key'])
-        - check(${module}['value'])
-        - if ${module}['key'] == '自取':
-            - click('首页')
-          else:
-            - goBack
-    - click('订单')
-    - click('去点餐')
-```
