@@ -12,4 +12,4 @@
 - 支持多设备并行执行
 
 #### 演示↓↓↓
-<a href="https://www.yuque.com/jodeee/vt6gkg/oue9xb" target="_blank"><img src="./demo.gif" width="90%" hight="90%"/></a>
+![](https://github.com/Jodeee/fasttest/blob/master/demo.gif)
