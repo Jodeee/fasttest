@@ -11,7 +11,5 @@
 - 支持`CLI`命令，支持`Jenkins`持续集成
 - 支持多设备并行执行
 
-#### 运行示例
-![](https://github.com/Jodeee/fasttest/blob/master/demo.gif)
-
-更多介绍请点击[fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
+#### 演示↓↓↓
+<a href="https://www.yuque.com/jodeee/vt6gkg/oue9xb" target="_blank"><img src="./demo.gif" width="90%" hight="90%"/></a>
