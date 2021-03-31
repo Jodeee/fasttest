@@ -13,3 +13,5 @@
 
 #### 演示↓↓↓
 ![](https://github.com/Jodeee/fasttest/blob/master/demo.gif)
+
+更多请点击 [fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
