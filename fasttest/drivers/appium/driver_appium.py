@@ -171,7 +171,7 @@ class AndroidDriver(object):
         try:
             width = Var.instance.get_window_size()['width']
             height = Var.instance.get_window_size()['height']
-            AndroidDriver.swipe(width / 2, height * 3 / 4, width / 2, height / 4, duration)
+            AndroidDriver.swipe(width / 2, height * 0.65, width / 2, height / 4, duration)
         except Exception as e:
             raise e
 
@@ -482,7 +482,7 @@ class iOSDriver(object):
         try:
             width = Var.instance.get_window_size()['width']
             height = Var.instance.get_window_size()['height']
-            iOSDriver.swipe(width / 2, height * 3 / 4, width / 2, height / 4, duration)
+            iOSDriver.swipe(width / 2, height * 0.65, width / 2, height / 4, duration)
         except Exception as e:
             raise e
 
