@@ -176,9 +176,9 @@ class ActionAnalysis(object):
         var_value = step_split[-1].strip()
 
         if re.match(r'\$\.(\w)+\(.*\)', var_value):
-            key = var_value.split('(', 1)[0]
+            key = var_value.split('(', 1)[0].strip()
             if key == '$.id':
-                parms = self._get_replace_string(var_value.split(key, 1)[-1][1:-1])
+                parms = [self._get_replace_string(var_value.split(key, 1)[-1][1:-1])]
             else:
                 parms = self._get_parms(var_value.split(key, 1)[-1])
         elif re.match(r'(\w)+\(.*\)', var_value):
@@ -188,10 +188,10 @@ class ActionAnalysis(object):
             key = None
             parms = [self._get_params_type(var_value)]
         action_data = Dict({
-            'key': key,
+            'key': 'variable',
             'parms': parms,
             'name': name,
-            'tag': 'getVar',
+            'func': key,
             'step': step
         })
         return action_data
@@ -201,9 +201,9 @@ class ActionAnalysis(object):
         parms = step.split('call', 1)[-1].strip().split(key, 1)[-1]
         parms = self._get_parms(parms)
         action_data = Dict({
-            'key': key,
+            'key': 'call',
             'parms': parms,
-            'tag': 'call',
+            'func': key,
             'style': style,
             'step': step
         })
@@ -211,11 +211,10 @@ class ActionAnalysis(object):
 
     def _analysis_other_keywords(self, step):
         key = step.split(' ', 1)[0].strip()
-        parms = self._get_replace_string(step.lstrip(key).strip())
+        parms = [self._get_replace_string(step.lstrip(key).strip())]
         action_data = Dict({
             'key': key,
             'parms': parms,
-            'tag': 'other',
             'step': f'{key} {parms}'
         })
         return action_data
@@ -232,10 +231,9 @@ class ActionAnalysis(object):
         parms =  [self._get_params_type(f_t[1])]
 
         action_data = Dict({
-            'key': 'for in',
+            'key': 'for',
             'parms': parms,
-            'var': iterating,
-            'tag': 'for',
+            'value': iterating,
             'step': f'for {f_t[0]} in {self._get_params_type(f_t[1])}'
         })
         return action_data
@@ -266,16 +264,14 @@ class ActionAnalysis(object):
     def executor_keywords(self, action, style):
 
         try:
-            if action.tag in ['getVar', 'call', 'other', 'for']:
-                result = self.action_executor.action_executor(action)
-            elif action.key in Var.default_keywords_data:
-                result = self.action_executor.action_executor(action)
+            if action.key in Var.default_keywords_data:
+                result = self.action_executor._action_executor(action)
             elif action.key in Var.new_keywords_data:
-                result = self.action_executor.new_action_executor(action)
+                result = self.action_executor._new_action_executo(action)
             else:
-                raise ValueError("'{}' is not defined".format(action.key))
+                raise NameError("'{}' is not defined".format(action.key))
 
-            if action.tag == 'getVar':
+            if action.key == 'variable':
                 # 变量赋值
                 self.variables[action.name] = result
             return result

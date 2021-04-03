@@ -474,7 +474,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_up(duration=100):
+    def swipe_up(duration=2):
         '''
         :param duration:
         :return:
@@ -487,7 +487,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_down(duration=100):
+    def swipe_down(duration=2):
         '''
         :param duration:
         :return:
@@ -500,7 +500,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_left(duration=100):
+    def swipe_left(duration=2):
         '''
         :param duration:
         :return:
@@ -513,7 +513,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe_right(duration=100):
+    def swipe_right(duration=2):
         '''
         :param duration:
         :return:
@@ -526,7 +526,7 @@ class iOSDriver(object):
             raise e
 
     @staticmethod
-    def swipe(from_x, from_y, to_x, to_y, duration=100):
+    def swipe(from_x, from_y, to_x, to_y, duration=2):
         '''
         :param from_x:
         :param from_y:
@@ -546,7 +546,7 @@ class iOSDriver(object):
                 to_x = to_x * width
             if to_y <= 1.0:
                 to_y = to_y * height
-            Var.instance.swipe(int(from_x), int(from_y), int(to_x), int(to_y), duration)
+            Var.instance.swipe(int(from_x), int(from_y), int(to_x), int(to_y), int(duration * 100))
         except Exception as e:
             raise e
 

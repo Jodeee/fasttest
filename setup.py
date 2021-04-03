@@ -15,7 +15,7 @@ with open("README.md", "r", encoding='UTF-8') as fh:
     long_description = fh.read()
 
 info = sys.version_info
-if info.major == 3 and info.minor == 7:
+if info.major == 3 and info.minor <= 7:
     requires = [
         'PyYAML>=5.1.2',
         'wd>=1.0.1',

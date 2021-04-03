@@ -17,11 +17,14 @@ def return_keywords(driver):
         "$.isExist", # 是否存在
         "$.isNotExist", # 不存在
         "while",
+        "for",
         "if",
         "elif",
         "else",
         "assert",
-        "setTimeout",  # 设置等待时间
+        "setTimeout",
+        "call",
+        "variable"
     ]
     keywords_app= [
         "installApp", # 安装app

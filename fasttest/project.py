@@ -142,8 +142,8 @@ class Project(object):
 
         data = analytical_file(os.path.join(Var.root, 'data.yaml'))
         dict = Dict(data)
-        Var.extensions_var['variable'] = dict.variable[0]
-        Var.extensions_var['resource'] = dict.resource[0]
+        Var.extensions_var['variable'] = dict.variable
+        Var.extensions_var['resource'] = dict.resource
         Var.extensions_var['keywords'] = dict.keywords
         if not Var.extensions_var.variable:
             Var.extensions_var['variable'] = Dict()

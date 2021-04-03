@@ -58,10 +58,10 @@ def _init_project(dir):
         with open(data_path, 'w') as f:
             print('create file: {}'.format(data_path))
             config = "variable:\n" \
-                     "  - userid: 'admin'\n" \
-                     "  - password: '13456'\n" \
+                     "    userid: 'admin'\n" \
+                     "    password: '13456'\n" \
                      "resource:\n" \
-                     "  - logo: 'Resource/logo.png'\n" \
+                     "    logo: 'Resource/logo.png'\n" \
                      "keywords:\n" \
                      "  - 'ScriptsTest'\n"
             f.write(config)
