@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-from concurrent import futures
 from fasttest.common import *
-from macaca.webelement import WebElement
 
 class DriverBaseApp(object):
 

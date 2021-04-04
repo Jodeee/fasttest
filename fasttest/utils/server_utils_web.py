@@ -33,15 +33,15 @@ class ServerUtilsWeb(object):
         else:
             self.remote_url = None
         # driver path
-        if self.desired_capabilities[self.browser] and 'driver' in self.desired_capabilities[self.browser][0].keys():
-            self.driver_path = self.desired_capabilities[self.browser][0]['driver']
+        if self.desired_capabilities[self.browser] and 'driver' in self.desired_capabilities[self.browser].keys():
+            self.driver_path = self.desired_capabilities[self.browser]['driver']
             if not os.path.isfile(self.driver_path):
                 self.driver_path = os.path.join(self.root, self.driver_path)
         else:
             self.driver_path = None
         # options
-        if self.desired_capabilities[self.browser] and 'options' in self.desired_capabilities[self.browser][0].keys():
-            self.options = self.desired_capabilities[self.browser][0]['options']
+        if self.desired_capabilities[self.browser] and 'options' in self.desired_capabilities[self.browser].keys():
+            self.options = self.desired_capabilities[self.browser]['options']
         else:
             self.options = None
 

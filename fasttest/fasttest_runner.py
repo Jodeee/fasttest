@@ -43,13 +43,13 @@ def _init_project(dir):
                      "saveScreenshot: False\n" \
                      "timeOut: 10\n" \
                      "desiredCapabilities:\n" \
-                     "    - platformName: 'Android'\n" \
-                     "      udid: 'device_id'\n" \
-                     "      appPackage: 'com.android.mobile'\n" \
-                     "      appActivity: 'com.android.mobile.Launcher'\n" \
-                     "      automationName: 'Appium'\n" \
-                     "      deviceName: 'HUWWEI P40 Pro'\n" \
-                     "      noReset: True\n" \
+                     "    platformName: 'Android'\n" \
+                     "    udid: 'device_id'\n" \
+                     "    appPackage: 'com.android.mobile'\n" \
+                     "    appActivity: 'com.android.mobile.Launcher'\n" \
+                     "    automationName: 'Appium'\n" \
+                     "    deviceName: 'HUWWEI P40 Pro'\n" \
+                     "    noReset: True\n" \
                      "testcase:\n" \
                      "    - TestCase/case.yaml"
             f.write(config)
@@ -177,12 +177,13 @@ def main():
     result = _start_project(workers, project_path)
     end_time = time.time()
     print('run time: {}s'.format(int(end_time-start_time)))
-    print('result:')
     if isinstance(result, list):
         for r in result:
-            print(r)
+            for k, v in r.items():
+                print('{}: {}'.format(k, v))
     else:
-        print(result)
+        for k, v in result.items():
+            print('{}: {}'.format(k, v))
 
 if __name__ == '__main__':
     main()

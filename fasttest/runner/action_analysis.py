@@ -211,10 +211,10 @@ class ActionAnalysis(object):
 
     def _analysis_other_keywords(self, step):
         key = step.split(' ', 1)[0].strip()
-        parms = [self._get_replace_string(step.lstrip(key).strip())]
+        parms = self._get_replace_string(step.lstrip(key).strip())
         action_data = Dict({
             'key': key,
-            'parms': parms,
+            'parms': [parms],
             'step': f'{key} {parms}'
         })
         return action_data
@@ -228,11 +228,11 @@ class ActionAnalysis(object):
         # 迭代值
         iterating = f_t[0][2:-1]
         # 迭代对象
-        parms =  [self._get_params_type(f_t[1])]
+        parms =  self._get_params_type(f_t[1])
 
         action_data = Dict({
             'key': 'for',
-            'parms': parms,
+            'parms': [parms],
             'value': iterating,
             'step': f'for {f_t[0]} in {self._get_params_type(f_t[1])}'
         })

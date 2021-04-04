@@ -52,7 +52,7 @@ class Project(object):
         Var.time_out = self._config.timeOut
         Var.test_case = self._config.testcase
         Var.desired_caps = Dict()
-        for configK, configV in self._config.desiredCapabilities[0].items():
+        for configK, configV in self._config.desiredCapabilities.items():
             Var.desired_caps[configK] = configV
 
         if not Var.driver or Var.driver.lower() not in ['appium', 'macaca', 'selenium']:
