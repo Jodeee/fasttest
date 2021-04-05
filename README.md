@@ -4,7 +4,7 @@
 
 #### 我能做什么
 - 支持`IDEA`关键字联想输入，在`yaml`文件上写用例像写代码一样舒畅
-- 支持在线实时`debug`用例步骤，无需重复运行验证
+- 支持实时`debug`用例步骤，无需重复运行验证
 - 支持现有关键字组合、自定义关键字，拥有无限扩展性
 - 支持`PO`模式、支持`iOS`、`Android`两端共用一份用例
 - 支持`if`、`while`、`for`等语法用于构造复杂场景
@@ -12,6 +12,6 @@
 - 支持多设备并行执行
 
 #### 演示↓↓↓
-![](http://47.110.43.11/media/fast/1.0.0/help.gif)
+![](https://github.com/Jodeee/fasttest/blob/master/demo.gif)
 
 更多请点击 [fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
