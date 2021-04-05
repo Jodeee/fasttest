@@ -185,7 +185,7 @@ class ActionExecutorApp(ActionExecutorBase):
         :param action:
         :return:
         '''
-        element = self._getParms(action, 0)
+        element = self._getElement(action)
         text = DriverBaseApp.get_text(element)
         return text
 

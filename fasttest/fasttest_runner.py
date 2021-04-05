@@ -179,10 +179,15 @@ def main():
     print('run time: {}s'.format(int(end_time-start_time)))
     if isinstance(result, list):
         for r in result:
+            print('\n')
             for k, v in r.items():
+                if k == 'result':
+                    continue
                 print('{}: {}'.format(k, v))
     else:
         for k, v in result.items():
+            if k == 'result':
+                continue
             print('{}: {}'.format(k, v))
 
 if __name__ == '__main__':
