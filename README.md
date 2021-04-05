@@ -12,6 +12,6 @@
 - 支持多设备并行执行
 
 #### 演示↓↓↓
-![](https://github.com/Jodeee/fasttest/blob/master/demo.gif)
+![](http://47.110.43.11/media/fast/1.0.0/help.gif)
 
 更多请点击 [fasttest](https://www.yuque.com/jodeee/vt6gkg/oue9xb)
