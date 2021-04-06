@@ -221,8 +221,8 @@ class ActionExecutorBase(object):
                 func_ = getattr(self, '_{}'.format(func[2:]))
                 result = func_(action)
             elif func:
-                new_action = copy.copy(action) #todo
-                new_action.key = action.func
+                new_action = action.copy() #todo
+                new_action['key'] = action.func
                 result = self._new_action_executo(new_action)
             else:
                 result = self._getParms(action, 0)
