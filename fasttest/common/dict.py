@@ -32,6 +32,11 @@ class Dict(collections.UserDict):
             return self[str(item)]
         else:
             return None
+       
+    def __copy__(self):
+        n_d = type(self)()
+        n_d.__dict__.update(self.__dict__)
+        return n_d
 
 class DictEncoder(json.JSONEncoder):
 
