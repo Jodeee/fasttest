@@ -227,7 +227,7 @@ class ActionExecutorBase(object):
             else:
                 result = self._getParms(action, 0)
         except Exception as e:
-            raise NameError("keyword '{}' is not defined".format(action.key))
+            raise e
 
         self._out(action.name, result)
         return result
