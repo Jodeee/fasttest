@@ -122,6 +122,11 @@ class ServerUtilsApp(object):
                     key = 'package'
                 elif key in ['activity', 'appActivity']:
                     key = 'activity'
+            if isinstance(value, Dict):
+                value_dict = {}
+                for key_, value_ in value.items():
+                    value_dict[key_] = value_
+                value = value_dict
             desired_capabilities_dict[key] = value
             log_info(' {}: {}'.format(key, value))
             object.__setattr__(self, key, value)
