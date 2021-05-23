@@ -33,7 +33,7 @@ else:
     ]
 setuptools.setup(
     name="fasttest",
-    version="1.0.0",
+    version="1.0.1",
     author="IMJIE",
     author_email="imjie@outlook.com",
     keywords=('macaca', 'appium', 'selenium', 'APP自动化', 'WEB自动化', '关键字驱动'),
