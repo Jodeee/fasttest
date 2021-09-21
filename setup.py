@@ -19,7 +19,6 @@ if info.major == 3 and info.minor <= 7:
     requires = [
         'PyYAML>=5.1.2',
         'wd>=1.0.1',
-        'selenium',
         'colorama',
         'opencv-contrib-python==3.4.2.16'
     ]
@@ -27,7 +26,6 @@ else:
     requires = [
         'PyYAML>=5.1.2',
         'wd>=1.0.1',
-        'selenium',
         'colorama',
         'opencv-contrib-python'
     ]
